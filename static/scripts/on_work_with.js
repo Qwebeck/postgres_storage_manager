@@ -43,12 +43,10 @@ function on_work_with_storage() {
     active_storage = sessionStorage.getItem('active_storage')
     var options = getItemFromStorage(sessionStorage, 'businesses')
     var business_select = document.getElementById('active_storage')
-    console.log(options.data)
     fillSelects([business_select], options.data)
     setSelectedElementOnSelects([business_select], active_storage)
-    // could be replaced with ?
-    // activateSection(elements.work_with_storage_section)
-    if (active_section != elements.work_with_storage_section) activateSection(elements.work_with_storage_section)
+    activateSection(elements.work_with_storage_section)
+    // if (active_section != elements.work_with_storage_section) activateSection(elements.work_with_storage_section)
     updateStorageInfo()
 
 }

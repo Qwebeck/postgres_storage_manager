@@ -56,7 +56,7 @@ function updateTypesInfo() {
 */
 function fillBusinessSelects(selects) {
     var data = getItemFromStorage(sessionStorage, 'businesses');
-    fillSelects(to_update, data.data);
+    fillSelects(selects, data.data);
 }
 
 /**

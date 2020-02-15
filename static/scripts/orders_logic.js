@@ -1,4 +1,8 @@
 /**
+ * Order reborn option
+ */
+
+/**
  * Package, describe logic for oredrs. Such as sending requests, 
  * editing order, creating order configuration, etc.
  */
@@ -32,11 +36,11 @@ function addOrder(e) {
     specific_orders = toDict(order_types)
     specific_orders['supplier_id'] = e.target.suppliers_ids.value
     specific_orders['client_id'] = e.target.clients_ids.value
-    if(!validateOrderForm(e.target)) return
+    if (!validateOrderForm(e.target)) return
     url = '/add_order'
     req = sendRequest(url, specific_orders, "POST")
     waitingAnimation(true)
-    req.then( _ => {
+    req.then(_ => {
         setModifiedFlagOnItem(sessionStorage, 'pending_orders')
         returnToDefaultChildNumber(elements.specific_orders_container)
         updateOrdersInfo(false)
@@ -44,18 +48,19 @@ function addOrder(e) {
     })
         .catch(console.error)
     elements.client_select_in_orders.className = ""
-    elements.supplier_select_in_orders.className =""
+    elements.supplier_select_in_orders.className = ""
     e.target.reset()
 }
 
-function saveOrder(e){
+function saveOrder(e) {
     e.target.innerHTML = "Изменить"
     e.target.onclick = editOrder
+    activateActionButtons([action_buttons.complete_order_btn, action_buttons.delete_order_btn])
     switchSection(elements.order_modification_section, elements.order_statistics_section)
     var current_order_data = getItemFromStorage(sessionStorage, 'current_order')
     console.log(current_order_data)
-    createTable(Object.values(current_order_data.data.products),null)
-    
+    createTable(Object.values(current_order_data.data.products), null)
+
 }
 function editOrder(e) {
     e.target.innerHTML = "Сохранить"
@@ -105,6 +110,7 @@ function editOrder(e) {
         }
         saveItemInStorage(sessionStorage, 'current_order', data)
     }
+    deactivateActionButtons([action_buttons.complete_order_btn, action_buttons.delete_order_btn])
 
 }
 
@@ -119,9 +125,9 @@ function expandForHistoryOrders(e) {
     getSpecificProducts = sendRequest(url, "", "GET")
     getOrderSides.then(data => {
         createTable(data,
-             null,
-             elements.order_statistics_section,
-             false)
+            null,
+            elements.order_statistics_section,
+            false)
         return getSpecificProducts
     }
     ).then(createLayoutForExpandedObjects)
@@ -129,8 +135,8 @@ function expandForHistoryOrders(e) {
 
     function createLayoutForExpandedObjects(data) {
         createTable(data,
-                    null,
-                    output_section_id = 'output_section',
+            null,
+            elements.output_section,
         )
         waitingAnimation(false)
         switchToolbar(false, false)
@@ -152,8 +158,10 @@ function expandForOrders(e) {
     var getOrderSides = sendRequest(get_sides_url, "", "GET")
     var getSpecificOrders = sendRequest(order_url, "", "GET")
     getOrderSides.then(data => {
-        createTable(data, (data_row, _unused1, _unused) => sessionStorage.setItem('customer_id', data_row['Клиент'])
-            , 'order_statistics', false)
+        createTable(data, 
+                   (data_row, _unused1, _unused) => sessionStorage.setItem('customer_id', data_row['Клиент']), 
+                    elements.order_statistics_section, 
+                    false)
         return getSpecificOrders
     }
     ).then(createLayoutForExpandedObjects)
@@ -178,12 +186,12 @@ function expandForOrders(e) {
         ignore_columns = ['type_name', 'quantity', 'serial_number', 'number']
         createTable(data.available_products,
             saveDataAboutOrder,
-            'output_section',
+            elements.output_section,
             false,
             ignore_columns)
         createTable(data.order_stats,
             null,
-            output_section_id = 'order_statistics',
+            elements.order_statistics_section,
             append = true)
         switchToolbar(elements.orders_toolbar, elements.order_edit_toolbar)
         switchSection(elements.orders_form, elements.order_statistics_section)
@@ -238,8 +246,8 @@ function completeOrder(e) {
     )
 }
 
-function deleteOrder(e){
-    var order_id = e.target.value    
+function deleteOrder(e) {
+    var order_id = e.target.value
     var url = '/delete_order/id/' + order_id
     sendRequest(url, '', "DELETE").then(
         _ => {

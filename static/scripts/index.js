@@ -28,11 +28,21 @@ var main_storage_id = "Головний склад, Вінниця";
 
 function init() {
     elements = get_elements()
+    action_buttons = get_action_btn_description()
+    activateActionButtons(Object.values(action_buttons))
     elements.storage_form.reset()
     elements.orders_form.reset()
     getInfoAboutStorage(main_storage_id);
     sessionStorage.setItem('active_storage', main_storage_id)
     updateHeaders()
+    declare_data_dicts()
+}
+
+function declare_data_dicts(){
+    current_order_types = {
+        is_modified: false,
+        data:{}
+    }
 }
 
 
@@ -51,13 +61,29 @@ function get_elements() {
         orders_form: document.getElementById('orders_add'),
         existing_headers: document.getElementsByName('storage_header'),
         orders_toolbar: document.getElementById('orders_toolbar'),
-        orders_edit_toolbar: document.getElementById('order_edit_toolbar'),
+        order_edit_toolbar: document.getElementById('order_edit_toolbar'),
         existing_toolbars: document.getElementsByName('toolbar'),
         work_with_storage_section: document.getElementById('work_with_storage'),
         order_statistics_section: document.getElementById('order_statistics'),
         order_modification_section: document.getElementById('order_modification_section'),
         specific_orders_container: document.getElementById('orders_on_specific_products'),
-        date_of_order_creation_input: document.getElementById('order_date')
+        date_of_order_creation_input: document.getElementById('order_date'),
+        specific_orders_modification_container: document.getElementById('specific_orders_modification')
+
     }
 }
 
+function get_action_btn_description(){
+    return{
+        complete_order_btn: {
+            button: document.getElementById('complete_order_btn'),
+            classname: "tlb-btn order-button",
+            handler: completeOrder
+        },
+        delete_order_btn: {
+            button: document.getElementById('delete_order_btn'),
+            classname: "tlb-btn order-button",
+            handler: deleteOrder
+        }
+    }
+}

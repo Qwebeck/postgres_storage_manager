@@ -287,3 +287,14 @@ table{
 #order_modification_section{
     display: none;
 }
+
+.disabled{
+    background-color: rgba(95, 95, 95, 0.493);
+    border: 1px solid lightgray;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+}
+.disabled:hover{
+    background-color: lightgray;
+}

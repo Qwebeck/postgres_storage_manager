@@ -33,7 +33,7 @@ function activateToolbar(toolbar) {
 
     if (active_toolbar) active_toolbar.className = "hidden";
     if (toolbar) {
-        toolbar.className = "toolbar";
+        toolbar.className = "active-toolbar";
         active_toolbar = toolbar;
     }
 }
@@ -57,7 +57,7 @@ function setSelectedElementOnSelects(list_of_selects, default_value) {
 
 /** 
  * Activate section with given id, and deactivate active section
- * @param {Element} section - id of section to activare 
+ * @param {Element} section - id of section to activate 
  */
 function activateSection(new_active_section) {
     if (active_section) active_section.style = "display:none;"
@@ -158,4 +158,37 @@ function toggleUserInput(e, from, input_id, based_on = 'active_storage', when="n
 function setCurrentDate(date_input) {
     var today = new Date();
     date_input.valueAsDate = today;
+}
+
+/**
+ * Unibind handlers from provided buttons, and changes their style to inactive 
+ * @package gui_updaters
+ *  @param {{button:Element,
+    classname:string
+    handler: Function}[]} buttons - array of button descriptions - buttons, to deactivate
+ * @returns none
+ */
+function deactivateActionButtons(buttons){
+    for(button_desription of buttons){
+
+        button_desription.button.onclick = _ => (alert('Недоступно во время изменения заказа'))
+        button_desription.button.className = "disabled"
+    }
+}
+/**
+ * Bind buttons to corresponding handlers and corresponding classes
+ * @package gui_updaters
+ * @param {{button:Element,
+            classname:string
+            handler: Function}[]} buttons - array of button descriptions
+ */
+function activateActionButtons(buttons){
+    for(button_desription of buttons){
+        if(!('button' in button_desription) || !('classname' in button_desription) || !('handler' in button_desription)){
+            console.log('Wrong format for ' + button_desription)
+            continue
+        }
+        button_desription.button.onclick = button_desription.handler
+        button_desription.button.className = button_desription.classname
+    }
 }

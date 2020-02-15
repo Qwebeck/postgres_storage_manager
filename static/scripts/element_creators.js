@@ -45,7 +45,7 @@ function createHeader(data, ignore_columns, table) {
  * @param {boolean} append - append information to output section
  * @param {string[]} ignore_columns - columns from data, that shouldn't be added to table
  */
-function createTable(data, action, outputSection = customElements.output_section, append = false, ignore_columns = []) {
+function createTable(data, action, outputSection = elements.output_section, append = false, ignore_columns = []) {
     if (!append) outputSection.innerHTML = ""
     if (!data || data.length == 0) {
         var empty = document.createElement('h3')

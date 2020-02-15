@@ -32,6 +32,9 @@
         <div id='query_section' class="query_section">
             <div id='order_modification_section'>
                 <h1>Изменение заказа</h1>
+                <div id='specific_order_modification'>
+
+                </div>
             </div>
             <div id="order_statistics">
 
@@ -41,7 +44,7 @@
 
             <div id="work_with_storage">
                 <h1 name='storage_header'></h1>
-                
+
                 <form id="add_business" class="action" onsubmit="addBusiness(event)">
                     <h1>Добавить организацию</h1>
                     <input type="text" name='name' placeholder="Название">
@@ -150,8 +153,8 @@
         </div>
         <div class="hidden" name="toolbar" id="order_edit_toolbar">
             <button class="tlb-btn order-button" onclick="editOrder(event)">Изменить</button>
-            <button class="tlb-btn order-button" onclick="completeOrder(event)">Выполнить</button>
-            <button class="tlb-btn order-button" onclick="deleteOrder(event)">Удалить</button>
+            <button id='complete_order_btn' class="tlb-btn order-button" >Выполнить</button>
+            <button id='delete_order_btn' class="tlb-btn order-button" >Удалить</button>
         </div>
         <div class="output_section" id="output_section">
         </div>
