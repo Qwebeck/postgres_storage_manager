@@ -17,9 +17,8 @@ function waitingAnimation(condition) {
  * @package gui_updaters
  */
 function updateHeaders() {
-    var headers = document.getElementsByName('storage_header')
     var st_name = getItemFromStorage(sessionStorage, 'active_storage')
-    for (var header of headers) {
+    for (var header of elements.existing_headers) {
         header.innerHTML = ""
         header.innerHTML = st_name
     }
@@ -27,15 +26,15 @@ function updateHeaders() {
 
 /**
  * @depracated
- * @param {string} toolbar_id - id of toolbar to activate.
+ * @param {Element} toolbar - toolbar to activate.
  *  If not provided function deactivate current toolbar
  */
-function activateToolbar(toolbar_id) {
+function activateToolbar(toolbar) {
 
-    if (active_toolbar_id != "") document.getElementById(active_toolbar_id).className = "hidden";
-    if (toolbar_id) {
-        document.getElementById(toolbar_id).className = "toolbar";
-        active_toolbar_id = toolbar_id;
+    if (active_toolbar) active_toolbar.className = "hidden";
+    if (toolbar) {
+        toolbar.className = "toolbar";
+        active_toolbar = toolbar;
     }
 }
 
@@ -58,13 +57,15 @@ function setSelectedElementOnSelects(list_of_selects, default_value) {
 
 /** 
  * Activate section with given id, and deactivate active section
- * @param {string} id - id of section to activare 
+ * @param {Element} section - id of section to activare 
  */
-function activateSection(id) {
-    if (!(active_page_id === "")) document.getElementById(active_page_id).style = "display:none;"
-    active_page_id = id;
+function activateSection(new_active_section) {
+    if (active_section) active_section.style = "display:none;"
+    active_section = new_active_section;
+    // ---------------  ??
     elements.order_statistics.style = "display:none"
-    document.getElementById(active_page_id).style = "display:flex";
+    // ----------------
+    new_active_section.style = "display:flex";
 }
 
 /**
@@ -88,38 +89,38 @@ function showHistory(e) {
 /**
  * Change current `from` toolbar `to`. If no `from`, `to` specified - hides current toolbar 
  * @package gui_updaters
- * @param {string|boolean} from - toolbar to hide
- * @param {string|boolean} to - toolbar to show
+ * @param {Element} from - toolbar to hide
+ * @param {Element} to - toolbar to show
  */
 function switchToolbar(from, to) {
-    if (from) document.getElementById(from).className = "hidden";
+    if (from) from.className = "hidden";
     else {
-        var toolbars = document.getElementsByName('toolbar')
-        for (tb of toolbars) {
+        for (tb of elements.existing_toolbars) {
             tb.className = "hidden"
         }
     }
-    if (to) document.getElementById(to).className = "active-toolbar"
+    if (to) to.className = "active-toolbar"
 }
 
 /**
  * Change section that currently works as query section.
  * @package gui_updaters
- * @param {*} from - id of element to switch from
- * @param {*} to - id of element to switch on
+ * @param {Element} from - id of element to switch from
+ * @param {Element} to - id of element to switch on
  */
-function switchQuerySection(from, to){
-    document.getElementById(from).style = "display:none;";
-    document.getElementById(to).style = "display:block;";
+function switchSection(from, to){
+    if(from) from.style = "display:none"
+    if(to) to.style = "display:block"
+    from.style = "display:none;";
+    to.style = "display:block;";
 }
 
 /**
  * Remove elements, that was added to container dynamically
- * @param {string} container_id - container, where chil will be cleared
+ * @param {Element} container - container, where chil will be cleared
  * @param {int} default_number - number of children to left
  */
-function returnToDefaultChildNumber(container_id, default_number=2){
-    const container = document.getElementById(container_id);
+function returnToDefaultChildNumber(container, default_number=2){
     while (container.children.length>default_number){
          container.removeChild(container.firstChild)
     }
@@ -149,3 +150,12 @@ function toggleUserInput(e, from, input_id, based_on = 'active_storage', when="n
     
 }
 
+/**
+ * Set's current date in date field
+ * @package gui_updaters 
+ * @param {Element} date_input - id of date input
+ */
+function setCurrentDate(date_input) {
+    var today = new Date();
+    dateInput.valueAsDate = today;
+}

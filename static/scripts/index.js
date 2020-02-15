@@ -19,8 +19,8 @@ Code convetions:
  * active_storage - active storage
  */
 
-var active_page_id = "";
-var active_toolbar_id = ""
+var active_section = null
+var active_toolbar = null
 // Change on query
 var main_storage_id = "Головний склад, Вінниця";
 
@@ -38,8 +38,8 @@ function init() {
 
 function get_elements() {
     return {
-        client_form_in_orders: document.getElementById('clients_ids'),
-        supplier_form_in_orders: document.getElementById('suppliers_ids'),
+        client_select_in_orders: document.getElementById('clients_ids'),
+        supplier_select_in_orders: document.getElementById('suppliers_ids'),
         is_history: document.getElementById('is_history'),
         query_section: document.getElementById('query_section'),
         output_section: document.getElementById('output_section'),
@@ -47,7 +47,17 @@ function get_elements() {
         block_with_waiting_anim: document.getElementById('waiting'),
         show_orders_from_input: document.getElementById('from_date'),
         show_orders_to_input: document.getElementById('to_date'),
-        storage_form: document.getElementById("add_on_storage_form"),
-        orders_form: document.getElementById("orders_add")
+        storage_form: document.getElementById('add_on_storage_form'),
+        orders_form: document.getElementById('orders_add'),
+        existing_headers: document.getElementsByName('storage_header'),
+        orders_toolbar: document.getElementById('orders_toolbar'),
+        orders_edit_toolbar: document.getElementById('order_edit_toolbar'),
+        existing_toolbars: document.getElementsByName('toolbar'),
+        work_with_storage_section: document.getElementById('work_with_storage'),
+        order_statistics_section: document.getElementById('order_statistics'),
+        order_modification_section: document.getElementById('order_modification_section'),
+        specific_orders_container: document.getElementById('orders_on_specific_products'),
+        date_of_order_creation_input: document.getElementById('order_date')
     }
 }
+

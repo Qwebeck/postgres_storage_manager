@@ -142,16 +142,6 @@ function zip_in_dict(header, values) {
 function catch_error(error) {
     console.log("Exit status code is: ", error);
 }
-/**
- * Set's current date in date field
- * @package utils 
- * @param {string} dateInputId - id of date input
- */
-function setCurrentDate(dateInputId) {
-    var today = new Date();
-    dateInput = document.getElementById(dateInputId)
-    dateInput.valueAsDate = today;
-}
 
 /**
  * Parse headers from dictionary to array of strings

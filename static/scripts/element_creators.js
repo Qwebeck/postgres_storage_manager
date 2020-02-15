@@ -41,12 +41,11 @@ function createHeader(data, ignore_columns, table) {
  * @param {string[][]} data - Data for table creation
  * @param {function({},[],Element)} action - handler, that that performs some action on current row. 
  * createTable passes in it three params: data(dict), headers(array), newly created table element.
- * @param {string} output_section_id - id of section where new table will be created
+ * @param {Element} outputSection - id of section where new table will be created
  * @param {boolean} append - append information to output section
  * @param {string[]} ignore_columns - columns from data, that shouldn't be added to table
  */
-function createTable(data, action, output_section_id = 'output_section', append = false, ignore_columns = []) {
-    const outputSection = document.getElementById(output_section_id)
+function createTable(data, action, outputSection = customElements.output_section, append = false, ignore_columns = []) {
     if (!append) outputSection.innerHTML = ""
     if (!data || data.length == 0) {
         var empty = document.createElement('h3')

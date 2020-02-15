@@ -20,13 +20,15 @@ function clearTemporaryVars() {
 function on_work_with_orders(is_history = false) {
     clearTemporaryVars();
     elements.is_history.checked = false;
-    activateSection('orders_add');
-    activateToolbar('orders_toolbar');
-    setCurrentDate('order_date');
-    returnToDefaultChildNumber('orders_on_specific_products');
-    switchToolbar(null, 'orders_toolbar');
+    activateSection(elements.orders_form);
+    activateToolbar(elements.orders_toolbar);
+    setCurrentDate(elements.date_of_order_creation_input);
+    returnToDefaultChildNumber(elements.specific_orders_container);
+    // Is needed ?
+    // switchToolbar(null, elements.orders_toolbar);
     updateHeaders();
-    fillBusinessSelects(['clients_ids','suppliers_ids']);
+    fillBusinessSelects([elements.client_select_in_orders,
+                        elements.supplier_select_in_orders]);
     updateTypesInfo();
     updateOrdersInfo(false);
 
@@ -44,8 +46,9 @@ function on_work_with_storage() {
     console.log(options.data)
     fillSelects([business_select], options.data.result)
     setSelectedElementOnSelects([business_select], active_storage)
-
-    if (active_page_id != 'work_with_storage') activateSection('work_with_storage')
+    // could be replaced with ?
+    // activateSection(elements.work_with_storage_section)
+    if (active_section != elements.work_with_storage_section) activateSection(elements.work_with_storage_section)
     updateStorageInfo()
 
 }

@@ -38,20 +38,20 @@ function addOrder(e) {
     waitingAnimation(true)
     req.then( _ => {
         setModifiedFlagOnItem(sessionStorage, 'pending_orders')
-        returnToDefaultChildNumber('orders_on_specific_products')
+        returnToDefaultChildNumber(elements.specific_orders_container)
         updateOrdersInfo(false)
         waitingAnimation(false)
     })
         .catch(console.error)
-    elements.client_form_in_orders.className = ""
-    elements.supplier_form_in_orders.className =""
+    elements.client_select_in_orders.className = ""
+    elements.supplier_select_in_orders.className =""
     e.target.reset()
 }
 
 function saveOrder(e){
     e.target.innerHTML = "Изменить"
     e.target.onclick = editOrder
-    switchQuerySection('order_modification_section', 'order_statistics')
+    switchSection(elements.order_modification_section, elements.order_statistics_section)
     var current_order_data = getItemFromStorage(sessionStorage, 'current_order')
     console.log(current_order_data)
     createTable(Object.values(current_order_data.data.products),null)
@@ -60,7 +60,7 @@ function saveOrder(e){
 function editOrder(e) {
     e.target.innerHTML = "Сохранить"
     e.target.onclick = saveOrder
-    switchQuerySection('order_statistics','order_modification_section')
+    switchSection(elements.order_statistics_section, elements.order_modification_section)
     var current_order_data = getItemFromStorage(sessionStorage, 'current_order')
     var order_types = current_order_data.data.types
     var assigned_products = current_order_data.data.products
@@ -132,7 +132,7 @@ function expandForHistoryOrders(e) {
         )
         waitingAnimation(false)
         switchToolbar(false, false)
-        switchQuerySection('orders_add', 'order_statistics')
+        switchSection(elements.orders_form, elements.order_statistics_section)
 
     }
 
@@ -183,8 +183,8 @@ function expandForOrders(e) {
             null,
             output_section_id = 'order_statistics',
             append = true)
-        switchToolbar('orders_toolbar', 'order_edit_toolbar')
-        switchQuerySection('orders_add', 'order_statistics')
+        switchToolbar(elements.orders_toolbar, elements.order_edit_toolbar)
+        switchSection(elements.orders_form, elements.order_statistics_section)
         assignOrderIdToButtons(order_id)
 
     }

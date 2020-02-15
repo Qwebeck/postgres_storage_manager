@@ -1,3 +1,5 @@
+// change this function
+
 function activeStorageChanged(event){
     event.preventDefault()
     if(!toggleUserInput(event, 'new_storage_name', 'new_storage')){
