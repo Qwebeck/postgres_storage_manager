@@ -6,7 +6,7 @@ from config import *
 from models import (app, db, Products, Businesses, Orders, SpecificOrders)
 from sqlalchemy.sql import text
 from datetime import datetime
-from src.utils import pack_query_to_dict
+# from src.utils import pack_query_to_dict
 from src.queries import (client_supplier_query,
                          types_query,
                          statistics_query,
@@ -56,8 +56,8 @@ def main():
 @app.route('/get_types/id/<string:owner_id>')
 def get_types(owner_id):
     available_types = types_query(owner_id).all()
-    result = pack_query_to_dict(available_types)
-    return jsonify(result)
+    # result = pack_query_to_dict(available_types)
+    return jsonify(available_types)
 
 
 @app.route('/get_statistics/id/<string:owner_id>')
@@ -65,7 +65,7 @@ def count_types(owner_id):
     """Return count of products on storage."""
     statistics = statistics_query(owner_id)
     result = db.session.query(statistics).all()
-    result = pack_query_to_dict(result)
+    # result = pack_query_to_dict(result)
     return jsonify(result)
 
 
@@ -73,7 +73,7 @@ def count_types(owner_id):
 def get_details_about_type(owner_id, type_name):
     types = type_name.split(',')
     result = expand_type_query(owner_id, [type_name]).all()
-    result = pack_query_to_dict(result)
+    # result = pack_query_to_dict(result)
     return jsonify(result)
 
 
@@ -118,7 +118,7 @@ def delete_order(order_id):
 def get_info():
     query = businesses_query()
     result = db.session.query(query).all()
-    result = pack_query_to_dict(result)
+    # result = pack_query_to_dict(result)
     return jsonify(result)
 
 
@@ -126,7 +126,7 @@ def get_info():
 def get_orders(business_id):
     history = request.args.get('history')
     result = get_orders_query(history, business_id).all()
-    result = pack_query_to_dict(result)
+    # result = pack_query_to_dict(result)
     return jsonify(result)
 
 
@@ -135,7 +135,7 @@ def orders_in_period(from_, to, business_id):
     history = request.args.get('history')
     query = orders_from_to_query(history, from_, to, business_id)
     result = query.all()
-    result = pack_query_to_dict(result)
+    # result = pack_query_to_dict(result)
     if not result:
         result = {'result': None}
     return jsonify(result)
@@ -164,14 +164,14 @@ def add_order():
 @app.route('/sides_in_order/id/<int:order_id>')
 def get_order_sides(order_id):
     result = db.session.query(client_supplier_query(order_id)).all()
-    result = pack_query_to_dict(result)
+    # result = pack_query_to_dict(result)
     return jsonify(result)
 
 
 @app.route('/expand_history_order/id/<int:order_id>')
 def expand_history_order(order_id):
     result = expand_history_order_query(order_id).all()
-    result = pack_query_to_dict(result)
+    # result = pack_query_to_dict(result)
     return jsonify(result)
 
 

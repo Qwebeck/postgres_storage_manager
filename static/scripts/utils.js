@@ -157,20 +157,20 @@ function parseHeadersFromDataRow(data_row, ignore_columns) {
 }
 
 
-/**
- * Checks if value is object or null. If object - returns if_not_null field from his object 
- * @param {*} value - elemnt to check is null
- * @param {*} if_null - value if null
- * @param {*} if_not_null - field of object if value is not null
- */
-function coalesce(value, if_null, if_not_null) {
-    if (value) {
-        return value[if_not_null]
-    }
-    else {
-        return if_null
-    }
-}
+// /**
+//  * Checks if value is object or null. If object - returns if_not_null field from his object 
+//  * @param {*} value - elemnt to check is null
+//  * @param {*} if_null - value if null
+//  * @param {*} if_not_null - field of object if value is not null
+//  */
+// function coalesce(value, if_null, if_not_null) {
+//     if (value) {
+//         return value[if_not_null]
+//     }
+//     else {
+//         return if_null
+//     }
+// }
 
 
 /**

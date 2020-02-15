@@ -19,9 +19,17 @@ function updateOrdersInfo(history) {
     var orders = getItemFromStorage(sessionStorage, key);
     elements.output_section.innerHTML = ""
     if (orders.is_modified) {
-        getOrders(data => createTable(coalesce(data, null, 'result'), createButtonForOrderExpand, 'output_section', append = true, order_ignore_columns))
+        getOrders(data => createTable(data,            
+                                     createButtonForOrderExpand,
+                                     elements.output_section,
+                                     append = true,
+                                     order_ignore_columns))
     } else {
-        createTable(coalesce(orders.data, null, 'result'), createButtonForOrderExpand, 'output_section', append = true, order_ignore_columns)
+        createTable(orders.data,
+                    createButtonForOrderExpand,
+                    elements.output_section,
+                    append = true,
+                    order_ignore_columns)
     }
 }
 
@@ -36,23 +44,19 @@ function updateTypesInfo() {
         getNewTypes.then(_ => updateTypesInfo())
     } else {
         selects = document.getElementsByName('product_type');
-        fillSelects(selects, coalesce(available_types.data, null, 'result'));
+        fillSelects(selects, available_types.data);
     }
 }
 
 /**
-* Fill selects in orders with appropriate businesses
+* Fill selects in orders with appropriate businesses.
+* Wrapper around fillSelects
 * @package data_nodes_updaters
-* @param {string[]} select_ids - ids of selects to update 
+* @param {Element[]}  - ids of selects to update 
 */
-function fillBusinessSelects(select_ids) {
-    var to_update = []
-    for (const id of select_ids) {
-        select_element = document.getElementById(id)
-        to_update.push(select_element)
-    }
+function fillBusinessSelects(selects) {
     var data = getItemFromStorage(sessionStorage, 'businesses');
-    fillSelects(to_update, data.data.result);
+    fillSelects(to_update, data.data);
 }
 
 /**
@@ -72,12 +76,12 @@ function updateStorageInfo() {
     var id = getItemFromStorage(sessionStorage, 'active_storage')
     statistics = getItemFromStorage(sessionStorage, 'storage_stats')
     if (statistics.data) {
-        data = statistics.data.result
+        data = statistics.data
     } else {
         data = null
     }
     if (statistics.is_modified) {
-        getStatistics(id, data => createTable(data.result, createButtonForTypeExpand))
+        getStatistics(id, data => createTable(data, createButtonForTypeExpand))
     }
     else createTable(data, createButtonForTypeExpand)
     updateSelects()
@@ -87,19 +91,18 @@ function updateStorageInfo() {
  * Wrapper around fill selects, that describe, logic for filling business selects.
  * @package data_nodes_updaters
  */
-function updateSelects(){
-    var types = getItemFromStorage(sessionStorage,'types')
-    var id = getItemFromStorage(sessionStorage,'active_storage')
+function updateSelects() {
+    var types = getItemFromStorage(sessionStorage, 'types')
+    var id = getItemFromStorage(sessionStorage, 'active_storage')
     var selects = document.getElementsByName("type_name")
     activateToolbar()
     if (types.is_modified) {
         const url = '/get_types/id/' + id;
-        const getAvailableTypes = sendRequest(url, "", "GET", sessionStorage,'types');
-        getAvailableTypes.then(data => fillSelects(selects,coalesce(data,null,data['result'])))
-        .catch(console.exception)
+        const getAvailableTypes = sendRequest(url, "", "GET", sessionStorage, 'types');
+        getAvailableTypes.then(data => fillSelects(selects, data))
+            .catch(console.exception)
     } else {
-        options = coalesce(types.data,null,'result')
-        fillSelects(selects, options)
+        fillSelects(selects, types.data)
 
     }
 }

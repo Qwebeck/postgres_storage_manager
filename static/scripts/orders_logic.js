@@ -69,9 +69,9 @@ function editOrder(e) {
     var data = { 'types': order_types }
     sendRequest(url, data, "GET")
         .then(data => {
-            var avaiable_products = convertToObject('Серийный номер', data.result)
+            var avaiable_products = convertToObject('Серийный номер', data)
             saveItemInStorage(sessionStorage, 'available_products_for_assigment', avaiable_products)
-            createTable(data.result, markAssignedAndAddToggles)
+            createTable(data, markAssignedAndAddToggles)
         })
     function markAssignedAndAddToggles(data, _, element) {
         var serial_number = data['Серийный номер']
@@ -118,17 +118,19 @@ function expandForHistoryOrders(e) {
     getOrderSides = sendRequest(get_sides_url, "", "GET")
     getSpecificProducts = sendRequest(url, "", "GET")
     getOrderSides.then(data => {
-        createTable(data.result, null,
-            'order_statistics', false)
+        createTable(data,
+             null,
+             elements.order_statistics_section,
+             false)
         return getSpecificProducts
     }
     ).then(createLayoutForExpandedObjects)
         .catch(console.error)
 
     function createLayoutForExpandedObjects(data) {
-        createTable(coalesce(data,null,'result'),
-            null,
-            output_section_id = 'output_section',
+        createTable(data,
+                    null,
+                    output_section_id = 'output_section',
         )
         waitingAnimation(false)
         switchToolbar(false, false)
@@ -150,7 +152,7 @@ function expandForOrders(e) {
     var getOrderSides = sendRequest(get_sides_url, "", "GET")
     var getSpecificOrders = sendRequest(order_url, "", "GET")
     getOrderSides.then(data => {
-        createTable(data.result, (data_row, _unused1, _unused) => sessionStorage.setItem('customer_id', data_row['Клиент'])
+        createTable(data, (data_row, _unused1, _unused) => sessionStorage.setItem('customer_id', data_row['Клиент'])
             , 'order_statistics', false)
         return getSpecificOrders
     }

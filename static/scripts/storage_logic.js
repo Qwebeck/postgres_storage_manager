@@ -79,23 +79,24 @@ function addProduct(e) {
 }
 
 /**
- * Returns business by his id
- * @package storage.js
- * @param {*} id 
- * @returns business in case of succes. Null in case of failure.
- */
-function getStorageById(id){
-    businesses = getItemFromStorage(localStorage,'businesses').data
-    // console.log(businesses)
-    for(var business of businesses.result){
-        b_id = getByName(businesses.headers,business,"id")
-        if (b_id == id) {
-            b = zip_in_dict(businesses.headers, business)
-            return b; 
-        }
-    }
-    return null
-}
+//  * @deprecated
+//  * Returns business by his id
+//  * @package storage.js
+//  * @param {*} id 
+//  * @returns business in case of succes. Null in case of failure.
+//  */
+// function getStorageById(id){
+//     businesses = getItemFromStorage(localStorage,'businesses').data
+//     // console.log(businesses)
+//     for(var business of businesses){
+//         b_id = getByName(businesses.headers,business,"id")
+//         if (b_id == id) {
+//             b = zip_in_dict(businesses.headers, business)
+//             return b; 
+//         }
+//     }
+//     return null
+// }
 
 /**
  * Fill ouput section with info about statistics
@@ -146,7 +147,7 @@ function expandForTypes(e) {
     url = '/expand_types/id/' + storage_id + '/types/' + event.target.value
     query = sendRequest(url, "", "GET");    
     
-    query.then(data => createTable(data.result, createButtonForProductDelete))
+    query.then(data => createTable(data, createButtonForProductDelete))
         .catch(console.error)
 
     const createButtonForProductDelete = (row_info, _, rowNode) => {

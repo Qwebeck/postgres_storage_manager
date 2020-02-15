@@ -144,7 +144,7 @@ function addProductField(container_id){
     var default_option = createElement('option',{'selected':'selected', 'value': 'default', 'innerHTML':'Тип'})
     var quantityInput = createElement('input',{'type':'text','name':'number','placeholder':'Количество', 'onchange':_=> addProductField(container_id)})
     select.appendChild(default_option);
-    fillSelects([select],available_types.data.result);
+    fillSelects([select],available_types.data);
     prod_ord.appendChild(select);
     prod_ord.appendChild(quantityInput);
     container.appendChild(prod_ord);

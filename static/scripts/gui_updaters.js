@@ -157,5 +157,5 @@ function toggleUserInput(e, from, input_id, based_on = 'active_storage', when="n
  */
 function setCurrentDate(date_input) {
     var today = new Date();
-    dateInput.valueAsDate = today;
+    date_input.valueAsDate = today;
 }
