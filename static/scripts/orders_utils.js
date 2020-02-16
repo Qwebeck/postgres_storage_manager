@@ -7,8 +7,8 @@
  * Generates an appropriate order url, based on time inputs and history selection
  */
 function createOrderUrl() {
-    from = elements.show_orders_from_input.value;
-    to = elements.show_orders_to_input.value;
+    from = containers_and_elements.show_orders_from_input.value;
+    to = containers_and_elements.show_orders_to_input.value;
     if(!validatePeriod(from, to)) {
         url = '/get_orders';
     }else{
@@ -19,12 +19,19 @@ function createOrderUrl() {
     };
     active_storage = sessionStorage.getItem('active_storage')
     url += `/${active_storage}` 
-    if(elements.is_history.checked){
+    if(containers_and_elements.is_history.checked){
         url += '?history=true';
     }
     return url;
 }
-
+/**
+ * @package order_utils
+ * Creates expand order url for provided id
+ */
+function createExpandOrderUrl(){
+    var order_id = sessionStorage.getItem('current_order_id')
+    return '/expand_order/id/' + order_id
+}
 /**
  * Assign order_id to every button, that have order-button class
  *@param order_id 

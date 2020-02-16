@@ -24,17 +24,17 @@ function validateOrderForm(form) {
     var product_orders = document.getElementsByName("product_order")
     var order_exists = false
     for(var order_container of product_orders){
-        product_type = order_container.querySelector('select[name=product_type]')
+        product_type = order_container.querySelector('input[name=product_type]')
         number = order_container.querySelector('input[name=number]')
-        if(product_type.value == 'default' && number.value != 0){
+        if(!product_type.value && number.value != 0){
             error = true
             product_type.className = 'error'
         }
-        if(product_type.value != 'default' && !number.value){
+        if(product_type.value  && !number.value){
             error = true
             number.className = 'error'
         }
-        if(product_type.value != 'default' && number.value){
+        if(product_type.value && number.value){
             order_exists = true
         }
     }
@@ -132,3 +132,19 @@ function validatePeriod(from, to) {
     return true;
 }
 
+/**
+ * Validate if name of business was provided
+ */
+function validateNewBusiness(form){
+    error = false
+    field = form.querySelector("[name=new_business_name")
+    if(!field.value){
+        message="Подайте название бизнеса"
+        error = true
+    }
+    if(error) {
+        alert(message)
+        return false
+    }
+    return true
+}

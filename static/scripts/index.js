@@ -5,8 +5,7 @@ Code convetions:
 */
 
 /*TODO
-1. Add new types and delete old types in order editing. 
-
+1. Allow user to create order on types, that aren't available on storage
 
 /**
  * Keys with data
@@ -27,21 +26,37 @@ var main_storage_id = "Головний склад, Вінниця";
 
 
 function init() {
-    elements = get_elements()
+    data_item_modified = new Event('data_item_modified')
+    document.addEventListener('data_item_modified', updateData)
+    
+    containers_and_elements = get_elements()
+
     action_buttons = get_action_btn_description()
+    data_dicts = get_data_dicts()
+
     activateActionButtons(Object.values(action_buttons))
-    elements.storage_form.reset()
-    elements.orders_form.reset()
+
+    containers_and_elements.storage_form.reset()
+    containers_and_elements.orders_form.reset()
+
     getInfoAboutStorage(main_storage_id);
+
     sessionStorage.setItem('active_storage', main_storage_id)
     updateHeaders()
-    declare_data_dicts()
 }
 
-function declare_data_dicts(){
-    current_order_types = {
-        is_modified: false,
-        data:{}
+function get_data_dicts() {
+    return {
+        current_order_types:{
+            is_modified: false,
+            url_creation_handler: mockUrl,
+            data: {}
+        },
+        current_order_descirption:{
+            is_modified: false,
+            url_creation_handler: createExpandOrderUrl,
+            data: {}
+        }
     }
 }
 
@@ -68,22 +83,41 @@ function get_elements() {
         order_modification_section: document.getElementById('order_modification_section'),
         specific_orders_container: document.getElementById('orders_on_specific_products'),
         date_of_order_creation_input: document.getElementById('order_date'),
-        specific_orders_modification_container: document.getElementById('specific_orders_modification')
-
+        specific_orders_modification_container: document.getElementById('specific_orders_modification'),
+        order_creation_specific_order_section: document.getElementById('orders_on_specific_products'),
+        order_modification_specific_order_section: document.getElementById('specific_order_modification'),
+        available_types_list: document.getElementById('available_types'),
+        business_addition_form: document.getElementById('storage_name')
     }
 }
 
-function get_action_btn_description(){
-    return{
+function get_action_btn_description() {
+    return {
         complete_order_btn: {
             button: document.getElementById('complete_order_btn'),
             classname: "tlb-btn order-button",
-            handler: completeOrder
+            handler: completeOrder,
+            text: "Выполнить"
         },
         delete_order_btn: {
             button: document.getElementById('delete_order_btn'),
             classname: "tlb-btn order-button",
-            handler: deleteOrder
+            handler: deleteOrder,
+            text: "Удалить"
+        },
+        edit_order_btn: {
+            button: document.getElementById('edit_order_btn'),
+            classname: "tlb-btn order-button",
+            handler: editOrder,
+            text: "Изменить"
         }
     }
+}
+
+
+/**
+ * tmp handler to not break things
+ */
+function mockUrl() {
+    return '/mock'
 }

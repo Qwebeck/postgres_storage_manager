@@ -20,6 +20,11 @@
 </head>
 
 <body onload="init()">
+    <datalist id="available_types">
+                    
+    </datalist>
+
+
     <div class="menu">
         <button class="menu-item" onclick="on_work_with_storage()">
             Работа со складом
@@ -30,12 +35,13 @@
     </div>
     <div class="container">
         <div id='query_section' class="query_section">
-            <div id='order_modification_section'>
+            <form id='order_modification_section'>
                 <h1>Изменение заказа</h1>
                 <div id='specific_order_modification'>
 
                 </div>
-            </div>
+                <input type="submit">
+            </form>
             <div id="order_statistics">
 
             </div>
@@ -45,9 +51,9 @@
             <div id="work_with_storage">
                 <h1 name='storage_header'></h1>
 
-                <form id="add_business" class="action" onsubmit="addBusiness(event)">
+                <!-- <form id="add_business" class="action" onsubmit="addBusiness(event)">
                     <h1>Добавить организацию</h1>
-                    <input type="text" name='name' placeholder="Название">
+                    <input type="text" name='name' placeholder="Название" autocomplete="off">
                     <input type="text" name='location' placeholder="Местоположение">
                     <div>
                         <input type="checkbox" name='is_supplier' value="true">
@@ -58,7 +64,7 @@
                         <label for="is_client">Клиент</label>
                     </div>
                     <input class="action-button" type="submit">
-                </form>
+                </form> -->
                 <div id="add_on_storage">
                     <h1>Добавить товары на склад </h1>
                     <form id="storage_name" onsubmit="addStorage(event)">
@@ -66,21 +72,21 @@
                             <option value="new">Новый бизнес</option>
                         </select>
                         <div id="new_storage_name">
-                            <input type="text" id="new_storage" placeholder="Название нового бизнеса">
+                            <input name="new_business_name" type="text" id="new_storage" placeholder="Название нового бизнеса" autocomplete="off">
                             <input type="submit" value="Добавить">
 
                         </div>
                     </form>
                     <form id="add_on_storage_form" onsubmit="addProduct(event)">
 
-                        <input type="text" name="producent" placeholder="Производитель">
-                        <input type="text" name="serial_number" placeholder="Серийный номер">
-                        <input type="text" name="model" placeholder="Модель">
+                        <input type="text" name="producent" placeholder="Производитель" autocomplete="off">
+                        <input type="text" name="serial_number" placeholder="Серийный номер" autocomplete="off">
+                        <input type="text" name="model" placeholder="Модель" autocomplete="off">
                         <select id='default_select_for_type' name="type_name" onchange="isUserInputForType(event)">
                             <option value="default" selected="selected">Тип продукта</option>
                             <option value="new">Новый тип</option>
                         </select>
-                        <input type="text" placeholder="Тип нового товара" id="new_type" name='type'>
+                        <input type="text" placeholder="Тип нового товара" id="new_type" name="type" autocomplete="off">
                         <select name="product_condition">
                             <option value='true'>Исправное</option>
                             <option value='false'>Неисправное</option>
@@ -115,22 +121,18 @@
                     <input id='order_date' type="date">
                 </div>
                 <h4>Товары</h4>
-                <div id='orders_on_specific_products'>
+                <div id='orders_on_specific_products'>           
                     <div name="product_order" class="product_order">
-                        <select name="product_type">
-                            <option selected="selected" value="default">Тип</option>
-                        </select>
-                        <input type="text" name="number" placeholder="Количество"
-                            onchange="addProductField('orders_on_specific_products')">
-                    </div>
-                    <div name="product_order" class="product_order">
-                        <select name="product_type">
-                            <option selected="selected" value="default">Тип</option>
-                        </select>
-                        <input type="text" name="number" placeholder="Количество"
-                            onchange="addProductField('orders_on_specific_products')">
+                        <input type="text" name="product_type" list="available_types" placeholder="Tип" autocomplete="off">
+                        <input type="text" name="number" placeholder="Количество" autocomplete="off"
+                            onchange="addProductField(containers_and_elements.order_creation_specific_order_section, null, 1)">
                     </div>
 
+                    <div name="product_order" class="product_order">
+                        <input type="text" name="product_type" list="available_types" placeholder="Tип" autocomplete="off">
+                        <input type="text" name="number" placeholder="Количество" autocomplete="off"
+                            onchange="addProductField(containers_and_elements.order_creation_specific_order_section, null, 1)">
+                    </div>
                 </div>
 
 
@@ -152,7 +154,7 @@
             </label>
         </div>
         <div class="hidden" name="toolbar" id="order_edit_toolbar">
-            <button class="tlb-btn order-button" onclick="editOrder(event)">Изменить</button>
+            <button id='edit_order_btn' class="tlb-btn order-button" onclick="editOrder(event)">Изменить</button>
             <button id='complete_order_btn' class="tlb-btn order-button" >Выполнить</button>
             <button id='delete_order_btn' class="tlb-btn order-button" >Удалить</button>
         </div>

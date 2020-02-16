@@ -5,10 +5,10 @@
  */
 function waitingAnimation(condition) {
     if (condition == true) {
-        elements.block_with_waiting_anim.style = "display:block;"
+        containers_and_elements.block_with_waiting_anim.style = "display:block;"
     }
     else {
-        elements.block_with_waiting_anim.style = "display:none;"
+        containers_and_elements.block_with_waiting_anim.style = "display:none;"
     }
 }
 
@@ -18,7 +18,7 @@ function waitingAnimation(condition) {
  */
 function updateHeaders() {
     var st_name = getItemFromStorage(sessionStorage, 'active_storage')
-    for (var header of elements.existing_headers) {
+    for (var header of containers_and_elements.existing_headers) {
         header.innerHTML = ""
         header.innerHTML = st_name
     }
@@ -63,7 +63,7 @@ function activateSection(new_active_section) {
     if (active_section) active_section.style = "display:none;"
     active_section = new_active_section;
     // ---------------  ??
-    elements.order_statistics.style = "display:none"
+    containers_and_elements.order_statistics.style = "display:none"
     // ----------------
     new_active_section.style = "display:flex";
 }
@@ -76,12 +76,12 @@ function activateSection(new_active_section) {
 
 function showHistory(e) {
     if (e.target.checked) {
-        elements.output_section.style = "width:100%";
-        elements.query_section.style = "display:none";
+        containers_and_elements.output_section.style = "width:100%";
+        containers_and_elements.query_section.style = "display:none";
         updateOrdersInfo(history = true);
     } else {
-        elements.query_section.style = "display:block";
-        elements.output_section.style = "width:65%";
+        containers_and_elements.query_section.style = "display:block";
+        containers_and_elements.output_section.style = "width:65%";
         updateOrdersInfo(history = false);
     }
 }
@@ -95,7 +95,7 @@ function showHistory(e) {
 function switchToolbar(from, to) {
     if (from) from.className = "hidden";
     else {
-        for (tb of elements.existing_toolbars) {
+        for (tb of containers_and_elements.existing_toolbars) {
             tb.className = "hidden"
         }
     }
@@ -108,11 +108,9 @@ function switchToolbar(from, to) {
  * @param {Element} from - id of element to switch from
  * @param {Element} to - id of element to switch on
  */
-function switchSection(from, to){
-    if(from) from.style = "display:none"
-    if(to) to.style = "display:block"
-    from.style = "display:none;";
-    to.style = "display:block;";
+function switchSection(from, to) {
+    if (from) from.style = "display:none"
+    if (to) to.style = "display:block"
 }
 
 /**
@@ -120,11 +118,21 @@ function switchSection(from, to){
  * @param {Element} container - container, where chil will be cleared
  * @param {int} default_number - number of children to left
  */
-function returnToDefaultChildNumber(container, default_number=2){
-    while (container.children.length>default_number){
-         container.removeChild(container.firstChild)
+function returnToDefaultChildNumber(container, default_number = 2) {
+    while (container.children.length > default_number) {
+        container.removeChild(container.firstChild)
     }
+    number_inputs = container.querySelectorAll("input[name=number]")
+    type_inputs = container.querySelectorAll("input[name=product_type]")
+    for (const input of number_inputs) {
+        input.value = ""
+    }
+    for (const input of type_inputs) {
+        input.value = ""
+    }
+
 }
+
 
 /**
  * @deprecated - ?
@@ -136,18 +144,18 @@ function returnToDefaultChildNumber(container, default_number=2){
  * @param {string} based_on - id of element, which value decides about input toggling
  * @param {string} when - value, that should be, to display text input
  */
-function toggleUserInput(e, from, input_id, based_on = 'active_storage', when="new"){
+function toggleUserInput(e, from, input_id, based_on = 'active_storage', when = "new") {
     var newVal = document.getElementById(based_on).value;
-    if( newVal.localeCompare(when) === 0){
+    if (newVal.localeCompare(when) === 0) {
         document.getElementById(from).style = "display:block;"
         return true
     }
-    else{
-        document.getElementById(from).style = "display:none;"        
-        document.getElementById(input_id).value= "";
+    else {
+        document.getElementById(from).style = "display:none;"
+        document.getElementById(input_id).value = "";
         return false
     }
-    
+
 }
 
 /**
@@ -165,11 +173,12 @@ function setCurrentDate(date_input) {
  * @package gui_updaters
  *  @param {{button:Element,
     classname:string
-    handler: Function}[]} buttons - array of button descriptions - buttons, to deactivate
+    handler: Function,
+    ....}[]} buttons - array of button descriptions - buttons, to deactivate
  * @returns none
  */
-function deactivateActionButtons(buttons){
-    for(button_desription of buttons){
+function deactivateActionButtons(buttons) {
+    for (button_desription of buttons) {
 
         button_desription.button.onclick = _ => (alert('Недоступно во время изменения заказа'))
         button_desription.button.className = "disabled"
@@ -180,15 +189,18 @@ function deactivateActionButtons(buttons){
  * @package gui_updaters
  * @param {{button:Element,
             classname:string
-            handler: Function}[]} buttons - array of button descriptions
+            handler: Function,
+            text:string}[]} buttons - array of button descriptions
  */
-function activateActionButtons(buttons){
-    for(button_desription of buttons){
-        if(!('button' in button_desription) || !('classname' in button_desription) || !('handler' in button_desription)){
+function activateActionButtons(buttons) {
+    for (button_desription of buttons) {
+        if (!('button' in button_desription) || !('classname' in button_desription) || !('handler' in button_desription)) {
             console.log('Wrong format for ' + button_desription)
             continue
         }
         button_desription.button.onclick = button_desription.handler
         button_desription.button.className = button_desription.classname
+        button_desription.button.innerHTML = button_desription.text
+
     }
 }

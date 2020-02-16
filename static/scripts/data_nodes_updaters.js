@@ -17,17 +17,17 @@ function updateOrdersInfo(history) {
     if (history) key = 'history';
     else key = 'pending_orders'
     var orders = getItemFromStorage(sessionStorage, key);
-    elements.output_section.innerHTML = ""
+    containers_and_elements.output_section.innerHTML = ""
     if (orders.is_modified) {
         getOrders(data => createTable(data,            
                                      createButtonForOrderExpand,
-                                     elements.output_section,
+                                     containers_and_elements.output_section,
                                      append = true,
                                      order_ignore_columns))
     } else {
         createTable(orders.data,
                     createButtonForOrderExpand,
-                    elements.output_section,
+                    containers_and_elements.output_section,
                     append = true,
                     order_ignore_columns)
     }
@@ -43,8 +43,7 @@ function updateTypesInfo() {
         getNewTypes = sendRequest('/get_types/id/' + main_storage_id, "", "GET", sessionStorage, 'types')
         getNewTypes.then(_ => updateTypesInfo())
     } else {
-        selects = document.getElementsByName('product_type');
-        fillSelects(selects, available_types.data);
+        fillSelects([containers_and_elements.available_types_list], available_types.data);
     }
 }
 
@@ -105,4 +104,23 @@ function updateSelects() {
         fillSelects(selects, types.data)
 
     }
+}
+
+/**
+ * Update all data dictionaries, where is_modified flag is set to true 
+ * @package data_nodes_updaters
+ */
+function updateData(){
+    for(data_item of Object.values(data_dicts)){
+        if(data_item.is_modified){
+            var url = data_item.url_creation_handler() 
+            waitingAnimation(true)
+            sendRequest(url,"","GET").then(data => {
+                data_item.data = data
+                data_item.is_modified = false
+                waitingAnimation(false)
+            })
+        }
+    }
+
 }

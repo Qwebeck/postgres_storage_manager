@@ -42,13 +42,13 @@ function addOrder(e) {
     waitingAnimation(true)
     req.then(_ => {
         setModifiedFlagOnItem(sessionStorage, 'pending_orders')
-        returnToDefaultChildNumber(elements.specific_orders_container)
+        returnToDefaultChildNumber(containers_and_elements.specific_orders_container)
         updateOrdersInfo(false)
         waitingAnimation(false)
     })
         .catch(console.error)
-    elements.client_select_in_orders.className = ""
-    elements.supplier_select_in_orders.className = ""
+    containers_and_elements.client_select_in_orders.className = ""
+    containers_and_elements.supplier_select_in_orders.className = ""
     e.target.reset()
 }
 
@@ -56,18 +56,21 @@ function saveOrder(e) {
     e.target.innerHTML = "Изменить"
     e.target.onclick = editOrder
     activateActionButtons([action_buttons.complete_order_btn, action_buttons.delete_order_btn])
-    switchSection(elements.order_modification_section, elements.order_statistics_section)
+    switchSection(containers_and_elements.order_modification_section, containers_and_elements.order_statistics_section)
     var current_order_data = getItemFromStorage(sessionStorage, 'current_order')
     console.log(current_order_data)
     createTable(Object.values(current_order_data.data.products), null)
+    data_dicts.current_order_stats.is_modified = true
+    document.dispatchEvent(data_item_modified)
 
 }
 function editOrder(e) {
     e.target.innerHTML = "Сохранить"
     e.target.onclick = saveOrder
-    switchSection(elements.order_statistics_section, elements.order_modification_section)
+    switchSection(containers_and_elements.order_statistics_section, containers_and_elements.order_modification_section)
     var current_order_data = getItemFromStorage(sessionStorage, 'current_order')
-    var order_types = current_order_data.data.types
+    // var order_types = current_order_data.data.types
+    var order_types = Object.keys(data_dicts.current_order_types.data)
     var assigned_products = current_order_data.data.products
     var active_storage_id = sessionStorage.getItem('active_storage')
     var url = '/expand_types/id/' + active_storage_id + '/types/' + order_types.join(',')
@@ -75,9 +78,27 @@ function editOrder(e) {
     sendRequest(url, data, "GET")
         .then(data => {
             var avaiable_products = convertToObject('Серийный номер', data)
+            createLayoutForsSpecificOrderEditing()
             saveItemInStorage(sessionStorage, 'available_products_for_assigment', avaiable_products)
             createTable(data, markAssignedAndAddToggles)
         })
+
+    function createLayoutForsSpecificOrderEditing() {
+        console.log(data_dicts.current_order_types.data)
+        fillSelects([containers_and_elements.available_types_list],
+            Object.keys(data_dicts.current_order_types.data))
+        for ([type, number] of Object.entries(data_dicts.current_order_types.data)) {
+
+            addProductField(containers_and_elements.order_modification_specific_order_section,
+                (select, quantityInput) => {
+                    select.value = type
+                    quantityInput.value = number
+                },
+                null)
+        }
+        addProductField(containers_and_elements.order_modification_specific_order_section, null, 2)
+    }
+
     function markAssignedAndAddToggles(data, _, element) {
         var serial_number = data['Серийный номер']
         var action_name = "Привязать"
@@ -106,7 +127,7 @@ function editOrder(e) {
         }
         data = {
             products: assigned_products,
-            types: current_order.data.types
+            types: Object.keys(data_dicts.current_order_types.data)
         }
         saveItemInStorage(sessionStorage, 'current_order', data)
     }
@@ -116,8 +137,8 @@ function editOrder(e) {
 
 function expandForHistoryOrders(e) {
     waitingAnimation(true)
-    elements.query_section.style = 'display:block;'
-    elements.output_section.style = 'width:65%;'
+    containers_and_elements.query_section.style = 'display:block;'
+    containers_and_elements.output_section.style = 'width:65%;'
     order_id = e.target.value;
     url = '/expand_history_order/id/' + order_id
     get_sides_url = '/sides_in_order/id/' + order_id
@@ -126,7 +147,7 @@ function expandForHistoryOrders(e) {
     getOrderSides.then(data => {
         createTable(data,
             null,
-            elements.order_statistics_section,
+            containers_and_elements.order_statistics_section,
             false)
         return getSpecificProducts
     }
@@ -136,11 +157,11 @@ function expandForHistoryOrders(e) {
     function createLayoutForExpandedObjects(data) {
         createTable(data,
             null,
-            elements.output_section,
+            containers_and_elements.output_section,
         )
         waitingAnimation(false)
         switchToolbar(false, false)
-        switchSection(elements.orders_form, elements.order_statistics_section)
+        switchSection(containers_and_elements.orders_form, containers_and_elements.order_statistics_section)
 
     }
 
@@ -153,15 +174,18 @@ function expandForHistoryOrders(e) {
  */
 function expandForOrders(e) {
     var order_id = e.target.value;
+
+    sessionStorage.setItem('current_order_id', order_id)
+
     var order_url = '/expand_order/id/' + order_id
     var get_sides_url = '/sides_in_order/id/' + order_id
     var getOrderSides = sendRequest(get_sides_url, "", "GET")
     var getSpecificOrders = sendRequest(order_url, "", "GET")
     getOrderSides.then(data => {
-        createTable(data, 
-                   (data_row, _unused1, _unused) => sessionStorage.setItem('customer_id', data_row['Клиент']), 
-                    elements.order_statistics_section, 
-                    false)
+        createTable(data,
+            (data_row, _unused1, _unused) => sessionStorage.setItem('customer_id', data_row['Клиент']),
+            containers_and_elements.order_statistics_section,
+            false)
         return getSpecificOrders
     }
     ).then(createLayoutForExpandedObjects)
@@ -179,22 +203,29 @@ function expandForOrders(e) {
             var product_serial = data['Серийный номер']
             var product_type = data['Тип']
             current_order.data['products'][product_serial] = data
-            if (!current_order.data['types'].includes(product_type)) current_order.data['types'].push(product_type)
+            // if (!current_order.data['types'].includes(product_type)) current_order.data['types'].push(product_type)
             saveItemInStorage(sessionStorage, 'current_order', current_order.data)
+            if (product_type in data_dicts.current_order_types) {
+                data_dicts.current_order_types.data[product_type] += 1
+            }
+            else {
+                data_dicts.current_order_types.data[product_type] = 1
+            }
+
         }
         saveItemInStorage(sessionStorage, 'current_order', { 'products': {}, 'types': [] })
         ignore_columns = ['type_name', 'quantity', 'serial_number', 'number']
         createTable(data.available_products,
             saveDataAboutOrder,
-            elements.output_section,
+            containers_and_elements.output_section,
             false,
             ignore_columns)
         createTable(data.order_stats,
             null,
-            elements.order_statistics_section,
+            containers_and_elements.order_statistics_section,
             append = true)
-        switchToolbar(elements.orders_toolbar, elements.order_edit_toolbar)
-        switchSection(elements.orders_form, elements.order_statistics_section)
+        switchToolbar(containers_and_elements.orders_toolbar, containers_and_elements.order_edit_toolbar)
+        switchSection(containers_and_elements.orders_form, containers_and_elements.order_statistics_section)
         assignOrderIdToButtons(order_id)
 
     }
@@ -256,3 +287,15 @@ function deleteOrder(e) {
         }
     )
 }
+
+
+/**
+ * @package orders_logic
+ * Clear variables, that for order session.
+ */
+function clearTemporaryVars() {
+    sessionStorage.setItem('customer_id', "")
+    saveItemInStorage(sessionStorage, 'serial_numbers_for_current_order', [])
+    data_dicts.current_order_types.data = {}
+}
+

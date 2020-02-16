@@ -18,14 +18,14 @@ from src.queries import (client_supplier_query,
                          orders_from_to_query,
                          change_owner,
                          add_history_record,
-                         expand_history_order_query)
+                         expand_history_order_query,
+                         unbind_from_orders)
 
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, OperationalError
 import traceback
 
 class InvalidUsage(Exception):
     status_code = 400
-
     def __init__(self, message, status_code=None, payload=None):
         Exception.__init__(self)
         self.message = message
@@ -47,11 +47,21 @@ def handle_invalid_usage(error):
     response = response.to_dict()
     return jsonify(response), 400
 
+@app.errorhandler(OperationalError)
+def handle_invalid_usage(error):
+    response = InvalidUsage(
+        message='Потеряно соединение с сервером базы данных')
+    response.status_code = 500
+    response = response.to_dict()
+    return jsonify(response), 400
 
 @app.route('/')
 def main():
     return render_template('index.html')
 
+@app.route('/mock')
+def mock():
+    return 'ok'
 
 @app.route('/get_types/id/<string:owner_id>')
 def get_types(owner_id):
@@ -72,7 +82,7 @@ def count_types(owner_id):
 @app.route('/expand_types/id/<string:owner_id>/types/<string:type_name>')
 def get_details_about_type(owner_id, type_name):
     types = type_name.split(',')
-    result = expand_type_query(owner_id, [type_name]).all()
+    result = expand_type_query(owner_id, types).all()
     # result = pack_query_to_dict(result)
     return jsonify(result)
 
@@ -222,6 +232,7 @@ def complete_order(order_id):
     customer_id = data['customer']
     add_history_record(order_id, product_serial_numbers)
     change_owner(customer_id, product_serial_numbers)
+    unbind_from_orders(product_serial_numbers)
     return 'ok'
 
 

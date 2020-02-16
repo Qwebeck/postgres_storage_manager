@@ -178,8 +178,8 @@ def expand_order_query(order_id):
                             Products.additonal_info.label(
                                 'Дополнительная информация'),
                             count.c.number])
-                    .select_from(ProductsSupplierCanSupply).where(and_(Orders.order_id == order_id))
-                    .order_by(Products.type_name)
+                    .select_from(ProductsSupplierCanSupply).where(and_(Orders.order_id == order_id, or_(Products.appear_in_order == order_id, Products.appear_in_order == None)))
+                    .order_by(Products.type_name, Products.appear_in_order.asc())
                     .limit(100))
     return db.session.query(query)
 
@@ -204,6 +204,12 @@ def change_owner(client, serial_numbers):
                 }, synchronize_session=False)
     db.session.commit()
 
+def unbind_from_orders(serial_numbers):
+    db.session.query(Products).filter(Products.serial_number.in_(serial_numbers)).\
+    update({Products.appear_in_order: None
+                }, synchronize_session=False)
+    db.session.commit()
+    
 
 def add_history_record(order_id, serial_numbers):
     db.session.query(Orders).filter(Orders.order_id == order_id).\

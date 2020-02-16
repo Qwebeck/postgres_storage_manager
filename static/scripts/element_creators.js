@@ -45,7 +45,7 @@ function createHeader(data, ignore_columns, table) {
  * @param {boolean} append - append information to output section
  * @param {string[]} ignore_columns - columns from data, that shouldn't be added to table
  */
-function createTable(data, action, outputSection = elements.output_section, append = false, ignore_columns = []) {
+function createTable(data, action, outputSection = containers_and_elements.output_section, append = false, ignore_columns = []) {
     if (!append) outputSection.innerHTML = ""
     if (!data || data.length == 0) {
         var empty = document.createElement('h3')
@@ -132,20 +132,22 @@ function createElement(type, options = {}){
 }
 /**
  * Add new section with select in text input for type selection. Executed during order performing.
- * @param {string} container_id - id of container element
+ * @package element_creators
+ * @param {Element} container - container where to add new product fields
+ * @param {function(select, input)} action - action, to which will be passed newly created element.
  */
-function addProductField(container_id){
-    var quantityInputs = document.getElementsByName("number");
-    var available_types = getItemFromStorage(sessionStorage,'types');
-    if(!quantityInputs[quantityInputs.length - 2].value) return
-    const container = document.getElementById(container_id);
+function addProductField(container, action=null, last_entered_val_from_end_pos=2){
+    var quantityInputs = container.querySelectorAll("[name=number]");
+    // var available_types = getItemFromStorage(sessionStorage,'types');
+    if(last_entered_val_from_end_pos && quantityInputs[quantityInputs.length-last_entered_val_from_end_pos] && !quantityInputs[quantityInputs.length-last_entered_val_from_end_pos].value) return
     var prod_ord = createElement('div', {'class':'product_order', 'name':'product_order'})
-    var select = createElement('select',{'name':'product_type'})
-    var default_option = createElement('option',{'selected':'selected', 'value': 'default', 'innerHTML':'Тип'})
-    var quantityInput = createElement('input',{'type':'text','name':'number','placeholder':'Количество', 'onchange':_=> addProductField(container_id)})
-    select.appendChild(default_option);
-    fillSelects([select],available_types.data);
-    prod_ord.appendChild(select);
-    prod_ord.appendChild(quantityInput);
+    var data_input = createElement('input',{'type':'text','name':'product_type', 'list':'available_types', 'placeholder':'Тип', 'autocomplete':'off'})
+    var quantity_input = createElement('input',{'type':'text','name':'number','placeholder':'Количество', 'autocomplete':'off'})
+    quantity_input.onchange = _ => {
+        addProductField(container, null, 1)
+    }
+    if(action) action(data_input, quantity_input);
+    prod_ord.appendChild(data_input);
+    prod_ord.appendChild(quantity_input);
     container.appendChild(prod_ord);
 }

@@ -23,6 +23,7 @@ function activeStorageChanged(event){
 
 function addStorage(e){
     e.preventDefault()
+    if(!validateNewBusiness(containers_and_elements.business_addition_form)) return
     var addingStorageContainer = document.getElementById('new_storage_name')
     var newStorageInput = document.getElementById('new_storage')
     var newStorageName = newStorageInput.value

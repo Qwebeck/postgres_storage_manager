@@ -57,6 +57,8 @@ class Products(db.Model):
     product_condition = db.Column(db.Boolean, default=True)
     additonal_info = db.Column(db.String(100))
     adding_date = db.Column(db.DateTime, default=datetime.utcnow)
+    appear_in_order = db.Column(db.Integer,
+                                db.ForeignKey(f'{SCHEMA_NAME}.orders.order_id'))
 
     def __repr__(self):
         return f'{self.type_name} {self.serial_number}, produced by {self.producent}'

@@ -286,6 +286,7 @@ table{
 }
 #order_modification_section{
     display: none;
+    text-align: center;
 }
 
 .disabled{
