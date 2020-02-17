@@ -40,8 +40,10 @@
                 <div id='specific_order_modification'>
 
                 </div>
-                <input type="submit">
             </form>
+            <div id="order_sides">
+                
+            </div>
             <div id="order_statistics">
 
             </div>
@@ -50,21 +52,6 @@
 
             <div id="work_with_storage">
                 <h1 name='storage_header'></h1>
-
-                <!-- <form id="add_business" class="action" onsubmit="addBusiness(event)">
-                    <h1>Добавить организацию</h1>
-                    <input type="text" name='name' placeholder="Название" autocomplete="off">
-                    <input type="text" name='location' placeholder="Местоположение">
-                    <div>
-                        <input type="checkbox" name='is_supplier' value="true">
-                        <label for="is_supplier">Поставщик</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" name='is_client' value="true">
-                        <label for="is_client">Клиент</label>
-                    </div>
-                    <input class="action-button" type="submit">
-                </form> -->
                 <div id="add_on_storage">
                     <h1>Добавить товары на склад </h1>
                     <form id="storage_name" onsubmit="addStorage(event)">
@@ -154,9 +141,12 @@
             </label>
         </div>
         <div class="hidden" name="toolbar" id="order_edit_toolbar">
+            <button id='disable_editing_btn' class="tlb-btn order-button" onclick="editOrder(event)">Отменить</button>
             <button id='edit_order_btn' class="tlb-btn order-button" onclick="editOrder(event)">Изменить</button>
-            <button id='complete_order_btn' class="tlb-btn order-button" >Выполнить</button>
-            <button id='delete_order_btn' class="tlb-btn order-button" >Удалить</button>
+            <button id='save_new_specific_orders' class="tlb-btn order-button">Сохранить измененный заказ</button>
+            <button id='save_binded_products' class="tlb-btn order-button">Сохранить привязанные продукты</button>
+            <button id='complete_order_btn' class="tlb-btn order-button">Выполнить</button>
+            <button id='delete_order_btn' class="tlb-btn order-button">Удалить</button>
         </div>
         <div class="output_section" id="output_section">
         </div>

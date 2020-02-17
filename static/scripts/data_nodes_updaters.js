@@ -115,7 +115,10 @@ function updateData(){
         if(data_item.is_modified){
             var url = data_item.url_creation_handler() 
             waitingAnimation(true)
-            sendRequest(url,"","GET").then(data => {
+            var req = sendRequest(url,"","GET")
+            req.then(data => {
+                if(data_item.on_update) data_item.on_update(data) 
+                if(data_item.data_processor) data = data_item.data_processor(data)
                 data_item.data = data
                 data_item.is_modified = false
                 waitingAnimation(false)

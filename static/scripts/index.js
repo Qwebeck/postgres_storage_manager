@@ -28,7 +28,7 @@ var main_storage_id = "Головний склад, Вінниця";
 function init() {
     data_item_modified = new Event('data_item_modified')
     document.addEventListener('data_item_modified', updateData)
-    
+
     containers_and_elements = get_elements()
 
     action_buttons = get_action_btn_description()
@@ -45,17 +45,49 @@ function init() {
     updateHeaders()
 }
 
+/**
+ * Change is_modified on is_actual
+ */
 function get_data_dicts() {
     return {
-        current_order_types:{
+        current_order_types: {
             is_modified: false,
             url_creation_handler: mockUrl,
             data: {}
         },
-        current_order_descirption:{
+        current_order_sides: {
+            is_modified: false,
+            url_creation_handler: createOrderSidesUrl,
+            data: {}
+        },
+        current_order_description: {
             is_modified: false,
             url_creation_handler: createExpandOrderUrl,
-            data: {}
+            data: {},
+            data_processor: (data) => {
+                available_products = convertToObject('serial_number', data.available_products)
+                order_stats = convertToObject("Тип", data.order_stats)
+                return {
+                    available_products: available_products,
+                    order_stats: order_stats,
+                    order_types: data.order_stats.reduce((accumulator, el) => {
+                        accumulator[el['Тип']] = el['Требуеться']
+                        return accumulator
+                    }, {}),
+                    unbinded_products: new Set()
+                }
+            },
+            on_update: () => {
+                expandForOrders()
+            },
+            pack: () => {
+                return {
+                    available_products: data_dicts.current_order_description.data.available_products,
+                    order_stats: data_dicts.current_order_description.data.order_stats,
+                    order_types: data_dicts.current_order_description.data.order_types,
+                    unbinded_products: Array.from(data_dicts.current_order_description.data.unbinded_products)
+                }
+            }
         }
     }
 }
@@ -87,7 +119,8 @@ function get_elements() {
         order_creation_specific_order_section: document.getElementById('orders_on_specific_products'),
         order_modification_specific_order_section: document.getElementById('specific_order_modification'),
         available_types_list: document.getElementById('available_types'),
-        business_addition_form: document.getElementById('storage_name')
+        business_addition_form: document.getElementById('storage_name'),
+        order_sides_section: document.getElementById('order_sides')
     }
 }
 
@@ -96,20 +129,44 @@ function get_action_btn_description() {
         complete_order_btn: {
             button: document.getElementById('complete_order_btn'),
             classname: "tlb-btn order-button",
+            hidden_classname: "disabled",
             handler: completeOrder,
             text: "Выполнить"
         },
         delete_order_btn: {
             button: document.getElementById('delete_order_btn'),
             classname: "tlb-btn order-button",
+            hidden_classname: "disabled",
             handler: deleteOrder,
             text: "Удалить"
         },
         edit_order_btn: {
             button: document.getElementById('edit_order_btn'),
             classname: "tlb-btn order-button",
+            hidden_classname: "disabled",
             handler: editOrder,
             text: "Изменить"
+        },
+        save_new_specific_orders_btn: {
+            button: document.getElementById('save_new_specific_orders'),
+            classname: "tlb-btn order-button",
+            hidden_classname: "hidden",
+            handler: saveSpecificOrders,
+            text: "Сохранить измененный заказ"
+        },
+        save_binded_products_btn: {
+            button: document.getElementById('save_binded_products'),
+            classname: "tlb-btn order-button",
+            hidden_classname: "hidden",
+            handler: saveBindedProducts,
+            text: "Сохранить привязанные продукты"
+        },
+        disable_editing_btn: {
+            button: document.getElementById('disable_editing_btn'),
+            classname: "tlb-btn order-button",
+            hidden_classname: "hidden",
+            handler: disableEditing,
+            text: "Отменить"
         }
     }
 }

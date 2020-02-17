@@ -2,9 +2,11 @@
  * Turns on/off waiting animation. 
  * @package gui_updaters
  * @param {boolean} condition 
+ * @param {int} parent_id - id of element, that called waiting section
  */
-function waitingAnimation(condition) {
+function waitingAnimation(condition, parent_id) {
     if (condition == true) {
+        waiting_section_parent_id = parent_id
         containers_and_elements.block_with_waiting_anim.style = "display:block;"
     }
     else {
@@ -181,7 +183,8 @@ function deactivateActionButtons(buttons) {
     for (button_desription of buttons) {
 
         button_desription.button.onclick = _ => (alert('Недоступно во время изменения заказа'))
-        button_desription.button.className = "disabled"
+        button_desription.button.className = button_desription.hidden_classname 
+        // "disabled"
     }
 }
 /**

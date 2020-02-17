@@ -107,6 +107,12 @@ input[type=text]:focus, textarea:focus {
 .product_order * {
     width: 50%;
 }
+
+#order_modification_section .product_order * {
+    width: 30%;
+}
+ 
+
 /* .product_order select{ */
     /* min-width: 40%; */
 /* } */
@@ -298,4 +304,10 @@ table{
 }
 .disabled:hover{
     background-color: lightgray;
+}
+#query_section table{
+    margin-top: 50px;
+}
+table{
+    margin-bottom: 0px;
 }

@@ -27,7 +27,7 @@ function sendRequest(url, data, method, storage = null, storage_key = null) {
     return new Promise(function (resolve, reject) {
         var xhr = new XMLHttpRequest();
         xhr.open(method, url, true);
-        xhr.timeout = 2000;
+        xhr.timeout = 5000;
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.onreadystatechange = function () {
             if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
@@ -45,7 +45,7 @@ function sendRequest(url, data, method, storage = null, storage_key = null) {
             }
         };
         xhr.ontimeout = function () {
-            reject('timeout')
+            reject('Слишком долгое время соединения')
         }
         xhr.send(JSON.stringify(data))
     }
@@ -54,16 +54,16 @@ function sendRequest(url, data, method, storage = null, storage_key = null) {
 
 
 
-/**
- * Return element by name.  
- * @param {Array<String>} labels - possible labels
- * @param {Array} values - data from which you need to get the element
- * @param {string} name - name of element you want get
- * @returns {*} value
- */
-function getByName(labels, values, name) {
-    return values[labels.indexOf(name)]
-}
+// /**
+//  * Return element by name.  
+//  * @param {Array<String>} labels - possible labels
+//  * @param {Array} values - data from which you need to get the element
+//  * @param {string} name - name of element you want get
+//  * @returns {*} value
+//  */
+// function getByName(labels, values, name) {
+//     return values[labels.indexOf(name)]
+// }
 
 
 /**
@@ -174,7 +174,8 @@ function parseHeadersFromDataRow(data_row, ignore_columns) {
 
 
 /**
- * Covert array of objects to object of objects
+ * Covenrt array of objects to object of objects with `key_name` as key
+ * @package utils
  * @param {string} key_name - field, that will be used as key
  * @param {{}} data - data, that should be converted
  * @returns {{}} Object

@@ -37,7 +37,7 @@ function addStorage(e){
             sessionStorage.setItem('active_storage', newStorageName)
             getInfoAboutStorage(newStorageName, on_work_with_storage)
         }        
-    )
+    ).catch(msg => alert(msg))
     
 
     addingStorageContainer.style = "display:none;"

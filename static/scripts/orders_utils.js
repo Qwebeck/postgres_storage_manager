@@ -32,6 +32,11 @@ function createExpandOrderUrl(){
     var order_id = sessionStorage.getItem('current_order_id')
     return '/expand_order/id/' + order_id
 }
+function createOrderSidesUrl(){
+    var order_id = sessionStorage.getItem('current_order_id')
+    return '/sides_in_order/id/' + order_id
+}
+
 /**
  * Assign order_id to every button, that have order-button class
  *@param order_id 

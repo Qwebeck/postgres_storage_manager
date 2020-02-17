@@ -19,13 +19,20 @@ from src.queries import (client_supplier_query,
                          change_owner,
                          add_history_record,
                          expand_history_order_query,
-                         unbind_from_orders)
+                         unbind_from_order,
+                         bind_to_order,
+                         modify_specific_orders,
+                         unbind_all_from_order,
+                         expand_type_query_2
+                         )
 
 from sqlalchemy.exc import IntegrityError, OperationalError
 import traceback
 
+
 class InvalidUsage(Exception):
     status_code = 400
+
     def __init__(self, message, status_code=None, payload=None):
         Exception.__init__(self)
         self.message = message
@@ -47,6 +54,7 @@ def handle_invalid_usage(error):
     response = response.to_dict()
     return jsonify(response), 400
 
+
 @app.errorhandler(OperationalError)
 def handle_invalid_usage(error):
     response = InvalidUsage(
@@ -55,13 +63,47 @@ def handle_invalid_usage(error):
     response = response.to_dict()
     return jsonify(response), 400
 
+
 @app.route('/')
 def main():
     return render_template('index.html')
 
+
+@app.route('/edit_order/id/<int:order_id>/modify_specific_orders', methods=["POST"])
+def edit_specific_orders(order_id):
+    order_data = request.get_json()
+    types = order_data['types'].items()
+    modify_specific_orders(order_id, types)
+    return 'ok'
+
+
+@app.route('/edit_order/id/<int:order_id>/modify_binded_products', methods=["POST"])
+def edit_binded_products(order_id):
+    order_data = request.get_json()
+    binded_products = order_data['available_products'].keys()
+    unbind_all_from_order(order_id)
+    bind_to_order(order_id, binded_products)
+    return 'ok'
+
+
+@app.route('/edit_order/id/<int:order_id>', methods=["POST"])
+def edit_order(order_id):
+    order_data = request.get_json()
+    binded_products = order_data['available_products'].keys()
+    d = order_data['order_stats']
+    # change to types here
+    order_stats = [(key, d[key]['Требуеться']) for key in d.keys()]
+    unbinded_products = order_data['unbinded_products']
+    unbind_all_from_order(order_id)
+    bind_to_order(order_id, binded_products)
+    modify_specific_orders(order_id, order_stats)
+    return 'ok', 200
+
+
 @app.route('/mock')
 def mock():
     return 'ok'
+
 
 @app.route('/get_types/id/<string:owner_id>')
 def get_types(owner_id):
@@ -78,11 +120,17 @@ def count_types(owner_id):
     # result = pack_query_to_dict(result)
     return jsonify(result)
 
-
 @app.route('/expand_types/id/<string:owner_id>/types/<string:type_name>')
-def get_details_about_type(owner_id, type_name):
+def get_details_about_type_2(owner_id, type_name):
     types = type_name.split(',')
-    result = expand_type_query(owner_id, types).all()
+    result = expand_type_query_2(owner_id, types).all()
+    # result = pack_query_to_dict(result)
+    return jsonify(result)
+
+@app.route('/expand_types/id/<string:owner_id>/types/<string:type_name>/for_order/<int:order_id>')
+def get_details_about_type(owner_id, type_name, order_id):
+    types = type_name.split(',')
+    result = expand_type_query(owner_id, types, order_id).all()
     # result = pack_query_to_dict(result)
     return jsonify(result)
 
@@ -107,9 +155,12 @@ def delete_product():
     db.session.commit()
     return 'ok'
 
+
 @app.route('/delete_order/id/<int:order_id>', methods=['DELETE'])
 def delete_order(order_id):
     try:
+        db.session.query(Products).filter(Products.appear_in_order == order_id)\
+                  .update({Products.appear_in_order: None}, synchronize_session=False)
         db.session.query(SpecificOrders)\
             .filter_by(order_id=order_id)\
             .delete()
@@ -121,7 +172,6 @@ def delete_order(order_id):
         tb = traceback.format_exc()
         print(tb)
     return 'ok'
-
 
 
 @app.route('/info_about_businesses')
@@ -194,19 +244,17 @@ def expand_order(order_id):
     products_with_stats = {}
     for row in query:
         if row.type_name not in products_with_stats.keys():
-            print(row.number)
             item_stats = {
                 'Тип': row.type_name,
-                'Останеться': row.number-row.quantity if row.number else -row.quantity,
+                'Останеться': row.number - (row.quantity or 0) if row.number else -row.quantity or 0,
                 'Требуеться': row.quantity,
-
             }
             item_info['order_stats'].append(item_stats)
             # Quantity - number of products ,that should be added to order
             # Used, because query returns all products, that satisfy conditions
             products_with_stats[row.type_name] = row.quantity
         # row.serial_number equviavalent to product existance.
-        if row.serial_number and products_with_stats[row.type_name] > 0:
+        if row.serial_number and (products_with_stats[row.type_name] or 0) > 0:
             item_info['available_products'].append(row)
             products_with_stats[row.type_name] -= 1
             # item_info['order_stats'][row.type_name]['Останеться'] += 1
@@ -232,7 +280,7 @@ def complete_order(order_id):
     customer_id = data['customer']
     add_history_record(order_id, product_serial_numbers)
     change_owner(customer_id, product_serial_numbers)
-    unbind_from_orders(product_serial_numbers)
+    unbind_from_order(product_serial_numbers)
     return 'ok'
 
 

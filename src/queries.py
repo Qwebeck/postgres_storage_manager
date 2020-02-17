@@ -40,19 +40,40 @@ def statistics_query(owner_id):
         .group_by(Products.type_name)
     return aliased(query)
 
-
-def expand_type_query(owner_id: str, type_name: []) -> 'session query':
+def expand_type_query_2(owner_id: str, type_name: []) -> 'session query':
     """Return query, where provide detaled info about available products for this type."""
     query = select([Products.type_name.label('Тип'),
                     Products.serial_number.label('Серийный номер'),
                     Products.producent.label('Изготовитель'),
                     Products.model.label('Модель'),
                     Products.product_condition.label('Состояние'),
-                    Products.additonal_info.label('Инфо')])\
+                    Products.additonal_info.label('Инфо'),
+                    Products.appear_in_order.label('Привязан к заказу')])\
+        .where(
+        and_(
+            Products.owner_id == owner_id,               
+            Products.type_name.in_(type_name)
+        )
+    )
+    return db.session.query(aliased(query))
+
+def expand_type_query(owner_id: str, type_name: [], order_id) -> 'session query':
+    """Return query, where provide detaled info about available products for this type."""
+    query = select([Products.type_name.label('Тип'),
+                    Products.serial_number.label('Серийный номер'),
+                    Products.producent.label('Изготовитель'),
+                    Products.model.label('Модель'),
+                    Products.product_condition.label('Состояние'),
+                    Products.additonal_info.label('Инфо'),
+                    Products.appear_in_order.label('Привязан к заказу')])\
         .where(
         and_(
             Products.owner_id == owner_id,
-            Products.type_name.in_(type_name)
+            and_(
+                or_(Products.appear_in_order == None,
+                    Products.appear_in_order == order_id),
+                Products.type_name.in_(type_name)
+            )
         )
     )
     return db.session.query(aliased(query))
@@ -91,6 +112,7 @@ def get_orders_query(history, business_id):
     Clients = aliased(Businesses)
     Suppliers = aliased(Businesses)
     query = db.session.query(
+        Orders.order_id.label("Ид заказа"),
         Orders.order_date.label("Дата заказа"),
         Clients.name.label("Клиент"),
         Suppliers.name.label("Поставщик"),
@@ -99,7 +121,8 @@ def get_orders_query(history, business_id):
         .join(Suppliers, Suppliers.name == Orders.supplier_id)\
         .filter(or_(Orders.supplier_id == business_id, Orders.client_id == business_id))
     if not history:
-        query = query.filter(Orders.completion_date == None).order_by(Orders.order_date.desc())
+        query = query.filter(Orders.completion_date == None).order_by(
+            Orders.order_date.desc())
     else:
         query = db.session.query(
             Orders.completion_date.label("Дата выполнения"),
@@ -111,14 +134,14 @@ def get_orders_query(history, business_id):
         query = query.filter(and_(Orders.completion_date != None,
                                   or_(Orders.supplier_id == business_id,
                                       Orders.client_id == business_id)))\
-                     .order_by(Orders.completion_date.desc())
+            .order_by(Orders.completion_date.desc())
     return query
 
 
 """
 Super query in SQL
 WITH a AS (
-    SELECT type_name, supplier_id, quantity 
+    SELECT type_name, supplier_id, quantity
     FROM b2b.orders
     JOIN b2b.specific_orders USING (order_id)
     WHERE order_id = 11),
@@ -150,7 +173,8 @@ def expand_order_query(order_id):
 
         Max number of returned rows is 100
      """
-    SupplierProducts = outerjoin(Orders, Products, Orders.supplier_id == Products.owner_id)
+    SupplierProducts = outerjoin(
+        Orders, Products, Orders.supplier_id == Products.owner_id)
     print(SupplierProducts)
     count = aliased(
         select([
@@ -177,6 +201,7 @@ def expand_order_query(order_id):
                             Products.producent.label('Производитель'),
                             Products.additonal_info.label(
                                 'Дополнительная информация'),
+                            Products.appear_in_order,
                             count.c.number])
                     .select_from(ProductsSupplierCanSupply).where(and_(Orders.order_id == order_id, or_(Products.appear_in_order == order_id, Products.appear_in_order == None)))
                     .order_by(Products.type_name, Products.appear_in_order.asc())
@@ -204,12 +229,58 @@ def change_owner(client, serial_numbers):
                 }, synchronize_session=False)
     db.session.commit()
 
-def unbind_from_orders(serial_numbers):
+
+def unbind_from_order(serial_numbers):
+    print(serial_numbers)
     db.session.query(Products).filter(Products.serial_number.in_(serial_numbers)).\
-    update({Products.appear_in_order: None
+        update({Products.appear_in_order: None
                 }, synchronize_session=False)
     db.session.commit()
-    
+
+def unbind_all_from_order(order_id):
+    db.session.query(Products).filter_by(appear_in_order=order_id).\
+        update({Products.appear_in_order: None
+                }, synchronize_session=False)
+    db.session.commit()
+
+
+def bind_to_order(order_id, serial_numbers):
+    db.session.query(Products).filter(Products.serial_number.in_(serial_numbers)).\
+        update({Products.appear_in_order: order_id
+                }, synchronize_session=False)
+    db.session.commit()
+
+
+def modify_specific_orders(order_id, order_stats):
+    presented_types = db.session.query(SpecificOrders.type_name)\
+                        .filter(SpecificOrders.order_id == order_id)\
+                        .all()
+
+    presented_types = [p_type.type_name for p_type in presented_types]
+    deleted_types = set(presented_types)
+    for p_type, amount in order_stats:
+        deleted_types -= set([p_type])
+        if p_type in presented_types:
+            db.session.query(SpecificOrders).filter(and_(SpecificOrders.type_name == p_type,
+                                                         SpecificOrders.order_id == order_id))\
+                .update({SpecificOrders.quantity: amount}, synchronize_session=False)
+        else:
+            new_specific_order = SpecificOrders(
+                order_id=order_id,
+                quantity=amount,
+                type_name=p_type
+            )
+            db.session.add(new_specific_order)
+
+    print('I want to delete')
+    print(deleted_types)
+    for p_type in deleted_types:
+        db.session.query(SpecificOrders)\
+        .filter(and_(SpecificOrders.type_name == p_type, SpecificOrders.order_id == order_id))\
+        .delete()
+
+    db.session.commit()
+
 
 def add_history_record(order_id, serial_numbers):
     db.session.query(Orders).filter(Orders.order_id == order_id).\
@@ -217,8 +288,8 @@ def add_history_record(order_id, serial_numbers):
                 }, synchronize_session=False)
 
     db.session.query(SpecificOrders)\
-              .filter_by(order_id=order_id)\
-              .delete()
+        .filter_by(order_id=order_id)\
+        .delete()
 
     products = db.session.query(Products).filter(
         Products.serial_number.in_(serial_numbers)).all()

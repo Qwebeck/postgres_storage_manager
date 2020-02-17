@@ -105,7 +105,7 @@ function fillSelects(list_of_selects, options, never_delete = 'new') {
             // Object.values(item) - makes fill select independent from item key
             var value = Object.values(item)[0]
             if (optionExists(select, value)) continue;
-            var new_option = createElement('option',{'innerHTML':value, 'value':value})
+            var new_option = createElement('option', { 'innerHTML': value, 'value': value })
             select.appendChild(new_option)
         }
     }
@@ -119,9 +119,9 @@ function fillSelects(list_of_selects, options, never_delete = 'new') {
  * @param {{key:value}} options - options, that will be assigned to element
  * @returns {Element} created element.
  */
-function createElement(type, options = {}){
+function createElement(type, options = {}) {
     var element = document.createElement(type)
-    for (const [key, val] of Object.entries(options)){
+    for (const [key, val] of Object.entries(options)) {
         if (key.localeCompare("innerHTML") == 0) {
             element.innerHTML = val
             continue
@@ -134,20 +134,26 @@ function createElement(type, options = {}){
  * Add new section with select in text input for type selection. Executed during order performing.
  * @package element_creators
  * @param {Element} container - container where to add new product fields
- * @param {function(select, input)} action - action, to which will be passed newly created element.
+ * @param {function(select, input, container)} new_el_processor - action, to which will be passed newly created element.
+ * @param {function()} onchange - will be executed on element change
  */
-function addProductField(container, action=null, last_entered_val_from_end_pos=2){
+function addProductField(container, new_el_processor = null, last_entered_val_from_end_pos = 2, onchange = null) {
     var quantityInputs = container.querySelectorAll("[name=number]");
     // var available_types = getItemFromStorage(sessionStorage,'types');
-    if(last_entered_val_from_end_pos && quantityInputs[quantityInputs.length-last_entered_val_from_end_pos] && !quantityInputs[quantityInputs.length-last_entered_val_from_end_pos].value) return
-    var prod_ord = createElement('div', {'class':'product_order', 'name':'product_order'})
-    var data_input = createElement('input',{'type':'text','name':'product_type', 'list':'available_types', 'placeholder':'Тип', 'autocomplete':'off'})
-    var quantity_input = createElement('input',{'type':'text','name':'number','placeholder':'Количество', 'autocomplete':'off'})
-    quantity_input.onchange = _ => {
-        addProductField(container, null, 1)
+    if (last_entered_val_from_end_pos && quantityInputs[quantityInputs.length - last_entered_val_from_end_pos] && !quantityInputs[quantityInputs.length - last_entered_val_from_end_pos].value) return
+    var prod_ord = createElement('div', { 'class': 'product_order', 'name': 'product_order' })
+    var data_input = createElement('input', { 'type': 'text', 'name': 'product_type', 'list': 'available_types', 'placeholder': 'Тип', 'autocomplete': 'off' })
+    var quantity_input = createElement('input', { 'type': 'text', 'name': 'number', 'placeholder': 'Количество', 'autocomplete': 'off' })
+    if (!onchange) {
+        quantity_input.onchange = _ => {
+            addProductField(container, null, 1)
+        }
+    } else {
+        quantity_input.onchange = onchange
     }
-    if(action) action(data_input, quantity_input);
     prod_ord.appendChild(data_input);
     prod_ord.appendChild(quantity_input);
     container.appendChild(prod_ord);
+    if (new_el_processor) new_el_processor(data_input, quantity_input, prod_ord);
+
 }
