@@ -19,17 +19,17 @@ function updateOrdersInfo(history) {
     var orders = getItemFromStorage(sessionStorage, key);
     containers_and_elements.output_section.innerHTML = ""
     if (orders.is_modified) {
-        getOrders(data => createTable(data,            
-                                     createButtonForOrderExpand,
-                                     containers_and_elements.output_section,
-                                     append = true,
-                                     order_ignore_columns))
+        getOrders(data => createTable(data,
+            createButtonForOrderExpand,
+            containers_and_elements.output_section,
+            append = true,
+            order_ignore_columns))
     } else {
         createTable(orders.data,
-                    createButtonForOrderExpand,
-                    containers_and_elements.output_section,
-                    append = true,
-                    order_ignore_columns)
+            createButtonForOrderExpand,
+            containers_and_elements.output_section,
+            append = true,
+            order_ignore_columns)
     }
 }
 
@@ -107,23 +107,25 @@ function updateSelects() {
 }
 
 /**
- * Update all data dictionaries, where is_modified flag is set to true 
+ * Update all data dictionaries, where is_modified flag is set to true.
  * @package data_nodes_updaters
+ * @returns {Promise} - promise, that resolves only after all data was updated
  */
-function updateData(){
-    for(data_item of Object.values(data_dicts)){
-        if(data_item.is_modified){
-            var url = data_item.url_creation_handler() 
-            waitingAnimation(true)
-            var req = sendRequest(url,"","GET")
-            req.then(data => {
-                if(data_item.on_update) data_item.on_update(data) 
-                if(data_item.data_processor) data = data_item.data_processor(data)
+function updateData() {
+    var itemUpdators = []
+    for (let data_item of Object.values(data_dicts)) {
+        if (data_item.is_modified) {
+            var url = data_item.url_creation_handler()
+            var req = sendRequest(url, "", "GET")
+            let toUpdate = req.then(data => {
+                if (data_item.on_update) data_item.on_update(data)
+                if (data_item.data_processor) data = data_item.data_processor(data)
                 data_item.data = data
                 data_item.is_modified = false
-                waitingAnimation(false)
-            })
+                return Promise.resolve()
+                })
+            itemUpdators.push(toUpdate)
         }
     }
-
+    return Promise.all(itemUpdators)
 }
