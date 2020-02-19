@@ -14,7 +14,8 @@ class StorageManager extends Section {
         toolbar,
         existing_businesses,
         storage_statistics,
-        active_business) {
+        active_business,
+        productTypeManager) {
         super(
             productAddingArea,
             productsArea,
@@ -23,6 +24,8 @@ class StorageManager extends Section {
         this.storage_statistics = storage_statistics
         this.existing_types = Array.isArray(storage_statistics.data) ? storage_statistics.data.map(x => x["Tип"]) : []
         this.active_business = active_business
+
+        this.product_type_manager = productTypeManager
 
         document.addEventListener(existing_businesses.emit, bussListener, false)
         document.addEventListener(storage_statistics.emit, statListener, false)
@@ -61,8 +64,12 @@ class StorageManager extends Section {
          }
     }
     expandForTypes(e) {
-        console.log(e.target.value)
+        e.preventDefault()
+        let type = e.target.value
+        productTypeManager.update(type)
+        productTypeManager.show()
     }
+
     addNewBusiness(new_business) {
         let url = '/add_new_business'
         let data = {

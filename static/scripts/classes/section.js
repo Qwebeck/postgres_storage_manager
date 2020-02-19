@@ -12,6 +12,8 @@ class Section{
         this.toolbar = toolbar
     }   
     show(){
+        if(active_section) active_section.hide()
+        active_section = this
         updateData().then(
             () => {
                 this.leftColumn.element.className = this.leftColumn.default_class || "active"
@@ -23,7 +25,7 @@ class Section{
     hide(){
         for(var element of this.subareas) if(element.hide) element.hide()   
         this.leftColumn.element.className = "hidden"
-        this.rightColumn.element.style = "hidden"
+        this.rightColumn.element.className = "hidden"
         if(this.toolbar) this.toolbar.element.className = "hidden"   
     }
 }

@@ -45,15 +45,23 @@ function init() {
     toolbars = getToolbars()
     areas = getAreas()
     data_dicts = getDataDicts()
-    
+
+    productTypeManager = new ProductTypeManager(
+        areas.product_managing_area,
+        areas.product_output_area,
+        null,
+        data_dicts.current_storage_statistics
+    )
+
     storageManager = new StorageManager(
-        productAddingArea = areas.control_panel_for_storage_manager,
-        productsArea = areas.storage_output_area,
-        toolbar = null,
-        existing_businesses = data_dicts.existing_businesses,
-        storage_statistics = data_dicts.current_storage_statistics,
-        active_business = main_storage_id)
-    
+        areas.control_panel_for_storage_manager,
+        areas.storage_output_area,
+        null,
+        data_dicts.existing_businesses,
+        data_dicts.current_storage_statistics,
+        main_storage_id,
+        productTypeManager)
+
     storageManager.hide()
     // activateActionButtons(Object.values(action_buttons))
     containers_and_elements.storage_form.reset()
@@ -61,7 +69,7 @@ function init() {
     updateData().then(
         () => {
             waitingAnimation(false)
-            
+
         }
     )
     updateHeaders()
@@ -159,11 +167,21 @@ function getAreas() {
                 forms.storage_order_creator_form
             ]
         },
+        product_managing_area: {
+            element: document.getElementById('product_managing_area'),
+            subareas: []
+        },        
         storage_output_area: {
             element: document.getElementById('storage_output_section'),
             default_class: "output_section",
             subareas: []
+        },
+        product_output_area: {
+            element: document.getElementById('product_output_area'),
+            default_class: "output_section",
+            subareas: []
         }
+
     }
 }
 
