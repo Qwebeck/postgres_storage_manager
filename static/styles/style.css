@@ -50,7 +50,7 @@ table th,td{
 #work_with_storage,
 #work_with_orders,
 #work_with_suppliers{
-    display: none;
+    /* display: none; */
     flex-direction: column;
 }
 form{
@@ -310,4 +310,8 @@ table{
 }
 table{
     margin-bottom: 0px;
+}
+
+.active {
+    display: block;
 }

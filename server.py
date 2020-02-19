@@ -102,16 +102,16 @@ def edit_order(order_id):
 
 @app.route('/mock')
 def mock():
-    return 'ok'
+    return jsonify(None)
 
-
+# V Depracated
 @app.route('/get_types/id/<string:owner_id>')
 def get_types(owner_id):
     available_types = types_query(owner_id).all()
     # result = pack_query_to_dict(available_types)
     return jsonify(available_types)
 
-
+# V
 @app.route('/get_statistics/id/<string:owner_id>')
 def count_types(owner_id):
     """Return count of products on storage."""
@@ -119,6 +119,7 @@ def count_types(owner_id):
     result = db.session.query(statistics).all()
     # result = pack_query_to_dict(result)
     return jsonify(result)
+
 
 @app.route('/expand_types/id/<string:owner_id>/types/<string:type_name>')
 def get_details_about_type_2(owner_id, type_name):
@@ -173,7 +174,8 @@ def delete_order(order_id):
         print(tb)
     return 'ok'
 
-
+# Info about existing businesse
+# V
 @app.route('/info_about_businesses')
 def get_info():
     query = businesses_query()
@@ -181,7 +183,7 @@ def get_info():
     # result = pack_query_to_dict(result)
     return jsonify(result)
 
-
+# V
 @app.route('/get_orders/<string:business_id>')
 def get_orders(business_id):
     history = request.args.get('history')
@@ -220,21 +222,21 @@ def add_order():
     db.session.commit()
     return 'ok'
 
-
+# V
 @app.route('/sides_in_order/id/<int:order_id>')
 def get_order_sides(order_id):
     result = db.session.query(client_supplier_query(order_id)).all()
     # result = pack_query_to_dict(result)
     return jsonify(result)
 
-
+# V
 @app.route('/expand_history_order/id/<int:order_id>')
 def expand_history_order(order_id):
     result = expand_history_order_query(order_id).all()
     # result = pack_query_to_dict(result)
     return jsonify(result)
 
-
+# V
 @app.route('/expand_order/id/<int:order_id>')
 def expand_order(order_id):
     query = expand_order_query(order_id).all()

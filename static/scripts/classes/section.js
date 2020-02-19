@@ -1,23 +1,29 @@
 class Section{
     /**
      * 
-     * @param {{element:Element, defaultClass: string}} leftColumn 
-     * @param {{element:Element, defaultClass: string}} rightColumn 
-     * @param {{element:Element, defaultClass: string}} toolbar 
+     * @param {{element:Element,default_class:string,subareas:[{element:Element,hide:function()}]}} leftColumn 
+     * @param {{element:Element,default_class:string,subareas:[{element:Element,hide:function()}]}} rightColumn 
+     * @param {{element:Element, default_class: string}} toolbar 
      */
     constructor(leftColumn, rightColumn, toolbar){
         this.leftColumn = leftColumn
         this.rightColumn = rightColumn
+        this.subareas = leftColumn.subareas.concat(rightColumn.subareas)
         this.toolbar = toolbar
     }   
-    show(){ 
-        this.leftColumn.element.className = this.leftColumn.defaultClass
-        this.rightColumn.element.className = this.rightColumn.defaultClass
-        this.toolbar.element.className = this.toolbar.defaultClass    
+    show(){
+        updateData().then(
+            () => {
+                this.leftColumn.element.className = this.leftColumn.default_class || "active"
+                this.rightColumn.element.className = this.rightColumn.default_class || "active"
+                if(this.toolbar) this.toolbar.className = this.toolbar.default_class || "active"
+            } 
+        )
     }
     hide(){
-        this.leftColumn.element.style = "display:none;"
-        this.rightColumn.element.style = "display:none;"
-        this.toolbar.element.style = "display:none;"   
+        for(var element of this.subareas) if(element.hide) element.hide()   
+        this.leftColumn.element.className = "hidden"
+        this.rightColumn.element.style = "hidden"
+        if(this.toolbar) this.toolbar.element.className = "hidden"   
     }
 }
