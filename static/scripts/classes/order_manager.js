@@ -4,14 +4,16 @@ class OrderManager extends Section {
         toolbar,
         pending_orders,
         order_sides,
-        order_description) {
+        order_description,
+        concrete_order_manager) {
         super(
             productAddingArea,
             ordersDiplayArea,
             toolbar)
         this.pending_orders = pending_orders
         this.order_sides = order_sides 
-        this.order_description = order_description 
+        this.order_description = order_description
+        this.concrete_order_manager = concrete_order_manager 
 
 
         document.addEventListener('pending_orders_update', poUpdate)
@@ -31,11 +33,10 @@ class OrderManager extends Section {
             ['order_id']
         )
     }
-    /**Change here, because this. refers to button */
     expandForOrder(order_id){
         sessionStorage.setItem('current_order_id', order_id)
-        this.order_sides.is_actual = false
         this.order_description.is_actual = false
+        this.concrete_order_manager.show()
         document.dispatchEvent(data_item_modified)
     }
 }

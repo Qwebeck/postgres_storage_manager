@@ -55,11 +55,11 @@ function get_data_dicts() {
             url_creation_handler: mockUrl,
             data: {}
         },
-        current_order_sides: {
-            is_modified: false,
-            url_creation_handler: createOrderSidesUrl,
-            data: {}
-        },
+        // current_order_sides: {
+        //     is_modified: false,
+        //     url_creation_handler: createOrderSidesUrl,
+        //     data: {}
+        // },
         current_order_description: {
             is_modified: false,
             url_creation_handler: createExpandOrderUrl,
@@ -70,6 +70,7 @@ function get_data_dicts() {
                 return {
                     available_products: available_products,
                     order_stats: order_stats,
+                    order_sides: data.order_sides,
                     order_types: data.order_stats.reduce((accumulator, el) => {
                         accumulator[el['Тип']] = el['Требуеться']
                         return accumulator

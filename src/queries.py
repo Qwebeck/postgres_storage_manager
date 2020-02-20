@@ -192,16 +192,19 @@ def expand_order_query(order_id):
         .outerjoin(count, SpecificOrders.type_name == count.c.type_name)
 
     # column dublicates, that needed because of there usage in server.py
-    query = aliased(select([SpecificOrders.type_name.label('Тип'),
+    query = aliased(select([Orders.supplier_id,
+                            Orders.client_id,
+                            SpecificOrders.type_name.label('Тип'),
+                            Products.producent.label('Производитель'),
+                            Products.model.label('Модель'),
+                            Products.appear_in_order.label('Привязан к заказу'),
                             SpecificOrders.type_name,
                             SpecificOrders.quantity,
                             Products.serial_number,
                             Products.serial_number.label('Серийный номер'),
-                            Products.model.label('Модель'),
-                            Products.producent.label('Производитель'),
+                            
                             Products.additonal_info.label(
                                 'Дополнительная информация'),
-                            Products.appear_in_order,
                             count.c.number])
                     .select_from(ProductsSupplierCanSupply).where(and_(Orders.order_id == order_id, or_(Products.appear_in_order == order_id, Products.appear_in_order == None)))
                     .order_by(Products.type_name, Products.appear_in_order.asc())

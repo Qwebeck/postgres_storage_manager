@@ -8,8 +8,12 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/style.css') }}">
     <script src="{{ url_for('static',filename='scripts/classes/index.js') }}"></script>
     <script src="{{ url_for('static',filename='scripts/classes/utils.js') }}"></script>
+    <script src="{{ url_for('static',filename='scripts/classes/areas.js') }}"></script>
+    <script src="{{ url_for('static',filename='scripts/classes/subareas.js') }}"></script>
+    <script src="{{ url_for('static',filename='scripts/classes/data_dicts.js') }}"></script>
     <script src="{{ url_for('static',filename='scripts/classes/section.js') }}"></script>
     <script src="{{ url_for('static',filename='scripts/classes/order_manager.js') }}"></script>
+    <script src="{{ url_for('static',filename='scripts/classes/concrete_order_manager.js') }}"></script>
     <script src="{{ url_for('static',filename='scripts/classes/storage_manager.js') }}"></script>
     <script src="{{ url_for('static',filename='scripts/classes/product_type_manager.js') }}"></script>
     <script src="{{ url_for('static',filename='scripts/classes/url_creators.js') }}"></script>
@@ -55,11 +59,13 @@
 
                 </div>
             </form>
-            <div id="order_sides">
+            <div id="concrete_order_description_area" class="hidden">
+                <div id="order_sides">
 
-            </div>
-            <div id="order_statistics" class="hidden">
-
+                </div>
+                <div id="order_statistics">
+    
+                </div>    
             </div>
 
             <div id='waiting' class="waiting"></div>
@@ -171,6 +177,15 @@
             <span class="slider round"></span>
         </label>
     </div>
+    
+    <div class="hidden" name="toolbar" id="concrete_order_toolbar">
+        <button id='edit_order_btn' class="tlb-btn order-button" onclick="editOrder(event)">Изменить</button>
+        <button id='complete_order_btn' class="tlb-btn order-button">Выполнить</button>
+        <button id='delete_order_btn' class="tlb-btn order-button">Удалить</button>
+    </div>
+
+
+
     <div class="hidden" name="toolbar" id="order_edit_toolbar">
         <button id='disable_editing_btn' class="tlb-btn order-button" onclick="editOrder(event)">Отменить</button>
         <button id='edit_order_btn' class="tlb-btn order-button" onclick="editOrder(event)">Изменить</button>
@@ -188,7 +203,10 @@
     <div class="output_section hidden" id="product_output_area">
 
     </div>
-    <div class="hidden" id="order_output_area">
+    <div class="output_section hidden" id="product_in_order_area">
+
+    </div>
+    <div class="output_section hidden" id="order_output_area">
 
     </div>
 

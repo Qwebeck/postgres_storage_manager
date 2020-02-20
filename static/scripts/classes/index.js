@@ -47,9 +47,19 @@ function init() {
     // action_buttons = get_action_btn_description()
     forms = getForms()
     datalists = getDatalist()
+    sections = getSections()
     toolbars = getToolbars()
     areas = getAreas()
     data_dicts = getDataDicts()
+    
+    concreteOrderManager = new ConcreteOrderManager(
+        areas.concrete_order_description_area,
+        areas.products_in_order_output_area,
+        toolbars.concrete_order_toolbar,
+        sections.order_sides_section,
+        sections.order_statistics_section,
+        data_dicts.current_actual_order_description
+    )
 
     orderManager = new OrderManager(
         areas.order_completion_area,
@@ -57,7 +67,8 @@ function init() {
         toolbars.order_lookup_toolbar,
         data_dicts.orders_with_current_storage,
         data_dicts.current_order_sides,
-        data_dicts.current_order_description
+        data_dicts.current_actual_order_description,
+        concreteOrderManager
     )
 
 
@@ -93,154 +104,7 @@ function init() {
 
 }
 
-/**
- * Return data used by application in dict format
- */
-function getDataDicts() {
-    return {
-        existing_businesses: {
-            is_actual: false,
-            url_creation_handler: () => '/info_about_businesses',
-            data_processor: (data) => data.map(x => x['name']),
-            data: {},
-            related_list: datalists.available_businesses_dl,
-            emit: 'bussines_update'
-        },
-        types_on_storage: {
-            is_actual: false,
-            url_creation_handler: (storage_id) => '/get_types/id/' + (storage_id || main_storage_id),
-            data: {}
-        },
-        current_storage_statistics: {
-            is_actual: false,
-            url_creation_handler: () => createUrlDependingOnStorage('/get_statistics/id/'),
-            related_list: datalists.available_types_dl,
-            emit: 'statistics_update',
-            data: {}
-        },
-        orders_with_current_storage: {
-            is_actual: false,
-            url_creation_handler: () => createUrlDependingOnStorage('/get_orders/'),
-            emit: 'pending_orders_update',
-            data: {}
-        },
-        current_order_sides: {
-            is_actual: false,
-            url_creation_handler: () => createUrlDependingOnOrder('/sides_in_order/id/'),
-            data: {}
-        },
-        current_actual_order_description: {
-            is_actual: false,
-            data: {},
-            url_creation_handler: () => createUrlDependingOnOrder('/expand_order/id/'),
-            data_processor: (data) => {
-                if (!data) return null
-                available_products = convertToObject('serial_number', data.available_products)
-                order_stats = convertToObject("Тип", data.order_stats)
-                return {
-                    available_products: available_products,
-                    order_stats: order_stats,
-                    order_types: data.order_stats.reduce((accumulator, el) => {
-                        accumulator[el['Тип']] = el['Требуеться']
-                        return accumulator
-                    }, {}),
-                    unbinded_products: new Set()
-                }
-            },
-            pack: () => {
-                return {
-                    available_products: data_dicts.current_order_description.data.available_products,
-                    order_stats: data_dicts.current_order_description.data.order_stats,
-                    order_types: data_dicts.current_order_description.data.order_types,
-                    unbinded_products: Array.from(data_dicts.current_order_description.data.unbinded_products)
-                }
-            }
-        },
-        current_history_order_description: {
-            is_actual: false,
-            url_creation_handler: () => createUrlDependingOnOrder('/expand_history_order/id'),
-            data: {}
-        }
-    }
-}
 
-
-function getForms() {
-    return {
-        storage_selector_form: {
-            element: document.getElementById('storage_name'),
-            hide: () => document.getElementById('storage_name').reset()
-        },
-        storage_type_completion_form: {
-            element: document.getElementById('add_on_storage_form'),
-            hide: () => document.getElementById('add_on_storage_form').reset()
-        },
-        orders_order_creation_form: {
-            element: document.getElementById('orders_add'),
-            hide: () => document.getElementById('orders_add').reset()
-        },
-        orders_specific_order_creation_section: {
-            element: document.getElementById('orders_on_specific_products'),
-            hide: () => returnToDefaultChildNumber(document.getElementById('orders_on_specific_products'),2)
-        }
-    }
-}
-
-
-function getAreas() {
-    return {
-        control_panel_for_storage_manager: {
-            element: document.getElementById('work_with_storage'),
-            subareas: [
-                forms.storage_selector_form,
-                forms.storage_type_completion_form
-            ]
-        },
-        product_managing_area: {
-            element: document.getElementById('product_managing_area'),
-            subareas: []
-        },
-        order_completion_area: {
-            element: document.getElementById('order_creation'),
-            subareas: [
-                forms.orders_order_creation_form,
-                forms.orders_specific_order_creation_section
-            ]
-        },
-        storage_output_area: {
-            element: document.getElementById('storage_output_section'),
-            default_class: "output_section",
-            subareas: []
-        },
-        product_output_area: {
-            element: document.getElementById('product_output_area'),
-            default_class: "output_section",
-            subareas: []
-        },
-        order_output_area: {
-            element: document.getElementById('order_output_area'),
-            default_class: "output_section",
-            subareas: []
-            
-        }
-
-    }
-}
-
-function getDatalist() {
-    return {
-        available_businesses_dl: document.getElementById('available_businesses'),
-        available_types_dl: document.getElementById('available_types')
-    }
-}
-
-function getToolbars() {
-    return {
-        order_lookup_toolbar: {
-            element: document.getElementById('orders_toolbar'),
-        }
-    }
-}
 /**Should be deleted */
 
 

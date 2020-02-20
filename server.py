@@ -128,6 +128,7 @@ def get_details_about_type_2(owner_id, type_name):
     # result = pack_query_to_dict(result)
     return jsonify(result)
 
+
 @app.route('/expand_types/id/<string:owner_id>/types/<string:type_name>/for_order/<int:order_id>')
 def get_details_about_type(owner_id, type_name, order_id):
     types = type_name.split(',')
@@ -241,7 +242,8 @@ def expand_history_order(order_id):
 def expand_order(order_id):
     query = expand_order_query(order_id).all()
     item_info = {'available_products': [],
-                 'order_stats': []
+                 'order_stats': [],
+                 'order_sides': {'Клиент': query[0].client_id, 'Поставщик': query[0].supplier_id}
                  }
     products_with_stats = {}
     for row in query:
