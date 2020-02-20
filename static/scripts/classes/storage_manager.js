@@ -44,7 +44,8 @@ class StorageManager extends Section {
             this.rightColumn.element)
     }
     availableBusinessesUpdate(data) {
-        updateDatalist(this.existing_businesses.related_list, data)
+        let active_business = sessionStorage.getItem('active_storage')
+        updateDatalist(this.existing_businesses.related_list, data, [active_business])
     }
 
     switchBusiness(e) {
@@ -53,6 +54,8 @@ class StorageManager extends Section {
         
         if (this.existing_businesses.data.includes(new_business)) {
             sessionStorage.setItem('active_storage', new_business)
+            updateHeaders()
+            updateDatalist(this.existing_businesses.related_list,this.existing_businesses.data, [new_business])            
             for (let item in data_dicts) {
                 if (item === 'existing_businesses') continue
                 data_dicts[item].is_actual = false

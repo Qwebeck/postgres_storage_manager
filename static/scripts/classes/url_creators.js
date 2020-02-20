@@ -13,3 +13,4 @@ function createUrlDependingOnStorage(endpoint){
     var current_storage = sessionStorage.getItem('active_storage')
     return endpoint + current_storage
 }
+

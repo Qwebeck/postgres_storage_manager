@@ -9,6 +9,7 @@
     <script src="{{ url_for('static',filename='scripts/classes/index.js') }}"></script>
     <script src="{{ url_for('static',filename='scripts/classes/utils.js') }}"></script>
     <script src="{{ url_for('static',filename='scripts/classes/section.js') }}"></script>
+    <script src="{{ url_for('static',filename='scripts/classes/order_manager.js') }}"></script>
     <script src="{{ url_for('static',filename='scripts/classes/storage_manager.js') }}"></script>
     <script src="{{ url_for('static',filename='scripts/classes/product_type_manager.js') }}"></script>
     <script src="{{ url_for('static',filename='scripts/classes/url_creators.js') }}"></script>
@@ -42,7 +43,7 @@
         <button class="menu-item" onclick="storageManager.show()">
             Работа со складом
         </button>
-        <button class="menu-item" onclick="storageManager.hide()">
+        <button class="menu-item" onclick="orderManager.show()">
             Работа с заказами
         </button>
     </div>
@@ -110,81 +111,86 @@
                 </div>
 
             </div>
+            <div id="order_creation" class="hidden">
+                <form class="form-container" class="action" id='orders_add' onsubmit="addOrder(event)">
+                    <h1 name='storage_header'></h1>
+                    <h1 id='action_name_1'>Добавить новый заказ</h1>
+                    <!-- <div class="product_order">
+                        <div> -->
+                    <h4>Заказчик</h4>
+                    <input type="text" name="product_type" list="available_businesses" placeholder="Заказчик"
+                        autocomplete="off">
 
-            <form class="form-container" class="action" id='orders_add' onsubmit="addOrder(event)">
-                <h1 name='storage_header'></h1>
-                <h1 id='action_name_1'>Добавить новый заказ</h1>
-                <div class="product_order">
-                    <div>
-                        <h4>Заказчик</h4>
-                        <select name="clients_ids" id="clients_ids">
-                            <option selected="selected" value="default">Заказчик</option>
-                        </select>
-                    </div>
-                    <div>
-                        <h4>Поставщик</h4>
-                        <select name="suppliers_ids" id="suppliers_ids">
-                            <option selected="selected" value="default">Поставщик</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="product_order">
-                    <h4>Дата заказа</h4>
-                    <input id='order_date' type="date">
-                </div>
-                <h4>Товары</h4>
-                <div id='orders_on_specific_products'>
-                    <div name="product_order" class="product_order">
-                        <input type="text" name="product_type" list="available_types" placeholder="Tип"
-                            autocomplete="off">
-                        <input type="text" name="number" placeholder="Количество" autocomplete="off"
-                            onchange="addProductField(containers_and_elements.order_creation_specific_order_section, null, 1)">
-                    </div>
-
-                    <div name="product_order" class="product_order">
-                        <input type="text" name="product_type" list="available_types" placeholder="Tип"
-                            autocomplete="off">
-                        <input type="text" name="number" placeholder="Количество" autocomplete="off"
-                            onchange="addProductField(containers_and_elements.order_creation_specific_order_section, null, 1)">
-                    </div>
+                    <!-- <select name="clients_ids" id="clients_ids">
+                                <option selected="selected" value="default">Заказчик</option>
+                            </select> -->
+                    <!-- </div> -->
+                    <!-- <div>
+                            <h4>Поставщик</h4>
+                            <select name="suppliers_ids" id="suppliers_ids">
+                                <option selected="selected" value="default">Поставщик</option>
+                            </select>
+                        </div> -->
+            <!-- </div> -->
+            <div class="product_order">
+                <h4>Дата заказа</h4>
+                <input id='order_date' type="date">
+            </div>
+            <h4>Товары</h4>
+            <div id='orders_on_specific_products'>
+                <div name="product_order" class="product_order">
+                    <input type="text" name="product_type" list="available_types" placeholder="Tип" autocomplete="off">
+                    <input type="text" name="number" placeholder="Количество" autocomplete="off"
+                        onchange="addProductField(containers_and_elements.order_creation_specific_order_section, null, 1)">
                 </div>
 
+                <div name="product_order" class="product_order">
+                    <input type="text" name="product_type" list="available_types" placeholder="Tип" autocomplete="off">
+                    <input type="text" name="number" placeholder="Количество" autocomplete="off"
+                        onchange="addProductField(containers_and_elements.order_creation_specific_order_section, null, 1)">
+                </div>
+            </div>
 
-                <input class="action-button" type="submit">
+
+            <input class="action-button" type="submit">
             </form>
-        </div>
-        <div class="hidden" name="toolbar" id="orders_toolbar">
-            <form id="order_history" onsubmit="showForPeriod(event)">
-                <label for="from_date">Заказы от</label>
-                <input type="date" id="from_date">
-                <label for="to_date">до</label>
-                <input type="date" id="to_date">
-                <input class="tlb-btn" type="submit" value="Найти">
-            </form>
-            <span>История</span>
-            <label class="switch">
-                <input type="checkbox" id='is_history' checked='' onchange="showHistory(event)">
-                <span class="slider round"></span>
-            </label>
-        </div>
-        <div class="hidden" name="toolbar" id="order_edit_toolbar">
-            <button id='disable_editing_btn' class="tlb-btn order-button" onclick="editOrder(event)">Отменить</button>
-            <button id='edit_order_btn' class="tlb-btn order-button" onclick="editOrder(event)">Изменить</button>
-            <button id='save_new_specific_orders' class="tlb-btn order-button">Сохранить измененный заказ</button>
-            <button id='save_binded_products' class="tlb-btn order-button">Сохранить привязанные продукты</button>
-            <button id='complete_order_btn' class="tlb-btn order-button">Выполнить</button>
-            <button id='delete_order_btn' class="tlb-btn order-button">Удалить</button>
-        </div>
-        <div class="output_section hidden" id="output_section">
 
         </div>
-        <div class="output_section hidden" id="storage_output_section">
+    </div>
+    <div class="hidden" name="toolbar" id="orders_toolbar">
+        <form id="order_history" onsubmit="showForPeriod(event)">
+            <label for="from_date">Заказы от</label>
+            <input type="date" id="from_date">
+            <label for="to_date">до</label>
+            <input type="date" id="to_date">
+            <input class="tlb-btn" type="submit" value="Найти">
+        </form>
+        <span>История</span>
+        <label class="switch">
+            <input type="checkbox" id='is_history' checked='' onchange="showHistory(event)">
+            <span class="slider round"></span>
+        </label>
+    </div>
+    <div class="hidden" name="toolbar" id="order_edit_toolbar">
+        <button id='disable_editing_btn' class="tlb-btn order-button" onclick="editOrder(event)">Отменить</button>
+        <button id='edit_order_btn' class="tlb-btn order-button" onclick="editOrder(event)">Изменить</button>
+        <button id='save_new_specific_orders' class="tlb-btn order-button">Сохранить измененный заказ</button>
+        <button id='save_binded_products' class="tlb-btn order-button">Сохранить привязанные продукты</button>
+        <button id='complete_order_btn' class="tlb-btn order-button">Выполнить</button>
+        <button id='delete_order_btn' class="tlb-btn order-button">Удалить</button>
+    </div>
+    <div class="output_section hidden" id="output_section">
 
-        </div>
-        <div class="output_section hidden" id="product_output_area">
+    </div>
+    <div class="output_section hidden" id="storage_output_section">
 
-        </div>
+    </div>
+    <div class="output_section hidden" id="product_output_area">
 
+    </div>
+    <div class="hidden" id="order_output_area">
+
+    </div>
 
 
     </div>

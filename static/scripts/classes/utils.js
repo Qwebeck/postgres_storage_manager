@@ -121,10 +121,11 @@ function convertToObject(key_name, data) {
  * of Objects with one key and one value:  {key:value} 
  * @package element_creators
  * @param {Element[]} list_of_selects - list of selects, to fill with new options, provided in data
- * @param {[]} options - list of new options
+ * @param {string[]} options - list of new options
+ * @param {string[]} ignore - options, that should be ignored
  * @param
  */
-function updateDatalist(datalist, options) {
+function updateDatalist(datalist, options, ignore = []) {
     if (!options) {
         console.log('fillSelects: No options provided.')
         return
@@ -135,7 +136,7 @@ function updateDatalist(datalist, options) {
         if (typeof item === 'object') value = Object.values(item)[0]
         else value = item
 
-        if (optionExists(datalist, value)) continue;
+        if (optionExists(datalist, value) || ignore.includes(value)) continue;
         let new_option = createElement('option', { 'innerHTML': value, 'value': value })
         datalist.appendChild(new_option)
     }
@@ -283,3 +284,52 @@ const formToDict = elements => [].reduce.call(elements, (data, element) => {
     if (isValidElement(element)) data[element.name] = element.value
     return data
 }, {})
+
+
+/**
+ * Remove elements, that was added to container dynamically
+ * @param {Element} container - container, where chil will be cleared
+ * @param {int} default_number - number of children to left
+ */
+function returnToDefaultChildNumber(container, default_number = 2) {
+    while (container.children.length > default_number) {
+        container.removeChild(container.firstChild)
+    }
+    number_inputs = container.querySelectorAll("input[name=number]")
+    type_inputs = container.querySelectorAll("input[name=product_type]")
+    for (const input of number_inputs) {
+        input.value = ""
+    }
+    for (const input of type_inputs) {
+        input.value = ""
+    }
+
+}
+
+/**
+ * Add new section with select in text input for type selection. Executed during order performing.
+ * @package element_creators
+ * @param {Element} container - container where to add new product fields
+ * @param {function(select, input, container)} new_el_processor - action, to which will be passed newly created element.
+ * @param {function()} onchange - will be executed on element change
+ */
+function addProductField(container, new_el_processor = null, last_entered_val_from_end_pos = 2, onchange = null) {
+    var quantityInputs = container.querySelectorAll("[name=number]");
+    // var available_types = getItemFromStorage(sessionStorage,'types');
+    if (last_entered_val_from_end_pos && quantityInputs[quantityInputs.length - last_entered_val_from_end_pos] && !quantityInputs[quantityInputs.length - last_entered_val_from_end_pos].value) return
+    var prod_ord = createElement('div', { 'class': 'product_order', 'name': 'product_order' })
+    var data_input = createElement('input', { 'type': 'text', 'name': 'product_type', 'list': 'available_types', 'placeholder': 'Тип', 'autocomplete': 'off' })
+    var quantity_input = createElement('input', { 'type': 'text', 'name': 'number', 'placeholder': 'Количество', 'autocomplete': 'off' })
+    if (!onchange) {
+        quantity_input.onchange = _ => {
+            addProductField(container, null, 1)
+        }
+    } else {
+        quantity_input.onchange = onchange
+    }
+    prod_ord.appendChild(data_input);
+    prod_ord.appendChild(quantity_input);
+    container.appendChild(prod_ord);
+    if (new_el_processor) new_el_processor(data_input, quantity_input, prod_ord);
+
+}

@@ -1,7 +1,17 @@
+/**
+ * Two problems:
+ * 1. No. 1 - different library version. 
+ * Solution:
+ *      1. Create wrappers everywhere
+ *      2. Create setup.py
+ *      3. Docker image
+ * 2. Problem with encodings in database 
+ */
+
 var active_section = null
 var active_toolbar = null
 // Change on query
-var main_storage_id = "Головний склад, Вінниця";
+var main_storage_id = "Головний офіс, Вінниця";
 
 /*
 Code convetions:
@@ -23,11 +33,6 @@ Code convetions:
  * active_storage - active storage
  */
 
-var active_section = null
-var active_toolbar = null
-// Change on query
-var main_storage_id = "Головний офіс, Вінниця";
-
 
 
 function init() {
@@ -45,6 +50,16 @@ function init() {
     toolbars = getToolbars()
     areas = getAreas()
     data_dicts = getDataDicts()
+
+    orderManager = new OrderManager(
+        areas.order_completion_area,
+        areas.order_output_area,
+        toolbars.order_lookup_toolbar,
+        data_dicts.orders_with_current_storage,
+        data_dicts.current_order_sides,
+        data_dicts.current_order_description
+    )
+
 
     productTypeManager = new ProductTypeManager(
         areas.product_managing_area,
@@ -91,6 +106,11 @@ function getDataDicts() {
             related_list: datalists.available_businesses_dl,
             emit: 'bussines_update'
         },
+        types_on_storage: {
+            is_actual: false,
+            url_creation_handler: (storage_id) => '/get_types/id/' + (storage_id || main_storage_id),
+            data: {}
+        },
         current_storage_statistics: {
             is_actual: false,
             url_creation_handler: () => createUrlDependingOnStorage('/get_statistics/id/'),
@@ -101,6 +121,7 @@ function getDataDicts() {
         orders_with_current_storage: {
             is_actual: false,
             url_creation_handler: () => createUrlDependingOnStorage('/get_orders/'),
+            emit: 'pending_orders_update',
             data: {}
         },
         current_order_sides: {
@@ -150,9 +171,17 @@ function getForms() {
             element: document.getElementById('storage_name'),
             hide: () => document.getElementById('storage_name').reset()
         },
-        storage_order_creator_form: {
+        storage_type_completion_form: {
             element: document.getElementById('add_on_storage_form'),
             hide: () => document.getElementById('add_on_storage_form').reset()
+        },
+        orders_order_creation_form: {
+            element: document.getElementById('orders_add'),
+            hide: () => document.getElementById('orders_add').reset()
+        },
+        orders_specific_order_creation_section: {
+            element: document.getElementById('orders_on_specific_products'),
+            hide: () => returnToDefaultChildNumber(document.getElementById('orders_on_specific_products'),2)
         }
     }
 }
@@ -164,13 +193,20 @@ function getAreas() {
             element: document.getElementById('work_with_storage'),
             subareas: [
                 forms.storage_selector_form,
-                forms.storage_order_creator_form
+                forms.storage_type_completion_form
             ]
         },
         product_managing_area: {
             element: document.getElementById('product_managing_area'),
             subareas: []
-        },        
+        },
+        order_completion_area: {
+            element: document.getElementById('order_creation'),
+            subareas: [
+                forms.orders_order_creation_form,
+                forms.orders_specific_order_creation_section
+            ]
+        },
         storage_output_area: {
             element: document.getElementById('storage_output_section'),
             default_class: "output_section",
@@ -180,6 +216,12 @@ function getAreas() {
             element: document.getElementById('product_output_area'),
             default_class: "output_section",
             subareas: []
+        },
+        order_output_area: {
+            element: document.getElementById('order_output_area'),
+            default_class: "output_section",
+            subareas: []
+            
         }
 
     }
@@ -194,7 +236,9 @@ function getDatalist() {
 
 function getToolbars() {
     return {
-
+        order_lookup_toolbar: {
+            element: document.getElementById('orders_toolbar'),
+        }
     }
 }
 /**Should be deleted */

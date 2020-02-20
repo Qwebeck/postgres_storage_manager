@@ -18,7 +18,7 @@ class Section{
             () => {
                 this.leftColumn.element.className = this.leftColumn.default_class || "active"
                 this.rightColumn.element.className = this.rightColumn.default_class || "active"
-                if(this.toolbar) this.toolbar.className = this.toolbar.default_class || "active"
+                if(this.toolbar) this.toolbar.element.className = this.toolbar.default_class || "active-toolbar"
             } 
         )
     }
