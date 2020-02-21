@@ -106,6 +106,7 @@ def mock():
 def get_types(owner_id):
     available_types = types_query(owner_id).all()
     # result = pack_query_to_dict(available_types)
+    available_types = [item._asdict() for item in available_types]
     return jsonify(available_types)
 
 # V
@@ -115,6 +116,7 @@ def count_types(owner_id):
     statistics = statistics_query(owner_id)
     result = db.session.query(statistics).all()
     # result = pack_query_to_dict(result)
+    result = [item._asdict() for item in result]
     return jsonify(result)
 
 
@@ -123,6 +125,7 @@ def get_details_about_type_2(owner_id, type_name):
     types = type_name.split(',')
     result = expand_type_query_2(owner_id, types).all()
     # result = pack_query_to_dict(result)
+    result = [item._asdict() for item in result]
     return jsonify(result)
 
 
@@ -130,6 +133,7 @@ def get_details_about_type_2(owner_id, type_name):
 def get_details_about_type(owner_id, type_name, order_id):
     types = type_name.split(',')
     result = expand_type_query(owner_id, types, order_id).all()
+    result = [item._asdict() for item in result]
     # result = pack_query_to_dict(result)
     return jsonify(result)
 
@@ -179,6 +183,7 @@ def get_info():
     query = businesses_query()
     result = db.session.query(query).all()
     # result = pack_query_to_dict(result)
+    result = [item._asdict() for item in result]
     return jsonify(result)
 
 # V
@@ -186,6 +191,7 @@ def get_info():
 def get_orders(business_id):
     history = request.args.get('history')
     result = get_orders_query(history, business_id).all()
+    result = [item._asdict() for item in result]
     # result = pack_query_to_dict(result)
     return jsonify(result)
 
@@ -198,6 +204,8 @@ def orders_in_period(from_, to, business_id):
     # result = pack_query_to_dict(result)
     if not result:
         result = None
+    else:
+        result = [item._asdict() for item in result]
     return jsonify(result)
 
 
@@ -225,6 +233,7 @@ def add_order():
 def get_order_sides(order_id):
     result = db.session.query(client_supplier_query(order_id)).all()
     # result = pack_query_to_dict(result)
+    result = [item._asdict() for item in result]
     return jsonify(result)
 
 # V
@@ -242,7 +251,7 @@ def expand_history_order(order_id):
         if item.type_name not in products_with_stats.keys():
             products_with_stats[item.type_name] = 0
 
-        order_info['available_products'].append(item)
+        order_info['available_products'].append(item._asdict())
         products_with_stats[item.type_name] += 1
 
     order_info['order_stats'] = [{'Тип': i_type, 'Реализовано': amount} for i_type, amount in products_with_stats.items()]
@@ -275,7 +284,7 @@ def expand_order(order_id):
             products_with_stats[row.type_name] = row.quantity
         # row.serial_number equviavalent to product existance.
         if row.serial_number and (products_with_stats[row.type_name] or 0) > 0:
-            item_info['available_products'].append(row)
+            item_info['available_products'].append(row._asdict())
             products_with_stats[row.type_name] -= 1
             # item_info['order_stats'][row.type_name]['Останеться'] += 1
     return jsonify(item_info)
