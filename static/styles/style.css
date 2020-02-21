@@ -108,7 +108,7 @@ input[type=text]:focus, textarea:focus {
     width: 50%;
 }
 
-#order_modification_section .product_order * {
+#specific_order_editing_area .product_order * {
     width: 30%;
 }
  

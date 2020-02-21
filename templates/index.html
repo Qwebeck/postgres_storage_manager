@@ -16,6 +16,7 @@
     <script src="{{ url_for('static',filename='scripts/classes/concrete_order_manager.js') }}"></script>
     <script src="{{ url_for('static',filename='scripts/classes/storage_manager.js') }}"></script>
     <script src="{{ url_for('static',filename='scripts/classes/product_type_manager.js') }}"></script>
+    <script src="{{ url_for('static',filename='scripts/classes/order_editor.js') }}"></script>
     <script src="{{ url_for('static',filename='scripts/classes/url_creators.js') }}"></script>
     <script src="{{ url_for('static',filename='scripts/validators.js') }}"></script>
 
@@ -67,7 +68,12 @@
     
                 </div>    
             </div>
+            <div id="specific_order_editing_area" class="hidden">
+                <h1>Изменение заказа</h1>
+                <form id="specific_order_editing_order_param">
 
+                </form>
+            </div>
             <div id='waiting' class="waiting"></div>
             <div id="product_managing_area" class="hidden">
 
@@ -118,13 +124,13 @@
 
             </div>
             <div id="order_creation" class="hidden">
-                <form class="form-container" class="action" id='orders_add' onsubmit="addOrder(event)">
+                <form class="form-container" class="action" id='orders_add' onsubmit="orderManager.addOrder(event)">
                     <h1 name='storage_header'></h1>
                     <h1 id='action_name_1'>Добавить новый заказ</h1>
                     <!-- <div class="product_order">
                         <div> -->
                     <h4>Заказчик</h4>
-                    <input type="text" name="product_type" list="available_businesses" placeholder="Заказчик"
+                    <input type="text" name="clients_ids" list="available_businesses" placeholder="Заказчик"
                         autocomplete="off">
 
                     <!-- <select name="clients_ids" id="clients_ids">
@@ -158,7 +164,7 @@
             </div>
 
 
-            <input class="action-button" type="submit">
+            <input class="action-button" type="submit" value="Добавить заказ">
             </form>
 
         </div>
@@ -179,20 +185,16 @@
     </div>
     
     <div class="hidden" name="toolbar" id="concrete_order_toolbar">
-        <button id='edit_order_btn' class="tlb-btn order-button" onclick="editOrder(event)">Изменить</button>
-        <button id='complete_order_btn' class="tlb-btn order-button">Выполнить</button>
-        <button id='delete_order_btn' class="tlb-btn order-button">Удалить</button>
+        <button id='edit_order_btn' class="tlb-btn order-button" onclick="concreteOrderManager.editOrder()">Изменить</button>
+        <button id='complete_order_btn' class="tlb-btn order-button" onclick="concreteOrderManager.completeOrder()">Выполнить</button>
+        <button id='delete_order_btn' class="tlb-btn order-button" onclick="concreteOrderManager.deleteOrder()">Удалить</button>
     </div>
 
 
 
     <div class="hidden" name="toolbar" id="order_edit_toolbar">
-        <button id='disable_editing_btn' class="tlb-btn order-button" onclick="editOrder(event)">Отменить</button>
-        <button id='edit_order_btn' class="tlb-btn order-button" onclick="editOrder(event)">Изменить</button>
-        <button id='save_new_specific_orders' class="tlb-btn order-button">Сохранить измененный заказ</button>
-        <button id='save_binded_products' class="tlb-btn order-button">Сохранить привязанные продукты</button>
-        <button id='complete_order_btn' class="tlb-btn order-button">Выполнить</button>
-        <button id='delete_order_btn' class="tlb-btn order-button">Удалить</button>
+        <button id='edit_order_btn' class="tlb-btn order-button" onclick="orderEditor.saveModifiedOrder(event)">Сохранить всё</button>
+        <button id='disable_editing_btn' class="tlb-btn order-button" onclick="concreteOrderManager.show()">Отменить</button>
     </div>
     <div class="output_section hidden" id="output_section">
 
@@ -207,6 +209,9 @@
 
     </div>
     <div class="output_section hidden" id="order_output_area">
+
+    </div>
+    <div class="output_section hidden" id="editing_output_area">
 
     </div>
 

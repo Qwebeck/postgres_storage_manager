@@ -52,14 +52,22 @@ function init() {
     areas = getAreas()
     data_dicts = getDataDicts()
     
+    orderEditor = new OrderEditor(
+        areas.order_editing_section,
+        areas.order_editing_output_section,
+        toolbars.order_editing_toolbar,
+        data_dicts.current_actual_order_description
+    )   
+    
     concreteOrderManager = new ConcreteOrderManager(
         areas.concrete_order_description_area,
         areas.products_in_order_output_area,
         toolbars.concrete_order_toolbar,
         sections.order_sides_section,
         sections.order_statistics_section,
-        data_dicts.current_actual_order_description
-    )
+        data_dicts.current_actual_order_description,
+        data_dicts.orders_with_current_storage
+        )
 
     orderManager = new OrderManager(
         areas.order_completion_area,

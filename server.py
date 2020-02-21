@@ -89,10 +89,11 @@ def edit_binded_products(order_id):
 @app.route('/edit_order/id/<int:order_id>', methods=["POST"])
 def edit_order(order_id):
     order_data = request.get_json()
-    binded_products = order_data['available_products'].keys()
-    d = order_data['order_stats']
+    binded_products = order_data['binded_products']
+    # d = order_data['order_stats']
     # change to types here
-    order_stats = [(key, d[key]['Требуеться']) for key in d.keys()]
+    # order_stats = [(item['Тип'], item['Требуеться']) for item in d]
+    order_stats = order_data['order_types'].items()
     unbinded_products = order_data['unbinded_products']
     unbind_all_from_order(order_id)
     bind_to_order(order_id, binded_products)
@@ -241,17 +242,18 @@ def expand_history_order(order_id):
 @app.route('/expand_order/id/<int:order_id>')
 def expand_order(order_id):
     query = expand_order_query(order_id).all()
+    order_sides = {'Клиент': query[0].client_id, 'Поставщик': query[0].supplier_id} if len(query) > 0 else {}
     item_info = {'available_products': [],
                  'order_stats': [],
-                 'order_sides': {'Клиент': query[0].client_id, 'Поставщик': query[0].supplier_id}
+                 'order_sides': order_sides
                  }
     products_with_stats = {}
     for row in query:
         if row.type_name not in products_with_stats.keys():
             item_stats = {
                 'Тип': row.type_name,
-                'Останеться': row.number - (row.quantity or 0) if row.number else -row.quantity or 0,
                 'Требуеться': row.quantity,
+                'Останеться': row.number - (row.quantity or 0) if row.number else -row.quantity or 0,
             }
             item_info['order_stats'].append(item_stats)
             # Quantity - number of products ,that should be added to order

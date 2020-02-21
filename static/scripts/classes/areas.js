@@ -26,6 +26,17 @@ function getAreas() {
                 sections.order_statistics_section
             ]
         },
+        order_editing_section:{
+            element: document.getElementById('specific_order_editing_area'),
+            subareas: [
+                sections.order_editing_specific_order_section
+            ]
+        },
+        order_editing_output_section:{
+            element: document.getElementById('editing_output_area'),
+            default_class: "output_section",
+            subareas: []
+        },
         storage_output_area: {
             element: document.getElementById('storage_output_section'),
             default_class: "output_section",

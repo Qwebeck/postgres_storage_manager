@@ -15,8 +15,8 @@ function getForms() {
             hide: () => document.getElementById('orders_add').reset()
         },
         orders_specific_order_creation_section: {
-            element: document.getElementById('orders_on_specific_products'),
-            hide: () => returnToDefaultChildNumber(document.getElementById('orders_on_specific_products'),2)
+            element: document.getElementById('specific_order_editing_area'),
+            hide: () => returnToDefaultChildNumber(document.getElementById('specific_order_editing_area'), 2)
         }
     }
 }
@@ -36,17 +36,24 @@ function getToolbars() {
         },
         concrete_order_toolbar: {
             element: document.getElementById('concrete_order_toolbar')
+        },
+        order_editing_toolbar: {
+            element: document.getElementById('order_edit_toolbar')            
         }
     }
 }
 
-function getSections(){
+function getSections() {
     return {
-        order_sides_section:{
+        order_sides_section: {
             element: document.getElementById('order_sides')
         },
-        order_statistics_section:{
+        order_statistics_section: {
             element: document.getElementById('order_statistics')
         },
+        order_editing_specific_order_section: {
+            element: document.getElementById('specific_order_editing_order_param'),
+            hide: () => returnToDefaultChildNumber(document.getElementById('specific_order_editing_order_param'),0)
+        }
     }
 }

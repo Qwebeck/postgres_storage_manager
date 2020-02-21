@@ -11,12 +11,12 @@ class OrderManager extends Section {
             ordersDiplayArea,
             toolbar)
         this.pending_orders = pending_orders
-        this.order_sides = order_sides 
+        // this.order_sides = order_sides 
         this.order_description = order_description
         this.concrete_order_manager = concrete_order_manager 
 
 
-        document.addEventListener('pending_orders_update', poUpdate)
+        document.addEventListener('pending_orders_update',(e) =>  this.pendingOrdersUpdate(e.detail))
     }
 
     pendingOrdersUpdate(data) {
@@ -39,11 +39,38 @@ class OrderManager extends Section {
         this.concrete_order_manager.show()
         document.dispatchEvent(data_item_modified)
     }
+    
+    addOrder(e){
+        const toDict = elements => [].reduce.call(elements, (data, element) => {
+            let type = element.querySelector('[name="product_type"]').value
+            let number = element.querySelector('[name="number"]').value    
+            let el = {
+                'type': type,
+                'number': number
+            }
+            data[type] = el
+            return data
+        }, {})
+        e.preventDefault()
+        let active_storage = sessionStorage.getItem('active_storage')
+        let form = e.target
+        let order_types = document.getElementsByName('product_order')
+        let specific_orders = toDict(order_types)
+        specific_orders['supplier_id'] = active_storage
+        specific_orders['client_id'] = form.clients_ids.value
+        if (!validateOrderForm(form)) return
+        var url = '/add_order'
+        var addOrder = sendRequest(url, specific_orders, "POST")
+        waitingAnimation(true)
+        addOrder.then(_ => {
+            this.pending_orders.is_actual = false
+            document.dispatchEvent(data_item_modified)
+        })
+        .catch(console.error)
+        this.show()
+    }
 }
 
-function poUpdate(e){
-    orderManager.pendingOrdersUpdate(e.detail)
-}
 
 function expandForOrder(e){
     let order_id = e.target.value

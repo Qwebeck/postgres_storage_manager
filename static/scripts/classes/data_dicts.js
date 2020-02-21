@@ -12,11 +12,11 @@ function getDataDicts() {
             related_list: datalists.available_businesses_dl,
             emit: 'bussines_update'
         },
-        types_on_storage: {
-            is_actual: false,
-            url_creation_handler: (storage_id) => '/get_types/id/' + (storage_id || main_storage_id),
-            data: {}
-        },
+        // types_on_storage: {
+        //     is_actual: false,
+        //     url_creation_handler: (storage_id) => '/get_types/id/' + (storage_id || main_storage_id),
+        //     data: {}
+        // },
         current_storage_statistics: {
             is_actual: false,
             url_creation_handler: () => createUrlDependingOnStorage('/get_statistics/id/'),
@@ -30,11 +30,6 @@ function getDataDicts() {
             emit: 'pending_orders_update',
             data: {}
         },
-        // current_order_sides: {
-        //     is_actual: false,
-        //     url_creation_handler: () => createUrlDependingOnOrder('/sides_in_order/id/'),
-        //     data: {}
-        // },
         current_actual_order_description: {
             is_actual: false,
             emit: 'actual_order_selected',
@@ -52,15 +47,17 @@ function getDataDicts() {
                         return accumulator
                     }, {}),
                     order_stats: Object.values(order_stats),
-                    unbinded_products: new Set()
+                    unbinded_products: new Set(),
+                    binded_products: new Set()
                 }
             },
             pack: () => {
+                let dict = data_dicts.current_actual_order_description.data
                 return {
-                    available_products: data_dicts.current_order_description.data.available_products,
-                    order_stats: data_dicts.current_order_description.data.order_stats,
-                    order_types: data_dicts.current_order_description.data.order_types,
-                    unbinded_products: Array.from(data_dicts.current_order_description.data.unbinded_products)
+                    // order_stats: dict.order_stats,
+                    order_types: dict.order_types,
+                    unbinded_products: Array.from(dict.unbinded_products),
+                    binded_products: Array.from(dict.binded_products)
                 }
             }
         },

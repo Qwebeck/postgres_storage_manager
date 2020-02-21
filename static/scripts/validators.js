@@ -7,19 +7,9 @@
 function validateOrderForm(form) {
     var error = false
     message = 'Заполните все необходимые поля'
-    if (form.clients_ids.value == 'default') {
+    if(!form.clients_ids.value){
         error = true
-        form.clients_ids.className = 'error'
-    }
-    if(form.suppliers_ids.value == 'default'){
-        error = true
-        form.suppliers_ids.className = 'error'        
-    }
-    if(form.suppliers_ids.value == form.clients_ids.value && form.clients_ids.value != 'default'){
-        error = true
-        form.clients_ids.className = 'error'
-        form.suppliers_ids.className = 'error'
-        message = 'Заказчик и поставщик должны быть разными.'                
+        form.clients_ids.className = "error"
     }
     var product_orders = document.getElementsByName("product_order")
     var order_exists = false

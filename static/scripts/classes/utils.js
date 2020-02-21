@@ -126,6 +126,13 @@ function convertToObject(key_name, data) {
  * @param
  */
 function updateDatalist(datalist, options, ignore = []) {
+    let child = datalist.lastElementChild;
+    while (child) {
+        datalist.removeChild(child);
+        child = datalist.lastElementChild;
+    }
+
+    
     if (!options) {
         console.log('fillSelects: No options provided.')
         return
