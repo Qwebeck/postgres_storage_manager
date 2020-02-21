@@ -297,7 +297,7 @@ def modify_specific_orders(order_id, order_stats):
 
 def add_history_record(order_id, serial_numbers):
     db.session.query(Orders).filter(Orders.order_id == order_id).\
-        update({Orders.completion_date: datetime.utcnow()
+        update({Orders.completion_date: datetime.now()
                 }, synchronize_session=False)
 
     db.session.query(SpecificOrders)\

@@ -6,8 +6,7 @@ from config import *
 from models import (app, db, Products, Businesses, Orders, SpecificOrders)
 from sqlalchemy.sql import text
 from datetime import datetime
-# from src.utils import pack_query_to_dict
-from src.queries import (client_supplier_query,
+from queries import (client_supplier_query,
                          types_query,
                          statistics_query,
                          expand_type_query,
