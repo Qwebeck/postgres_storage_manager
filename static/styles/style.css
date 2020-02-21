@@ -290,6 +290,10 @@ table{
 .assigned td{
     background-color: rgba(0, 100, 0, 0.493);
 }
+.assigned_to_other td{
+    background-color: rgba(100, 0, 0, 0.493);
+}
+
 #order_modification_section{
     display: none;
     text-align: center;
@@ -315,3 +319,6 @@ table{
 .active {
     display: block;
 }
+#output_section_container{
+    width: 65%;
+} 

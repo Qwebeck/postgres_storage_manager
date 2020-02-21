@@ -14,11 +14,21 @@ class ConcreteOrderManager extends Section {
         this.orderSidesSection = orderSidesSection
         this.order_description = order_description
         this.pending_orders = pending_orders
+        this.actual_order_toolbar = toolbar
 
         document.addEventListener(this.order_description.emit, (e) => this.describeCurrentOrder(e.detail))
     }
+    show(){
+        this.enterProperMode()
+        super.show()
+    }
+    enterProperMode(){
+        let is_history = JSON.parse(sessionStorage.getItem('is_history'))
+        this.toolbar = is_history ? null : this.actual_order_toolbar
 
+    }
     describeCurrentOrder(data) {
+        if(!data) return
         createTable(
             data.order_sides,
             null,
@@ -34,12 +44,11 @@ class ConcreteOrderManager extends Section {
             null,
             this.rightColumn.element,
             false,
-            ['supplier_id', 'client_id', 'type_name', 'quantity', 'serial_number', 'number']
+            ['supplier_id', 'client_id', 'type_name', 'quantity', 'serial_number', 'number', 'available_number']
         )
     }
 
     editOrder() {
-        let order_id = sessionStorage.getItem('current_order_id')
         orderEditor.show()
     }
     completeOrder() {

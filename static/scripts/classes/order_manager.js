@@ -2,6 +2,8 @@ class OrderManager extends Section {
     constructor(productAddingArea,
         ordersDiplayArea,
         toolbar,
+        history_section,
+        order_modification_section,
         pending_orders,
         order_sides,
         order_description,
@@ -10,28 +12,36 @@ class OrderManager extends Section {
             productAddingArea,
             ordersDiplayArea,
             toolbar)
-        this.pending_orders = pending_orders
-        // this.order_sides = order_sides 
-        this.order_description = order_description
-        this.concrete_order_manager = concrete_order_manager 
+        this.history_area = history_section 
+        this.order_creation_area = order_modification_section
 
+        this.pending_orders = pending_orders
+        this.order_description = order_description
+        this.concrete_order_manager = concrete_order_manager
+
+        // this.order_expand_handler = (e) => this.expandForOrder(e.target.value)
+        this.current_layout = this.order_creation_area
 
         document.addEventListener('pending_orders_update',(e) =>  this.pendingOrdersUpdate(e.detail))
     }
-
+        
     pendingOrdersUpdate(data) {
         createTable(
             data,
             (row_info, _, rowNode) =>
                 createActionButton(row_info,
                     rowNode,
-                    "Ид заказа",
-                    "Подробнее",
-                    expandForOrder),
+                    'order_id',
+                    'Подробнее',
+                    (e) => this.expandForOrder(e.target.value)),
             this.rightColumn.element,
             false,
             ['order_id']
         )
+    }
+    show(){
+        super.show()
+        this.current_layout.show()
     }
     expandForOrder(order_id){
         sessionStorage.setItem('current_order_id', order_id)
@@ -69,10 +79,29 @@ class OrderManager extends Section {
         .catch(console.error)
         this.show()
     }
+
+    switchMode(){
+        this.current_layout.hide()
+        if(this.current_layout === this.history_area) this.current_layout = this.order_creation_area
+        else this.current_layout = this.history_area
+        this.current_layout.show()
+    }
+
+    toggleOrders(e){
+        let history_checkbox = e.target
+        sessionStorage.setItem('is_history', history_checkbox.checked)
+        this.pending_orders.is_actual = false
+        this.switchMode()
+        document.dispatchEvent(data_item_modified)
+    }
+
+    showForPeriod(e){
+        e.preventDefault()
+        this.pending_orders.is_actual = false
+        document.dispatchEvent(data_item_modified)        
+    }
 }
 
 
-function expandForOrder(e){
-    let order_id = e.target.value
-    orderManager.expandForOrder(order_id)
-}
+
+

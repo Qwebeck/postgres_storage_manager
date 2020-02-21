@@ -26,7 +26,7 @@ function getDataDicts() {
         },
         orders_with_current_storage: {
             is_actual: false,
-            url_creation_handler: () => createUrlDependingOnStorage('/get_orders/'),
+            url_creation_handler: () => createOrderUrl(),
             emit: 'pending_orders_update',
             data: {}
         },
@@ -34,7 +34,7 @@ function getDataDicts() {
             is_actual: false,
             emit: 'actual_order_selected',
             data: {},
-            url_creation_handler: () => createUrlDependingOnOrder('/expand_order/id/'),
+            url_creation_handler: () => createExpandOrderUrl(),
             data_processor: (data) => {
                 if (!data) return null
                 let available_products = convertToObject('serial_number', data.available_products)
@@ -43,7 +43,7 @@ function getDataDicts() {
                     available_products: available_products,
                     order_sides: [data.order_sides],
                     order_types: data.order_stats.reduce((accumulator, el) => {
-                        accumulator[el['Тип']] = el['Требуеться']
+                        accumulator[el['Тип']] = el['Заказано']
                         return accumulator
                     }, {}),
                     order_stats: Object.values(order_stats),

@@ -12,11 +12,19 @@ function getForms() {
         },
         orders_order_creation_form: {
             element: document.getElementById('orders_add'),
-            hide: () => document.getElementById('orders_add').reset()
+            hide: () => {
+                            let element = document.getElementById('orders_add') 
+                            element.reset()
+                            element.className = "hidden"
+                        },
+            show: () => document.getElementById('orders_add').className = "form-container" 
         },
         orders_specific_order_creation_section: {
-            element: document.getElementById('specific_order_editing_area'),
-            hide: () => returnToDefaultChildNumber(document.getElementById('specific_order_editing_area'), 2)
+            element: document.getElementById('orders_on_specific_products'),
+            hide: () => returnToDefaultChildNumber(document.getElementById('orders_on_specific_products'), 2)
+        },
+        order_lookup: {
+            element: document.getElementById('order_history')
         }
     }
 }
@@ -54,6 +62,12 @@ function getSections() {
         order_editing_specific_order_section: {
             element: document.getElementById('specific_order_editing_order_param'),
             hide: () => returnToDefaultChildNumber(document.getElementById('specific_order_editing_order_param'),0)
-        }
+        },
+        history_info_section: {
+            element: document.getElementById('history_info_area'),
+            show: () => document.getElementById('history_info_area').className = "active",
+            hide: () => document.getElementById('history_info_area').className = "hidden"
+        },
+
     }
 }

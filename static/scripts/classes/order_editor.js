@@ -84,12 +84,17 @@ class OrderEditor extends Section {
     }
 
     markAssigned(data, _, element) {
+        var current_order_id = sessionStorage.getItem('current_order_id')
         var is_assigned = data['Привязан к заказу']
+        var is_assigned_to_current = is_assigned && data['Привязан к заказу'] == current_order_id 
         var action_name = "Привязать"
-        if (is_assigned) {
+        if (is_assigned_to_current) {
             element.className = "assigned"
             var action_name = "Отвязать"
             data_dicts.current_actual_order_description.data.binded_products.add(data["Серийный номер"])
+        }
+        else if(is_assigned){
+            element.className = "assigned_to_other"
         }
         // find another solution
         createActionButton(data, element, 'Серийный номер', action_name, (e) => orderEditor.toggleAssigment(e))

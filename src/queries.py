@@ -40,6 +40,7 @@ def statistics_query(owner_id):
         .group_by(Products.type_name)
     return aliased(query)
 
+
 def expand_type_query_2(owner_id: str, type_name: []) -> 'session query':
     """Return query, where provide detaled info about available products for this type."""
     query = select([Products.type_name.label('Тип'),
@@ -51,11 +52,12 @@ def expand_type_query_2(owner_id: str, type_name: []) -> 'session query':
                     Products.appear_in_order.label('Привязан к заказу')])\
         .where(
         and_(
-            Products.owner_id == owner_id,               
+            Products.owner_id == owner_id,
             Products.type_name.in_(type_name)
         )
     )
     return db.session.query(aliased(query))
+
 
 def expand_type_query(owner_id: str, type_name: [], order_id) -> 'session query':
     """Return query, where provide detaled info about available products for this type."""
@@ -69,11 +71,7 @@ def expand_type_query(owner_id: str, type_name: [], order_id) -> 'session query'
         .where(
         and_(
             Products.owner_id == owner_id,
-            and_(
-                or_(Products.appear_in_order == None,
-                    Products.appear_in_order == order_id),
-                Products.type_name.in_(type_name)
-            )
+            Products.type_name.in_(type_name)
         )
     )
     return db.session.query(aliased(query))
@@ -185,27 +183,40 @@ def expand_order_query(order_id):
         .where(Orders.order_id == order_id)
         .group_by(Products.type_name))
 
+    count_of_available = aliased(
+        select([
+            Products.type_name,
+            func.count().label('available_number')
+        ])
+        .select_from(SupplierProducts)
+        .where(and_(Orders.order_id == order_id, or_(Products.appear_in_order == order_id, Products.appear_in_order == None)))
+        .group_by(Products.type_name))
+
     ProductsSupplierCanSupply = join(Orders, SpecificOrders, Orders.order_id == SpecificOrders.order_id)\
         .join(Businesses, Orders.supplier_id == Businesses.name)\
         .outerjoin(Products, and_(Products.owner_id == Businesses.name,
                                   Products.type_name == SpecificOrders.type_name))\
-        .outerjoin(count, SpecificOrders.type_name == count.c.type_name)
+        .outerjoin(count, SpecificOrders.type_name == count.c.type_name)\
+        .outerjoin(count_of_available, SpecificOrders.type_name == count_of_available.c.type_name)
 
-    # column dublicates, that needed because of there usage in server.py
+   # column dublicates, that needed because of there usage in server.py
     query = aliased(select([Orders.supplier_id,
                             Orders.client_id,
                             SpecificOrders.type_name.label('Тип'),
                             Products.producent.label('Производитель'),
                             Products.model.label('Модель'),
-                            Products.appear_in_order.label('Привязан к заказу'),
+                            Products.appear_in_order.label(
+                                'Привязан к заказу'),
                             SpecificOrders.type_name,
                             SpecificOrders.quantity,
                             Products.serial_number,
                             Products.serial_number.label('Серийный номер'),
-                            
+
                             Products.additonal_info.label(
                                 'Дополнительная информация'),
-                            count.c.number])
+                            count.c.number,
+                            count_of_available.c.available_number
+                            ])
                     .select_from(ProductsSupplierCanSupply).where(and_(Orders.order_id == order_id, or_(Products.appear_in_order == order_id, Products.appear_in_order == None)))
                     .order_by(Products.type_name, Products.appear_in_order.asc())
                     .limit(100))
@@ -239,6 +250,7 @@ def unbind_from_order(serial_numbers):
         update({Products.appear_in_order: None
                 }, synchronize_session=False)
     db.session.commit()
+
 
 def unbind_all_from_order(order_id):
     db.session.query(Products).filter_by(appear_in_order=order_id).\
@@ -275,12 +287,10 @@ def modify_specific_orders(order_id, order_stats):
             )
             db.session.add(new_specific_order)
 
-    print('I want to delete')
-    print(deleted_types)
     for p_type in deleted_types:
         db.session.query(SpecificOrders)\
-        .filter(and_(SpecificOrders.type_name == p_type, SpecificOrders.order_id == order_id))\
-        .delete()
+            .filter(and_(SpecificOrders.type_name == p_type, SpecificOrders.order_id == order_id))\
+            .delete()
 
     db.session.commit()
 
@@ -320,12 +330,21 @@ def add_history_record(order_id, serial_numbers):
 
 
 def expand_history_order_query(order_id):
-    query = select([ProductsMovement.serial_number.label('Серийный номер'),
+    OrderDecription = outerjoin(
+        Orders, ProductsMovement, Orders.order_id == ProductsMovement.order_id)
+
+    query = select([
                     ProductsMovement.type_name.label('Тип'),
                     ProductsMovement.producent.label('Производитель'),
                     ProductsMovement.model.label('Модель'),
+                    ProductsMovement.serial_number.label('Серийный номер'),
+                    Orders.supplier_id,
+                    Orders.client_id,
+                    ProductsMovement.type_name,
+                    ProductsMovement.serial_number
                     ])\
-        .select_from(ProductsMovement)\
-        .where(ProductsMovement.order_id == order_id)
+        .select_from(OrderDecription)\
+        .where(ProductsMovement.order_id == order_id)\
+        .order_by(ProductsMovement.type_name)
 
     return db.session.query(aliased(query))

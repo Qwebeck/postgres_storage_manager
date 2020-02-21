@@ -26,6 +26,7 @@ var main_storage_id = "Головний склад, Вінниця";
 
 
 function init() {
+    sessionStorage.setItem('is_history', false)
     data_item_modified = new Event('data_item_modified')
     document.addEventListener('data_item_modified', updateData)
 

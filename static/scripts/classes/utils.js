@@ -4,9 +4,9 @@
  * @package classes/utils
  */
 function updateHeaders() {
-    // var st_name = se(sessionStorage, 'active_storage')
-    var st_name = sessionStorage.getItem('active_storage')
-    for (var header of containers_and_elements.existing_headers) {
+    let existing_headers = document.getElementsByName('storage_header')
+    let st_name = sessionStorage.getItem('active_storage')
+    for (let header of existing_headers) {
         header.innerHTML = ""
         header.innerHTML = st_name
     }
@@ -86,15 +86,14 @@ function updateData() {
  * Turns on/off waiting animation. 
  * @package classes/utils
  * @param {boolean} condition 
- * @param {int} parent_id - id of element, that called waiting section
  */
-function waitingAnimation(condition, parent_id) {
+function waitingAnimation(condition) {
+    let block_with_waiting_anim = document.getElementById('waiting')
     if (condition == true) {
-        waiting_section_parent_id = parent_id
-        containers_and_elements.block_with_waiting_anim.style = "display:block;"
+        block_with_waiting_anim.style = "display:block;"
     }
     else {
-        containers_and_elements.block_with_waiting_anim.style = "display:none;"
+        block_with_waiting_anim.style = "display:none;"
     }
 }
 
@@ -340,3 +339,4 @@ function addProductField(container, new_el_processor = null, last_entered_val_fr
     if (new_el_processor) new_el_processor(data_input, quantity_input, prod_ord);
 
 }
+

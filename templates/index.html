@@ -76,7 +76,13 @@
             </div>
             <div id='waiting' class="waiting"></div>
             <div id="product_managing_area" class="hidden">
+                <h1>Актуальное количество заказаных единиц</h1>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
 
+                <h1>Установленный критический уровень</h1>
             </div>
 
             <div id="work_with_storage" class="hidden">
@@ -124,26 +130,16 @@
 
             </div>
             <div id="order_creation" class="hidden">
-                <form class="form-container" class="action" id='orders_add' onsubmit="orderManager.addOrder(event)">
+                <div id="history_info_area" class="hidden">
+                    <h1>Историческая справка</h1>
+                </div>
+                                
+                <form class="hidden" class="form-container" class="action" id='orders_add' onsubmit="orderManager.addOrder(event)">
                     <h1 name='storage_header'></h1>
                     <h1 id='action_name_1'>Добавить новый заказ</h1>
-                    <!-- <div class="product_order">
-                        <div> -->
                     <h4>Заказчик</h4>
                     <input type="text" name="clients_ids" list="available_businesses" placeholder="Заказчик"
                         autocomplete="off">
-
-                    <!-- <select name="clients_ids" id="clients_ids">
-                                <option selected="selected" value="default">Заказчик</option>
-                            </select> -->
-                    <!-- </div> -->
-                    <!-- <div>
-                            <h4>Поставщик</h4>
-                            <select name="suppliers_ids" id="suppliers_ids">
-                                <option selected="selected" value="default">Поставщик</option>
-                            </select>
-                        </div> -->
-            <!-- </div> -->
             <div class="product_order">
                 <h4>Дата заказа</h4>
                 <input id='order_date' type="date">
@@ -153,13 +149,13 @@
                 <div name="product_order" class="product_order">
                     <input type="text" name="product_type" list="available_types" placeholder="Tип" autocomplete="off">
                     <input type="text" name="number" placeholder="Количество" autocomplete="off"
-                        onchange="addProductField(containers_and_elements.order_creation_specific_order_section, null, 1)">
+                        onchange="addProductField(this.parentElement.parentElement, null, 1)">
                 </div>
 
                 <div name="product_order" class="product_order">
                     <input type="text" name="product_type" list="available_types" placeholder="Tип" autocomplete="off">
                     <input type="text" name="number" placeholder="Количество" autocomplete="off"
-                        onchange="addProductField(containers_and_elements.order_creation_specific_order_section, null, 1)">
+                        onchange="addProductField(this.parentElement.parentElement, null, 1)">
                 </div>
             </div>
 
@@ -170,16 +166,17 @@
         </div>
     </div>
     <div class="hidden" name="toolbar" id="orders_toolbar">
-        <form id="order_history" onsubmit="showForPeriod(event)">
+        <form id="order_history" onsubmit="orderManager.showForPeriod(event)">
             <label for="from_date">Заказы от</label>
-            <input type="date" id="from_date">
+            <input type="date" name="from" id="from_date">
             <label for="to_date">до</label>
-            <input type="date" id="to_date">
+            <input type="date" name="to" id="to_date">
             <input class="tlb-btn" type="submit" value="Найти">
+        <button class="tlb-btn" onclick="{this.parentElement.reset();orderManager.showForPeriod(event)}">Показать всё</button>
         </form>
         <span>История</span>
         <label class="switch">
-            <input type="checkbox" id='is_history' checked='' onchange="showHistory(event)">
+        <input type="checkbox" id='is_history' onchange="orderManager.toggleOrders(event)">
             <span class="slider round"></span>
         </label>
     </div>
@@ -196,8 +193,12 @@
         <button id='edit_order_btn' class="tlb-btn order-button" onclick="orderEditor.saveModifiedOrder(event)">Сохранить всё</button>
         <button id='disable_editing_btn' class="tlb-btn order-button" onclick="concreteOrderManager.show()">Отменить</button>
     </div>
+   
+   
+   
     <div class="output_section hidden" id="output_section">
 
+   
     </div>
     <div class="output_section hidden" id="storage_output_section">
 

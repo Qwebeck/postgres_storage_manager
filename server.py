@@ -76,7 +76,7 @@ def edit_specific_orders(order_id):
     modify_specific_orders(order_id, types)
     return 'ok'
 
-
+# depracated
 @app.route('/edit_order/id/<int:order_id>/modify_binded_products', methods=["POST"])
 def edit_binded_products(order_id):
     order_data = request.get_json()
@@ -85,14 +85,11 @@ def edit_binded_products(order_id):
     bind_to_order(order_id, binded_products)
     return 'ok'
 
-
+# depracated
 @app.route('/edit_order/id/<int:order_id>', methods=["POST"])
 def edit_order(order_id):
     order_data = request.get_json()
     binded_products = order_data['binded_products']
-    # d = order_data['order_stats']
-    # change to types here
-    # order_stats = [(item['Тип'], item['Требуеться']) for item in d]
     order_stats = order_data['order_types'].items()
     unbinded_products = order_data['unbinded_products']
     unbind_all_from_order(order_id)
@@ -201,7 +198,7 @@ def orders_in_period(from_, to, business_id):
     result = query.all()
     # result = pack_query_to_dict(result)
     if not result:
-        result = {'result': None}
+        result = None
     return jsonify(result)
 
 
@@ -234,15 +231,31 @@ def get_order_sides(order_id):
 # V
 @app.route('/expand_history_order/id/<int:order_id>')
 def expand_history_order(order_id):
-    result = expand_history_order_query(order_id).all()
-    # result = pack_query_to_dict(result)
-    return jsonify(result)
+    query = expand_history_order_query(order_id).all()
+    order_sides = {'Клиент': query[0].client_id, 'Поставщик': query[0].supplier_id} if len(
+        query) > 0 else {}
+    order_info = {'available_products': [],
+                  'order_stats': [],
+                  'order_sides': order_sides}
+
+    products_with_stats = {}
+    for item in query:
+        if item.type_name not in products_with_stats.keys():
+            products_with_stats[item.type_name] = 0
+
+        order_info['available_products'].append(item)
+        products_with_stats[item.type_name] += 1
+
+    order_info['order_stats'] = [{'Тип': i_type, 'Реализовано': amount} for i_type, amount in products_with_stats.items()]
+    print(order_info)
+    return jsonify(order_info)
 
 # V
 @app.route('/expand_order/id/<int:order_id>')
 def expand_order(order_id):
     query = expand_order_query(order_id).all()
-    order_sides = {'Клиент': query[0].client_id, 'Поставщик': query[0].supplier_id} if len(query) > 0 else {}
+    order_sides = {'Клиент': query[0].client_id, 'Поставщик': query[0].supplier_id} if len(
+        query) > 0 else {}
     item_info = {'available_products': [],
                  'order_stats': [],
                  'order_sides': order_sides
@@ -252,8 +265,10 @@ def expand_order(order_id):
         if row.type_name not in products_with_stats.keys():
             item_stats = {
                 'Тип': row.type_name,
-                'Требуеться': row.quantity,
-                'Останеться': row.number - (row.quantity or 0) if row.number else -row.quantity or 0,
+                'Заказано': row.quantity,
+                'Сгенерировано в рамках заказа': row.available_number or 0,
+                'Всего на складе': row.number or 0,
+                # 'Останеться': row.number - (row.quantity or 0) if row.number else -row.quantity or 0,
             }
             item_info['order_stats'].append(item_stats)
             # Quantity - number of products ,that should be added to order
