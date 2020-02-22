@@ -9,8 +9,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 app.config['JSON_SORT_KEYS'] = False
 db = SQLAlchemy(app)
 
-## Drawing ER diagram
-## Draw from SQLAlchemy base
+# Drawing ER diagram
+# Draw from SQLAlchemy base
 # render_er(SQLALCHEMY_DATABASE_URI, 'b2b_database.png')
 
 
@@ -71,11 +71,22 @@ class Products(db.Model):
 #     order_id = ForeignKey to order
 #     products_id = ForeignKey to product primary key
 
+
+class CriticalLevels(db.Model):
+    __table_args__ = {"schema": SCHEMA_NAME}
+    business = db.Column(db.String,
+                         db.ForeignKey(f'{SCHEMA_NAME}.businesses.name'),
+                         primary_key=True)
+    type_name = db.Column(db.String(50),
+                          primary_key=True)
+    critical_amount = db.Column(db.Integer)
+
+
 class ProductsMovement(db.Model):
     __table_args__ = {"schema": SCHEMA_NAME}
     record_id = db.Column(db.Integer,
                           primary_key=True
-                        )   
+                          )
     order_id = db.Column(db.Integer,
                          db.ForeignKey(f'{SCHEMA_NAME}.orders.order_id'),
                          nullable=False)
@@ -83,6 +94,7 @@ class ProductsMovement(db.Model):
     type_name = db.Column(db.String(50), nullable=False)
     producent = db.Column(db.String(20), nullable=False)
     model = db.Column(db.String(20), nullable=False)
+
 
 class SpecificOrders(db.Model):
     __table_args__ = {"schema": SCHEMA_NAME}

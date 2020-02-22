@@ -73,6 +73,7 @@ class ConcreteOrderManager extends Section {
         let url = '/delete_order/id/' + order_id
         sendRequest(url, '', "DELETE").then(_ => {
             this.pending_orders.is_actual = false
+            orderManager.show()
             document.dispatchEvent(data_item_modified)
         }
         )

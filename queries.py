@@ -5,7 +5,8 @@ from models import (db,
                     Businesses,
                     Orders,
                     SpecificOrders,
-                    ProductsMovement)
+                    ProductsMovement,
+                    CriticalLevels)
 from sqlalchemy.orm import aliased
 from datetime import datetime
 from sqlalchemy.sql import text
@@ -41,8 +42,47 @@ def statistics_query(owner_id):
     return aliased(query)
 
 
+def set_critical_level(owner_id, type_name, new_critical_level):
+    db.session.query(CriticalLevels).filter(
+        and_(
+            CriticalLevels.business == owner_id,
+            CriticalLevels.type_name == type_name
+        ))\
+        .update({CriticalLevels.critical_amount: new_critical_level
+                 }, synchronize_session=False)
+
+    db.session.commit()
+
+
+def get_critical_level(owner_id, type_name):
+    critical_level = select([
+        CriticalLevels.critical_amount
+    ])\
+        .select_from(CriticalLevels)\
+        .where(and_(
+            CriticalLevels.business == owner_id,
+            CriticalLevels.type_name.in_(type_name),
+        )
+    )
+    return db.session.query(aliased(critical_level))
+
+
 def expand_type_query_2(owner_id: str, type_name: []) -> 'session query':
     """Return query, where provide detaled info about available products for this type."""
+    critical_level = get_critical_level(owner_id, type_name)
+
+    ordered = db.session.query(
+        func.sum(SpecificOrders.quantity).label('number')
+    )\
+        .join(Orders, Orders.order_id == SpecificOrders.order_id)\
+        .filter(
+        and_(
+            Orders.supplier_id == owner_id,
+            SpecificOrders.type_name.in_(type_name)
+        )
+
+    )
+
     query = select([Products.type_name.label('Тип'),
                     Products.serial_number.label('Серийный номер'),
                     Products.producent.label('Изготовитель'),
@@ -56,7 +96,7 @@ def expand_type_query_2(owner_id: str, type_name: []) -> 'session query':
             Products.type_name.in_(type_name)
         )
     )
-    return db.session.query(aliased(query))
+    return db.session.query(aliased(query)), ordered, critical_level
 
 
 def expand_type_query(owner_id: str, type_name: [], order_id) -> 'session query':
@@ -81,7 +121,7 @@ def create_product(new_product, owner_id):
     """Create new product, from provided dict."""
     if not isinstance(new_product, dict):
         raise ValueError(f"New product {new_product} is not a dict")
-    new_product = Products(
+    new_instance = Products(
         serial_number=new_product['serial_number'],
         type_name=new_product['type_name'],
         owner_id=owner_id,
@@ -90,7 +130,15 @@ def create_product(new_product, owner_id):
         producent=new_product['producent'],
         additonal_info=new_product['additional_info']
     )
-    return new_product
+
+    if not get_critical_level(owner_id, new_product['type_name']).all():
+        new_critical_entry = CriticalLevels(
+            business=owner_id,
+            type_name=new_product['type_name']
+        )
+    else:
+        new_critical_entry = None
+    return new_instance, new_critical_entry
 
 
 def businesses_query():
@@ -334,15 +382,15 @@ def expand_history_order_query(order_id):
         Orders, ProductsMovement, Orders.order_id == ProductsMovement.order_id)
 
     query = select([
-                    ProductsMovement.type_name.label('Тип'),
-                    ProductsMovement.producent.label('Производитель'),
-                    ProductsMovement.model.label('Модель'),
-                    ProductsMovement.serial_number.label('Серийный номер'),
-                    Orders.supplier_id,
-                    Orders.client_id,
-                    ProductsMovement.type_name,
-                    ProductsMovement.serial_number
-                    ])\
+        ProductsMovement.type_name.label('Тип'),
+        ProductsMovement.producent.label('Производитель'),
+        ProductsMovement.model.label('Модель'),
+        ProductsMovement.serial_number.label('Серийный номер'),
+        Orders.supplier_id,
+        Orders.client_id,
+        ProductsMovement.type_name,
+        ProductsMovement.serial_number
+    ])\
         .select_from(OrderDecription)\
         .where(ProductsMovement.order_id == order_id)\
         .order_by(ProductsMovement.type_name)

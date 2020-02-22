@@ -40,6 +40,8 @@ body{
     flex-direction: column;
     width: 65%;
     float: right;
+    overflow: auto;
+    height: 80vh;
 }
 table th,td{
     padding: 0px 15px 0px 15px;
@@ -79,7 +81,7 @@ table{
     padding: 10px;
     margin: 10px;
     flex-grow: 1;
-    text-align: left
+    text-align: center
 }
 .data_row button{
     min-width: 20%;
@@ -319,6 +321,3 @@ table{
 .active {
     display: block;
 }
-#output_section_container{
-    width: 65%;
-} 

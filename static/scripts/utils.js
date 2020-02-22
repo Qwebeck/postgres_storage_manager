@@ -3,9 +3,9 @@
  * Update values of headers, with name of actively selected storage 
  * @package classes/utils
  */
-function updateHeaders() {
-    let existing_headers = document.getElementsByName('storage_header')
-    let st_name = sessionStorage.getItem('active_storage')
+function updateHeaders(name='storage_header', value = ()=> sessionStorage.getItem('active_storage')) {
+    let existing_headers = document.getElementsByName(name)
+    let st_name = value()
     for (let header of existing_headers) {
         header.innerHTML = ""
         header.innerHTML = st_name

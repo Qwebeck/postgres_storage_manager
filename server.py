@@ -22,7 +22,8 @@ from queries import (client_supplier_query,
                          bind_to_order,
                          modify_specific_orders,
                          unbind_all_from_order,
-                         expand_type_query_2
+                         expand_type_query_2,
+                         set_critical_level
                          )
 
 from sqlalchemy.exc import IntegrityError, OperationalError
@@ -123,9 +124,16 @@ def count_types(owner_id):
 @app.route('/expand_types/id/<string:owner_id>/types/<string:type_name>')
 def get_details_about_type_2(owner_id, type_name):
     types = type_name.split(',')
-    result = expand_type_query_2(owner_id, types).all()
-    # result = pack_query_to_dict(result)
-    result = [item._asdict() for item in result]
+    products_query, ordered_amount_query, critical_level_query = expand_type_query_2(owner_id, types)
+    products = products_query.all()
+    ordered_amount = ordered_amount_query.first()
+    critical_level = critical_level_query.first()
+    products = [item._asdict() for item in products]
+    result = {
+        'available_products': products,
+        'type_stats': {'Всего заказов на тип': ordered_amount.number or 0, 'Количество на складе': len(products)},
+        'critical_level': critical_level.critical_amount if critical_level else None
+    }
     return jsonify(result)
 
 
@@ -137,14 +145,24 @@ def get_details_about_type(owner_id, type_name, order_id):
     # result = pack_query_to_dict(result)
     return jsonify(result)
 
+@app.route('/modify_critical_level', methods=["POST"])
+def modify_cl():
+    data = request.get_json()
+    owner_id = data['owner']
+    type_name = data['type_name']
+    amount = data['amount']
+    set_critical_level(owner_id, type_name, amount)
+    return 'ok', 200
 
 @app.route('/add_items_on_storage/id/<string:owner_id>', methods=['POST'])
 def insert_items(owner_id):
     new_product = request.get_json()
     if 'additional_info' not in new_product.keys():
         new_product['additional_info'] = ""
-    new_product = create_product(new_product, owner_id)
+    new_product, new_critical_entry = create_product(new_product, owner_id)
     db.session.add(new_product)
+    if new_critical_entry:
+        db.session.add(new_critical_entry)
     db.session.commit()
     return 'ok'
 

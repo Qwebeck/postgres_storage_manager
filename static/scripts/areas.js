@@ -10,7 +10,10 @@ function getAreas() {
         },
         product_managing_area: {
             element: document.getElementById('product_managing_area'),
-            subareas: []
+            subareas: [
+                sections.expanded_type_stats_section,
+                forms.type_critical_level
+            ]
         },
         order_completion_area: {
             element: document.getElementById('order_creation'),

@@ -25,6 +25,10 @@ function getForms() {
         },
         order_lookup: {
             element: document.getElementById('order_history')
+        },
+        type_critical_level: {
+            element: document.getElementById('critical_level'),
+            hide: () => document.getElementById('critical_level').reset()
         }
     }
 }
@@ -68,6 +72,8 @@ function getSections() {
             show: () => document.getElementById('history_info_area').className = "active",
             hide: () => document.getElementById('history_info_area').className = "hidden"
         },
-
+        expanded_type_stats_section: {
+            element: document.getElementById('expanded_type_stats')
+        }
     }
 }

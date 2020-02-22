@@ -12,11 +12,6 @@ function getDataDicts() {
             related_list: datalists.available_businesses_dl,
             emit: 'bussines_update'
         },
-        // types_on_storage: {
-        //     is_actual: false,
-        //     url_creation_handler: (storage_id) => '/get_types/id/' + (storage_id || main_storage_id),
-        //     data: {}
-        // },
         current_storage_statistics: {
             is_actual: false,
             url_creation_handler: () => createUrlDependingOnStorage('/get_statistics/id/'),
