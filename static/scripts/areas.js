@@ -1,4 +1,5 @@
 
+// change subareas on dicts
 function getAreas() {
     return {
         control_panel_for_storage_manager: {
@@ -12,7 +13,8 @@ function getAreas() {
             element: document.getElementById('product_managing_area'),
             subareas: [
                 sections.expanded_type_stats_section,
-                forms.type_critical_level
+                forms.type_critical_level,
+                sections.product_alert_section
             ]
         },
         order_completion_area: {

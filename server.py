@@ -157,6 +157,7 @@ def modify_cl():
 @app.route('/add_items_on_storage/id/<string:owner_id>', methods=['POST'])
 def insert_items(owner_id):
     new_product = request.get_json()
+
     if 'additional_info' not in new_product.keys():
         new_product['additional_info'] = ""
     new_product, new_critical_entry = create_product(new_product, owner_id)

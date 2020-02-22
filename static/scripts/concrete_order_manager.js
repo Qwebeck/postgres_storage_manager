@@ -29,6 +29,15 @@ class ConcreteOrderManager extends Section {
     }
     describeCurrentOrder(data) {
         if(!data) return
+        // Fix me
+        if(data.order_sides[0]['Поставщик'] != sessionStorage.getItem('active_storage')) {
+            this.toolbar.complete_btn.hide()
+            this.orderStatisticsSection.element.className = 'hidden'
+        }
+        else{
+            this.orderStatisticsSection.element.className = 'active'
+            this.toolbar.complete_btn.show()
+        } 
         createTable(
             data.order_sides,
             null,

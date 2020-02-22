@@ -66,9 +66,21 @@ class OrderManager extends Section {
         let form = e.target
         let order_types = document.getElementsByName('product_order')
         let specific_orders = toDict(order_types)
+        let client = form.clients_ids.value
         specific_orders['supplier_id'] = active_storage
-        specific_orders['client_id'] = form.clients_ids.value
+        specific_orders['client_id'] = client
         if (!validateOrderForm(form)) return
+        // 
+        if(!data_dicts.existing_businesses.data.includes(client)){
+            storageManager.addNewBusiness(client, () => this.sendOrderRequest(specific_orders))
+        }else{
+            this.sendOrderRequest(specific_orders)
+        }
+        // 
+        this.show()
+    }
+
+    sendOrderRequest(specific_orders){
         var url = '/add_order'
         var addOrder = sendRequest(url, specific_orders, "POST")
         waitingAnimation(true)
@@ -77,7 +89,7 @@ class OrderManager extends Section {
             document.dispatchEvent(data_item_modified)
         })
         .catch(console.error)
-        this.show()
+
     }
 
     switchMode(){

@@ -42,7 +42,8 @@ function init() {
 
     data_item_modified = new Event('data_item_modified')
     document.addEventListener('data_item_modified', updateData)
-
+    
+    buttons = getButtons()
     forms = getForms()
     datalists = getDatalist()
     sections = getSections()

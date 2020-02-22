@@ -63,7 +63,12 @@ class StorageManager extends Section {
             waitingAnimation(true)
             document.dispatchEvent(data_item_modified)
         } else {
-            this.addNewBusiness(new_business)
+            this.addNewBusiness(new_business, 
+                                () => {
+                                    sessionStorage.setItem('active_storage', new_business)
+                                    updateHeaders()
+                                    for (let item in data_dicts) data_dicts[item].is_actual = false
+                                })
          }
     }
     expandForTypes(e) {
@@ -73,7 +78,7 @@ class StorageManager extends Section {
         productTypeManager.show()
     }
 
-    addNewBusiness(new_business) {
+    addNewBusiness(new_business, callback = null) {
         let url = '/add_new_business'
         let data = {
             'name':new_business
@@ -81,10 +86,9 @@ class StorageManager extends Section {
         let addBusiness = sendRequest(url,data,'POST')
         addBusiness.then(
             _ => {
-                sessionStorage.setItem('active_storage', new_business)
-                updateHeaders()
-                for (let item in data_dicts) data_dicts[item].is_actual = false
                 waitingAnimation(true)
+                if(callback) callback()
+                data_dicts.existing_businesses.is_actual = false
                 document.dispatchEvent(data_item_modified)
             }
         )

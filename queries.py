@@ -35,6 +35,29 @@ def types_query(owner_id):
 
 def statistics_query(owner_id):
     """Return a query, that get count of each type on storage."""
+    
+    """
+    WITH p_count AS (
+        SELECT 
+            type_name,
+            owner_id,
+            COUNT(type_name) c
+        FROM products
+        GROUP BY (owner_id, type_name)
+    )
+    SELECT
+        so.type_name,
+        SUM(quantity),
+        cl.critical_amount,
+        p.c
+    FROM businesses b
+    JOIN orders ON b.name = supplier_id
+    JOIN specific_orders so USING (order_id)
+    LEFT JOIN critical_levels cl ON b.name = cl.business AND  cl.type_name = so.type_name 
+    JOIN p_count p ON b.name = p.owner_id AND p.type_name = so.type_name 
+    GROUP BY (so.type_name, critical_amount, p.c);
+    """
+    # query = db.session.quer    
     query = select([Products.type_name.label('Tип'),
                     func.count(Products.type_name).label('Всего')])\
         .where(Products.owner_id == owner_id)\
@@ -130,8 +153,7 @@ def create_product(new_product, owner_id):
         producent=new_product['producent'],
         additonal_info=new_product['additional_info']
     )
-
-    if not get_critical_level(owner_id, new_product['type_name']).all():
+    if not get_critical_level(owner_id, [new_product['type_name']]).all():
         new_critical_entry = CriticalLevels(
             business=owner_id,
             type_name=new_product['type_name']

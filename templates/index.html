@@ -77,12 +77,15 @@
             <div id='waiting' class="waiting"></div>
             <div id="product_managing_area" class="hidden">
                 <h1 name='type_name'></h1>
+                <div id='product_alert_area'>
+
+                </div>
                 <div id="expanded_type_stats">
 
                 </div>
                 <h1>Критический уровень</h1>
-                <form id="critical_level" class="form-container" onsubmit="productTypeManager.setCriticalLevel(event)">
-                        <input type="text" name="new_cl" placeholder="Установить критический уровень"/>
+                <form id="critical_level" class="form-container product_order" onsubmit="productTypeManager.setCriticalLevel(event)">
+                        <input type="text" name="new_cl" placeholder="Установить критический уровень" autocomplete="off"/>
                         <input type="submit" value="Установить"/>
     
                 </form>

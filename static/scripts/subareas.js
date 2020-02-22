@@ -13,11 +13,11 @@ function getForms() {
         orders_order_creation_form: {
             element: document.getElementById('orders_add'),
             hide: () => {
-                            let element = document.getElementById('orders_add') 
-                            element.reset()
-                            element.className = "hidden"
-                        },
-            show: () => document.getElementById('orders_add').className = "form-container" 
+                let element = document.getElementById('orders_add')
+                element.reset()
+                element.className = "hidden"
+            },
+            show: () => document.getElementById('orders_add').className = "form-container"
         },
         orders_specific_order_creation_section: {
             element: document.getElementById('orders_on_specific_products'),
@@ -47,10 +47,11 @@ function getToolbars() {
             element: document.getElementById('orders_toolbar'),
         },
         concrete_order_toolbar: {
-            element: document.getElementById('concrete_order_toolbar')
+            element: document.getElementById('concrete_order_toolbar'),
+            complete_btn: buttons.complete_order_btn
         },
         order_editing_toolbar: {
-            element: document.getElementById('order_edit_toolbar')            
+            element: document.getElementById('order_edit_toolbar')
         }
     }
 }
@@ -65,7 +66,7 @@ function getSections() {
         },
         order_editing_specific_order_section: {
             element: document.getElementById('specific_order_editing_order_param'),
-            hide: () => returnToDefaultChildNumber(document.getElementById('specific_order_editing_order_param'),0)
+            hide: () => returnToDefaultChildNumber(document.getElementById('specific_order_editing_order_param'), 0)
         },
         history_info_section: {
             element: document.getElementById('history_info_area'),
@@ -74,6 +75,25 @@ function getSections() {
         },
         expanded_type_stats_section: {
             element: document.getElementById('expanded_type_stats')
+        },
+        product_alert_section: {
+            element: document.getElementById('product_alert_area'),
+            hide: () => {
+                let alerts = document.getElementById('product_alert_area').querySelectorAll(".alert")
+                for (let alert of alerts) {
+                    alert.remove()
+                }
+            }
+        }
+    }
+}
+
+function getButtons() {
+    return {
+        complete_order_btn: {
+            element: document.getElementById('complete_order_btn'),
+            hide: () => document.getElementById('complete_order_btn').className = 'hidden',
+            show: () => document.getElementById('complete_order_btn').className = 'tlb-btn order-button'
         }
     }
 }
