@@ -53,7 +53,7 @@ class OrderEditor extends Section {
 
     addDeleteBtn(select, quantity_input, container, type, number) {
         let delete_btns = container.querySelectorAll(".action-button")
-        // if(delete_btns) return
+        if(delete_btns.length) return
         if (type && select) select.value = type
         if (number && quantity_input) quantity_input.value = number
         if (!type) return
