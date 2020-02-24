@@ -352,4 +352,4 @@ def complete_order(order_id):
 if __name__ == '__main__':
     db.engine.execute(f"CREATE SCHEMA IF NOT EXISTS {SCHEMA_NAME};")
     db.create_all()
-    app.run(debug=True)
+    app.run(debug=False)
