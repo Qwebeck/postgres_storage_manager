@@ -308,7 +308,16 @@ def expand_order_query(order_id):
             else_=None
         )
     ).label('К-во свободных'),
-        func.count(Products.type_name).label('К-во на складе'))\
+        func.count(Products.type_name).label('К-во на складе'),
+        func.count(
+            case(
+                [
+                    (Products.appear_in_order == order_id, Products.type_name)
+                ],
+                else_=None
+            )
+        ).label('К-во привязаных')
+        )\
         .select_from(Orders)\
         .join(SpecificOrders, SpecificOrders.order_id == Orders.order_id)\
         .join(Products,
@@ -344,7 +353,8 @@ def expand_order_query(order_id):
             SpecificOrders.type_name == Products.type_name
         )
     )\
-        .filter(or_(Products.appear_in_order == None, Products.appear_in_order == order_id))
+        .filter(or_(Products.appear_in_order == None, Products.appear_in_order == order_id))\
+        .order_by(Products.type_name, Products.appear_in_order.asc())
 
     return order_sides, order_stats_query, available_products_query
     # column dublicates, that needed because of there usage in server.py

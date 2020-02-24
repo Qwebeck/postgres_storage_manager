@@ -337,3 +337,7 @@ table{
     border: 2px solid rgba(233, 89, 6, 0.53);
     background-color: #8b43005c;
 }
+
+.info-table{
+    overflow: auto;
+}

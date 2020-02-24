@@ -52,6 +52,8 @@ class OrderEditor extends Section {
     }
 
     addDeleteBtn(select, quantity_input, container, type, number) {
+        let delete_btns = container.querySelectorAll(".action-button")
+        // if(delete_btns) return
         if (type && select) select.value = type
         if (number && quantity_input) quantity_input.value = number
         if (!type) return
@@ -65,7 +67,7 @@ class OrderEditor extends Section {
         for (let [type, number] of Object.entries(this.order_description.data.order_types)) {
             addProductField(this.specific_order_section,
                 (select, quantity_input, container) => this.addDeleteBtn(select, quantity_input, container, type, number),
-                null,
+                1,
                 (e) => this.orderParamsChanged(e))
         }
 
@@ -113,14 +115,6 @@ class OrderEditor extends Section {
             return
         }
         this.order_description.data.order_types[modified_type] = new_quantity
-        // var type_dict = this.order_description.data.order_stats[modified_type] || {}
-        // type_dict['Требуеться'] = new_quantity
-        // this.order_description.data.order_stats[modified_type] = type_dict
-        // if (!(modified_type in this.order_description.data.order_types)) {
-        // this.order_description.data.order_types[modified_type] = new_quantity
-        // } else {
-            // this.order_description.data.order_types[modified_type] = new_quantity
-        // }
         this.addDeleteBtn(null,q_input,parent,q_input.value)
         addProductField(this.specific_order_section,
             null,

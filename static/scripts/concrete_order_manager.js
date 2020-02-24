@@ -34,7 +34,7 @@ class ConcreteOrderManager extends Section {
         this.alert_area.hide()
         for(let item of data){
             let type = item['Тип']
-            let left = (item['К-во свободных'] - item['Заказано'])
+            let left = ((item['К-во свободных'] + item['К-во привязаных']) - item['Заказано'])
             if(left < 0){
                 let am_alert = createElement('div', { 'class': 'alert alert-critical', 'innerHTML': `Количества ${type} недостаточно для выполнения. Не хватает ${-left} ${type}ов` })
                 // Fix me
