@@ -1,3 +1,4 @@
+// Check why describeurrentorder called twice
 class ConcreteOrderManager extends Section {
     constructor(orderInfoArea,
         productsInOrderArea,
@@ -15,6 +16,7 @@ class ConcreteOrderManager extends Section {
         this.order_description = order_description
         this.pending_orders = pending_orders
         this.actual_order_toolbar = toolbar
+        this.alert_area = sections.order_alert_section
 
         document.addEventListener(this.order_description.emit, (e) => this.describeCurrentOrder(e.detail))
     }
@@ -27,16 +29,32 @@ class ConcreteOrderManager extends Section {
         this.toolbar = is_history ? null : this.actual_order_toolbar
 
     }
+
+    showAlerts(data){
+        this.alert_area.hide()
+        for(let item of data){
+            let type = item['Тип']
+            let left = (item['К-во свободных'] - item['Заказано'])
+            if(left < 0){
+                let am_alert = createElement('div', { 'class': 'alert alert-critical', 'innerHTML': `Количества ${type} недостаточно для выполнения. Не хватает ${-left} ${type}ов` })
+                // Fix me
+                this.alert_area.element.appendChild(am_alert)
+            }
+        }
+
+    }
+
     describeCurrentOrder(data) {
         if(!data) return
+        let stats_ignore_columns = []        
         // Fix me
         if(data.order_sides[0]['Поставщик'] != sessionStorage.getItem('active_storage')) {
-            this.toolbar.complete_btn.hide()
-            this.orderStatisticsSection.element.className = 'hidden'
+            this.actual_order_toolbar.complete_btn.hide()
+            stats_ignore_columns =  ['К-во свободных', 'К-во на складе']
         }
         else{
-            this.orderStatisticsSection.element.className = 'active'
-            this.toolbar.complete_btn.show()
+            this.showAlerts(data.order_stats)
+            this.actual_order_toolbar.complete_btn.show()
         } 
         createTable(
             data.order_sides,
@@ -46,7 +64,9 @@ class ConcreteOrderManager extends Section {
         createTable(
             data.order_stats,
             null,
-            this.orderStatisticsSection.element
+            this.orderStatisticsSection.element,
+            false,
+            stats_ignore_columns
         )
         createTable(
             Object.values(data.available_products),

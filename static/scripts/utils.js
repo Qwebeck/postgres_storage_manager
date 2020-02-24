@@ -46,6 +46,20 @@ function sendRequest(url, data, method) {
         xhr.ontimeout = function () {
             reject('Слишком долгое время соединения')
         }
+        // Trims all keys,and values because often could be that dict key/value is a primary key in db. 
+        // For example product type, so it ouldd happend, that two same types 
+        // ( one with space another without  ) would be trackted differently
+        for(let key in data){
+            if (typeof data[key] === "string"){
+                data[key] = data[key].trim()
+            }else{
+                for(let subkey in data[key]){
+                    let val = data[key][subkey] 
+                    delete data[key][subkey]
+                    data[key][subkey.trim()] = typeof val === "string" ? val.trim() : val 
+                }    
+            }
+        }
         xhr.send(JSON.stringify(data))
     }
     )
@@ -339,4 +353,5 @@ function addProductField(container, new_el_processor = null, last_entered_val_fr
     if (new_el_processor) new_el_processor(data_input, quantity_input, prod_ord);
 
 }
+
 

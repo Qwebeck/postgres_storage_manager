@@ -280,32 +280,50 @@ def expand_history_order(order_id):
 # V
 @app.route('/expand_order/id/<int:order_id>')
 def expand_order(order_id):
-    query = expand_order_query(order_id).all()
-    order_sides = {'Клиент': query[0].client_id, 'Поставщик': query[0].supplier_id} if len(
-        query) > 0 else {}
-    item_info = {'available_products': [],
-                 'order_stats': [],
-                 'order_sides': order_sides
-                 }
-    products_with_stats = {}
-    for row in query:
-        if row.type_name not in products_with_stats.keys():
-            item_stats = {
-                'Тип': row.type_name,
-                'Заказано': row.quantity,
-                'Сгенерировано в рамках заказа': row.available_number or 0,
-                'Всего на складе': row.number or 0,
-                # 'Останеться': row.number - (row.quantity or 0) if row.number else -row.quantity or 0,
-            }
-            item_info['order_stats'].append(item_stats)
-            # Quantity - number of products ,that should be added to order
-            # Used, because query returns all products, that satisfy conditions
-            products_with_stats[row.type_name] = row.quantity
-        # row.serial_number equviavalent to product existance.
-        if row.serial_number and (products_with_stats[row.type_name] or 0) > 0:
-            item_info['available_products'].append(row._asdict())
-            products_with_stats[row.type_name] -= 1
-            # item_info['order_stats'][row.type_name]['Останеться'] += 1
+    order_sides, order_stats_query, available_products_query = expand_order_query(order_id)
+    stats = order_stats_query.all()
+    stats = {item.Тип: item._asdict() for item in stats}
+    counter = {type_: 0 for type_ in stats.keys()}
+    available_products = available_products_query.all()
+    assigned_products = []
+    for item in available_products:
+        if counter[item.Тип] < stats[item.Тип]['Заказано']:
+            assigned_products.append(item._asdict())
+            counter[item.Тип] += 1
+    expanded_order = {
+        'order_sides': order_sides.first()._asdict(),
+        'order_stats': stats,
+        'available_products': assigned_products
+    }
+    return jsonify(expanded_order)
+
+    
+    # query = expand_order_query(order_id).all()
+    # order_sides = {'Клиент': query[0].client_id, 'Поставщик': query[0].supplier_id} if len(
+    #     query) > 0 else {}
+    # item_info = {'available_products': [],
+    #              'order_stats': [],
+    #              'order_sides': order_sides
+    #              }
+    # products_with_stats = {}
+    # for row in query:
+    #     if row.type_name not in products_with_stats.keys():
+    #         item_stats = {
+    #             'Тип': row.type_name,
+    #             'Заказано': row.quantity,
+    #             'Сгенерировано в рамках заказа': row.available_number or 0,
+    #             'Всего на складе': row.number or 0,
+    #             # 'Останеться': row.number - (row.quantity or 0) if row.number else -row.quantity or 0,
+    #         }
+    #         item_info['order_stats'].append(item_stats)
+    #         # Quantity - number of products ,that should be added to order
+    #         # Used, because query returns all products, that satisfy conditions
+    #         products_with_stats[row.type_name] = row.quantity
+    #     # row.serial_number equviavalent to product existance.
+    #     if row.serial_number and (products_with_stats[row.type_name] or 0) > 0:
+    #         item_info['available_products'].append(row._asdict())
+    #         products_with_stats[row.type_name] -= 1
+    #         # item_info['order_stats'][row.type_name]['Останеться'] += 1
     return jsonify(item_info)
 
 

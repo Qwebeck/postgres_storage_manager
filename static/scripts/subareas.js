@@ -76,10 +76,20 @@ function getSections() {
         expanded_type_stats_section: {
             element: document.getElementById('expanded_type_stats')
         },
+        // Fix me
         product_alert_section: {
             element: document.getElementById('product_alert_area'),
             hide: () => {
                 let alerts = document.getElementById('product_alert_area').querySelectorAll(".alert")
+                for (let alert of alerts) {
+                    alert.remove()
+                }
+            }
+        },
+        order_alert_section: {
+            element: document.getElementById('order_alert_section'),
+            hide: () => {
+                let alerts = document.getElementById('order_alert_section').querySelectorAll(".alert")
                 for (let alert of alerts) {
                     alert.remove()
                 }

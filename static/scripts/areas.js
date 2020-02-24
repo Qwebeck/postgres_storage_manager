@@ -29,7 +29,8 @@ function getAreas() {
             element: document.getElementById('concrete_order_description_area'),
             subareas: [
                 sections.order_sides_section,
-                sections.order_statistics_section
+                sections.order_statistics_section,
+                sections.order_alert_section
             ]
         },
         order_editing_section: {
