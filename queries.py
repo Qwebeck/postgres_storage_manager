@@ -154,10 +154,10 @@ def create_product(new_product, owner_id):
         serial_number=new_product['serial_number'],
         type_name=new_product['type_name'],
         owner_id=owner_id,
-        product_condition=bool(new_product['product_condition']),
+        product_condition=new_product['product_condition'] == 'true',
         model=new_product['model'],
         producent=new_product['producent'],
-        additonal_info=new_product['additional_info']
+        additonal_info=new_product['additional_info'],
     )
     if not get_critical_level(owner_id, [new_product['type_name']]).all():
         new_critical_entry = CriticalLevels(
@@ -302,12 +302,13 @@ def expand_order_query(order_id):
                                          func.count(
         case(
             [
-                (Products.appear_in_order ==
-                 None, Products.type_name)
+                (and_(Products.appear_in_order == None,
+                      Products.product_condition == True),
+                Products.type_name)
             ],
             else_=None
         )
-    ).label('К-во свободных'),
+    ).label('К-во исправных свободных'),
         func.count(Products.type_name).label('К-во на складе'),
         func.count(
             case(
@@ -316,8 +317,8 @@ def expand_order_query(order_id):
                 ],
                 else_=None
             )
-        ).label('К-во привязаных')
-        )\
+    ).label('К-во привязаных')
+    )\
         .select_from(Orders)\
         .join(SpecificOrders, SpecificOrders.order_id == Orders.order_id)\
         .join(Products,
@@ -328,7 +329,6 @@ def expand_order_query(order_id):
         .filter(Orders.order_id == order_id)\
         .group_by(SpecificOrders.type_name, SpecificOrders.quantity)
 
-
     # .join(Orders, and_(Orders.order_id == order_id,
     #                    Orders.supplier_id == Products.owner_id))\
     #     .join(SpecificOrders, and_(
@@ -336,7 +336,7 @@ def expand_order_query(order_id):
     #         SpecificOrders.type_name == Products.type_name
     #     )
     # )\
-        # .group_by(Products.type_name, SpecificOrders.quantity)
+    # .group_by(Products.type_name, SpecificOrders.quantity)
     # 2
     available_products_query = db.session.query(
         Products.type_name.label('Тип'),
@@ -353,7 +353,10 @@ def expand_order_query(order_id):
             SpecificOrders.type_name == Products.type_name
         )
     )\
-        .filter(or_(Products.appear_in_order == None, Products.appear_in_order == order_id))\
+        .filter(and_(or_(Products.appear_in_order == None, 
+                        Products.appear_in_order == order_id),
+                    Products.product_condition == True
+                ))\
         .order_by(Products.type_name, Products.appear_in_order.asc())
 
     return order_sides, order_stats_query, available_products_query
