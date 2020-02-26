@@ -1,0 +1,1088 @@
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db'>: starting process
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 14756>: process started
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 14756>: process completed
+INFO:root:Start uploading b2b_database_dump.gz
+INFO:oauth2client.client:access_token is expired. Now: 2020-02-25 18:32:04.542608, token_expiry: 2020-02-25 14:32:08
+INFO:oauth2client.client:Refreshing access_token
+WARNING:googleapiclient.discovery_cache:file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 36, in autodetect
+    from google.appengine.api import memcache
+ModuleNotFoundError: No module named 'google.appengine'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 33, in <module>
+    from oauth2client.contrib.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.contrib.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 37, in <module>
+    from oauth2client.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 41, in autodetect
+    from . import file_cache
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 41, in <module>
+    'file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth')
+ImportError: file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/discovery/v1/apis/drive/v2/rest
+INFO:googleapiclient.discovery:URL being requested: POST https://www.googleapis.com/upload/drive/v2/files?alt=json&uploadType=resumable
+INFO:root:Successfully uploaded b2b_database_dump.gz
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:18:44] "[37mGET / HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:18:45] "[37mGET /static/styles/style.css HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:18:45] "[36mGET /static/scripts/index.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:18:45] "[36mGET /static/scripts/utils.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:18:45] "[36mGET /static/scripts/areas.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:18:45] "[36mGET /static/scripts/subareas.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:18:45] "[36mGET /static/scripts/data_dicts.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:18:45] "[36mGET /static/scripts/section.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:18:45] "[36mGET /static/scripts/order_manager.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:18:45] "[36mGET /static/scripts/concrete_order_manager.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:18:45] "[36mGET /static/scripts/storage_manager.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:18:45] "[36mGET /static/scripts/product_type_manager.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:18:45] "[36mGET /static/scripts/order_editor.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:18:45] "[36mGET /static/scripts/url_creators.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:18:45] "[36mGET /static/scripts/validators.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:18:45] "[37mGET /static/styles/Preloader_2.gif HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:18:45] "[37mGET /mock HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:18:45] "[37mGET /mock HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:18:45] "[37mGET /info_about_businesses HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:18:46] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:18:46] "[37mGET /get_orders/Головний%20офіс,%20Вінниця HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:18:46] "[37mGET /get_statistics/id/Головний%20офіс,%20Вінниця HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:19:18] "[37mPOST /add_items_on_storage/id/Головний%20офіс,%20Вінниця HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:19:18] "[37mGET /get_statistics/id/Головний%20офіс,%20Вінниця HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:19:21] "[37mGET /expand_types/id/Головний%20офіс,%20Вінниця/types/printer HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:19:28] "[37mPOST /modify_critical_level HTTP/1.1[0m" 200 -
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db'>: starting process
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 22233>: process started
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 22233>: process completed
+INFO:root:Start uploading b2b_database_dump.gz
+INFO:oauth2client.client:access_token is expired. Now: 2020-02-25 21:19:45.132957, token_expiry: 2020-02-25 19:32:03
+INFO:oauth2client.client:Refreshing access_token
+WARNING:googleapiclient.discovery_cache:file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 36, in autodetect
+    from google.appengine.api import memcache
+ModuleNotFoundError: No module named 'google.appengine'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 33, in <module>
+    from oauth2client.contrib.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.contrib.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 37, in <module>
+    from oauth2client.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 41, in autodetect
+    from . import file_cache
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 41, in <module>
+    'file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth')
+ImportError: file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/discovery/v1/apis/drive/v2/rest
+INFO:googleapiclient.discovery:URL being requested: POST https://www.googleapis.com/upload/drive/v2/files?alt=json&uploadType=resumable
+INFO:root:Successfully uploaded b2b_database_dump.gz
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db'>: starting process
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 22788>: process started
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db'>: starting process
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 22876>: process started
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 22876>: process completed
+INFO:root:Start uploading b2b_database_dump
+WARNING:googleapiclient.discovery_cache:file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 36, in autodetect
+    from google.appengine.api import memcache
+ModuleNotFoundError: No module named 'google.appengine'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 33, in <module>
+    from oauth2client.contrib.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.contrib.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 37, in <module>
+    from oauth2client.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 41, in autodetect
+    from . import file_cache
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 41, in <module>
+    'file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth')
+ImportError: file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/discovery/v1/apis/drive/v2/rest
+INFO:googleapiclient.discovery:URL being requested: POST https://www.googleapis.com/upload/drive/v2/files?alt=json&uploadType=resumable
+INFO:root:Successfully uploaded b2b_database_dump
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:31:53] "[37mPOST /add_new_business HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:31:53] "[37mGET /get_statistics/id/my%20back%20up%20test HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:31:53] "[37mGET /get_orders/my%20back%20up%20test HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:31:53] "[37mGET /info_about_businesses HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:31:53] "[37mGET /mock HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:31:53] "[37mGET /mock HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:31:53] "[37mGET /mock HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:31:53] "[37mGET /get_statistics/id/my%20back%20up%20test HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:31:53] "[37mGET /mock HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:31:53] "[37mGET /get_orders/my%20back%20up%20test HTTP/1.1[0m" 200 -
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db'>: starting process
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 22913>: process started
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 22913>: process completed
+INFO:root:Start uploading b2b_database_dump
+WARNING:googleapiclient.discovery_cache:file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 36, in autodetect
+    from google.appengine.api import memcache
+ModuleNotFoundError: No module named 'google.appengine'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 33, in <module>
+    from oauth2client.contrib.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.contrib.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 37, in <module>
+    from oauth2client.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 41, in autodetect
+    from . import file_cache
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 41, in <module>
+    'file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth')
+ImportError: file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/discovery/v1/apis/drive/v2/rest
+INFO:googleapiclient.discovery:URL being requested: POST https://www.googleapis.com/upload/drive/v2/files?alt=json&uploadType=resumable
+INFO:root:Successfully uploaded b2b_database_dump
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db'>: starting process
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 23057>: process started
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 23057>: process completed
+INFO:root:Start uploading b2b_database_dump
+WARNING:googleapiclient.discovery_cache:file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 36, in autodetect
+    from google.appengine.api import memcache
+ModuleNotFoundError: No module named 'google.appengine'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 33, in <module>
+    from oauth2client.contrib.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.contrib.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 37, in <module>
+    from oauth2client.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 41, in autodetect
+    from . import file_cache
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 41, in <module>
+    'file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth')
+ImportError: file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/discovery/v1/apis/drive/v2/rest
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/drive/v2/files/b2b_database_dump?alt=json
+ERROR:root:Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/files.py", line 237, in FetchMetadata
+    .execute(http=self.http)
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/_helpers.py", line 130, in positional_wrapper
+    return wrapped(*args, **kwargs)
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/http.py", line 856, in execute
+    raise HttpError(resp, content, uri=self.uri)
+googleapiclient.errors.HttpError: <HttpError 404 when requesting https://www.googleapis.com/drive/v2/files/b2b_database_dump?alt=json returned "File not found: b2b_database_dump">
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/Projects/b2b_actual/cloud_backup.py", line 33, in upload
+    file_drive.Upload()
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/files.py", line 281, in Upload
+    self._FilesUpdate(param=param)
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/auth.py", line 75, in _decorated
+    return decoratee(self, *args, **kwargs)
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/files.py", line 42, in _decorated
+    self.FetchMetadata()
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/auth.py", line 75, in _decorated
+    return decoratee(self, *args, **kwargs)
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/files.py", line 239, in FetchMetadata
+    raise ApiRequestError(error)
+pydrive.files.ApiRequestError: <HttpError 404 when requesting https://www.googleapis.com/drive/v2/files/b2b_database_dump?alt=json returned "File not found: b2b_database_dump">
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/files.py", line 237, in FetchMetadata
+    .execute(http=self.http)
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/_helpers.py", line 130, in positional_wrapper
+    return wrapped(*args, **kwargs)
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/http.py", line 856, in execute
+    raise HttpError(resp, content, uri=self.uri)
+googleapiclient.errors.HttpError: <HttpError 404 when requesting https://www.googleapis.com/drive/v2/files/b2b_database_dump?alt=json returned "File not found: b2b_database_dump">
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/Projects/b2b_actual/cloud_backup.py", line 33, in upload
+    file_drive.Upload()
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/files.py", line 281, in Upload
+    self._FilesUpdate(param=param)
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/auth.py", line 75, in _decorated
+    return decoratee(self, *args, **kwargs)
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/files.py", line 42, in _decorated
+    self.FetchMetadata()
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/auth.py", line 75, in _decorated
+    return decoratee(self, *args, **kwargs)
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/files.py", line 239, in FetchMetadata
+    raise ApiRequestError(error)
+pydrive.files.ApiRequestError: <HttpError 404 when requesting https://www.googleapis.com/drive/v2/files/b2b_database_dump?alt=json returned "File not found: b2b_database_dump">
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db'>: starting process
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 23107>: process started
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 23107>: process completed
+INFO:root:Start uploading b2b_database_dump
+WARNING:googleapiclient.discovery_cache:file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 36, in autodetect
+    from google.appengine.api import memcache
+ModuleNotFoundError: No module named 'google.appengine'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 33, in <module>
+    from oauth2client.contrib.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.contrib.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 37, in <module>
+    from oauth2client.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 41, in autodetect
+    from . import file_cache
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 41, in <module>
+    'file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth')
+ImportError: file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/discovery/v1/apis/drive/v2/rest
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/drive/v2/files/b2b_database_dump?alt=json
+ERROR:root:Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/files.py", line 237, in FetchMetadata
+    .execute(http=self.http)
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/_helpers.py", line 130, in positional_wrapper
+    return wrapped(*args, **kwargs)
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/http.py", line 856, in execute
+    raise HttpError(resp, content, uri=self.uri)
+googleapiclient.errors.HttpError: <HttpError 404 when requesting https://www.googleapis.com/drive/v2/files/b2b_database_dump?alt=json returned "File not found: b2b_database_dump">
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/Projects/b2b_actual/cloud_backup.py", line 33, in upload
+    file_drive.Upload()
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/files.py", line 281, in Upload
+    self._FilesUpdate(param=param)
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/auth.py", line 75, in _decorated
+    return decoratee(self, *args, **kwargs)
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/files.py", line 42, in _decorated
+    self.FetchMetadata()
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/auth.py", line 75, in _decorated
+    return decoratee(self, *args, **kwargs)
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/files.py", line 239, in FetchMetadata
+    raise ApiRequestError(error)
+pydrive.files.ApiRequestError: <HttpError 404 when requesting https://www.googleapis.com/drive/v2/files/b2b_database_dump?alt=json returned "File not found: b2b_database_dump">
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/files.py", line 237, in FetchMetadata
+    .execute(http=self.http)
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/_helpers.py", line 130, in positional_wrapper
+    return wrapped(*args, **kwargs)
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/http.py", line 856, in execute
+    raise HttpError(resp, content, uri=self.uri)
+googleapiclient.errors.HttpError: <HttpError 404 when requesting https://www.googleapis.com/drive/v2/files/b2b_database_dump?alt=json returned "File not found: b2b_database_dump">
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/Projects/b2b_actual/cloud_backup.py", line 33, in upload
+    file_drive.Upload()
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/files.py", line 281, in Upload
+    self._FilesUpdate(param=param)
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/auth.py", line 75, in _decorated
+    return decoratee(self, *args, **kwargs)
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/files.py", line 42, in _decorated
+    self.FetchMetadata()
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/auth.py", line 75, in _decorated
+    return decoratee(self, *args, **kwargs)
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/files.py", line 239, in FetchMetadata
+    raise ApiRequestError(error)
+pydrive.files.ApiRequestError: <HttpError 404 when requesting https://www.googleapis.com/drive/v2/files/b2b_database_dump?alt=json returned "File not found: b2b_database_dump">
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db'>: starting process
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 23276>: process started
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 23276>: process completed
+INFO:root:Start uploading b2b_database_dump
+WARNING:googleapiclient.discovery_cache:file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 36, in autodetect
+    from google.appengine.api import memcache
+ModuleNotFoundError: No module named 'google.appengine'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 33, in <module>
+    from oauth2client.contrib.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.contrib.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 37, in <module>
+    from oauth2client.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 41, in autodetect
+    from . import file_cache
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 41, in <module>
+    'file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth')
+ImportError: file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/discovery/v1/apis/drive/v2/rest
+INFO:googleapiclient.discovery:URL being requested: POST https://www.googleapis.com/upload/drive/v2/files?alt=json&uploadType=resumable
+INFO:root:Successfully uploaded b2b_database_dump
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db'>: starting process
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 23357>: process started
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 23357>: process completed
+INFO:root:Start uploading b2b_database_dump
+WARNING:googleapiclient.discovery_cache:file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 36, in autodetect
+    from google.appengine.api import memcache
+ModuleNotFoundError: No module named 'google.appengine'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 33, in <module>
+    from oauth2client.contrib.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.contrib.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 37, in <module>
+    from oauth2client.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 41, in autodetect
+    from . import file_cache
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 41, in <module>
+    'file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth')
+ImportError: file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/discovery/v1/apis/drive/v2/rest
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/drive/v2/files/b2b_database_dump?alt=json
+ERROR:root:Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/files.py", line 237, in FetchMetadata
+    .execute(http=self.http)
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/_helpers.py", line 130, in positional_wrapper
+    return wrapped(*args, **kwargs)
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/http.py", line 856, in execute
+    raise HttpError(resp, content, uri=self.uri)
+googleapiclient.errors.HttpError: <HttpError 404 when requesting https://www.googleapis.com/drive/v2/files/b2b_database_dump?alt=json returned "File not found: b2b_database_dump">
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/Projects/b2b_actual/cloud_backup.py", line 33, in upload
+    file_drive.Upload()
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/files.py", line 281, in Upload
+    self._FilesUpdate(param=param)
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/auth.py", line 75, in _decorated
+    return decoratee(self, *args, **kwargs)
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/files.py", line 42, in _decorated
+    self.FetchMetadata()
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/auth.py", line 75, in _decorated
+    return decoratee(self, *args, **kwargs)
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/files.py", line 239, in FetchMetadata
+    raise ApiRequestError(error)
+pydrive.files.ApiRequestError: <HttpError 404 when requesting https://www.googleapis.com/drive/v2/files/b2b_database_dump?alt=json returned "File not found: b2b_database_dump">
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/files.py", line 237, in FetchMetadata
+    .execute(http=self.http)
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/_helpers.py", line 130, in positional_wrapper
+    return wrapped(*args, **kwargs)
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/http.py", line 856, in execute
+    raise HttpError(resp, content, uri=self.uri)
+googleapiclient.errors.HttpError: <HttpError 404 when requesting https://www.googleapis.com/drive/v2/files/b2b_database_dump?alt=json returned "File not found: b2b_database_dump">
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/Projects/b2b_actual/cloud_backup.py", line 33, in upload
+    file_drive.Upload()
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/files.py", line 281, in Upload
+    self._FilesUpdate(param=param)
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/auth.py", line 75, in _decorated
+    return decoratee(self, *args, **kwargs)
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/files.py", line 42, in _decorated
+    self.FetchMetadata()
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/auth.py", line 75, in _decorated
+    return decoratee(self, *args, **kwargs)
+  File "/usr/local/lib/python3.7/dist-packages/pydrive/files.py", line 239, in FetchMetadata
+    raise ApiRequestError(error)
+pydrive.files.ApiRequestError: <HttpError 404 when requesting https://www.googleapis.com/drive/v2/files/b2b_database_dump?alt=json returned "File not found: b2b_database_dump">
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db'>: starting process
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 23382>: process started
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 23382>: process completed
+INFO:root:Start uploading b2b_database_dump
+WARNING:googleapiclient.discovery_cache:file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 36, in autodetect
+    from google.appengine.api import memcache
+ModuleNotFoundError: No module named 'google.appengine'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 33, in <module>
+    from oauth2client.contrib.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.contrib.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 37, in <module>
+    from oauth2client.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 41, in autodetect
+    from . import file_cache
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 41, in <module>
+    'file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth')
+ImportError: file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/discovery/v1/apis/drive/v2/rest
+INFO:googleapiclient.discovery:URL being requested: POST https://www.googleapis.com/upload/drive/v2/files?alt=json&uploadType=resumable
+INFO:root:Successfully uploaded b2b_database_dump
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db'>: starting process
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 23522>: process started
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 23522>: process completed
+INFO:root:Start uploading b2b_database_dump
+WARNING:googleapiclient.discovery_cache:file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 36, in autodetect
+    from google.appengine.api import memcache
+ModuleNotFoundError: No module named 'google.appengine'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 33, in <module>
+    from oauth2client.contrib.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.contrib.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 37, in <module>
+    from oauth2client.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 41, in autodetect
+    from . import file_cache
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 41, in <module>
+    'file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth')
+ImportError: file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/discovery/v1/apis/drive/v2/rest
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/drive/v2/files?q=%27root%27+in+parents&maxResults=1000&alt=json
+INFO:googleapiclient.discovery:URL being requested: POST https://www.googleapis.com/upload/drive/v2/files?alt=json&uploadType=resumable
+INFO:root:Successfully uploaded b2b_database_dump
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db'>: starting process
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 23557>: process started
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 23557>: process completed
+INFO:root:Start uploading b2b_database_dump
+WARNING:googleapiclient.discovery_cache:file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 36, in autodetect
+    from google.appengine.api import memcache
+ModuleNotFoundError: No module named 'google.appengine'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 33, in <module>
+    from oauth2client.contrib.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.contrib.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 37, in <module>
+    from oauth2client.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 41, in autodetect
+    from . import file_cache
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 41, in <module>
+    'file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth')
+ImportError: file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/discovery/v1/apis/drive/v2/rest
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/drive/v2/files?q=%27root%27+in+parents&maxResults=1000&alt=json
+INFO:googleapiclient.discovery:URL being requested: POST https://www.googleapis.com/upload/drive/v2/files?alt=json&uploadType=resumable
+INFO:root:Successfully uploaded b2b_database_dump
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db'>: starting process
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 23571>: process started
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 23571>: process completed
+INFO:root:Start uploading b2b_database_dump
+WARNING:googleapiclient.discovery_cache:file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 36, in autodetect
+    from google.appengine.api import memcache
+ModuleNotFoundError: No module named 'google.appengine'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 33, in <module>
+    from oauth2client.contrib.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.contrib.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 37, in <module>
+    from oauth2client.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 41, in autodetect
+    from . import file_cache
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 41, in <module>
+    'file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth')
+ImportError: file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/discovery/v1/apis/drive/v2/rest
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/drive/v2/files?q=%27root%27+in+parents&maxResults=1000&alt=json
+INFO:googleapiclient.discovery:URL being requested: POST https://www.googleapis.com/upload/drive/v2/files?alt=json&uploadType=resumable
+INFO:root:Successfully uploaded b2b_database_dump
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db'>: starting process
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 23626>: process started
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 23626>: process completed
+INFO:root:Start uploading b2b_database_dump
+WARNING:googleapiclient.discovery_cache:file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 36, in autodetect
+    from google.appengine.api import memcache
+ModuleNotFoundError: No module named 'google.appengine'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 33, in <module>
+    from oauth2client.contrib.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.contrib.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 37, in <module>
+    from oauth2client.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 41, in autodetect
+    from . import file_cache
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 41, in <module>
+    'file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth')
+ImportError: file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/discovery/v1/apis/drive/v2/rest
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/drive/v2/files?q=%27root%27+in+parents&maxResults=1000&alt=json
+INFO:googleapiclient.discovery:URL being requested: DELETE https://www.googleapis.com/drive/v2/files/1XFHY1R8LLtIjKxNv2q2AZPpnC_TCb3bK?
+INFO:googleapiclient.discovery:URL being requested: DELETE https://www.googleapis.com/drive/v2/files/1AOFlTVGDGYyYofesCWo6JPO7IYbFamUE?
+INFO:googleapiclient.discovery:URL being requested: DELETE https://www.googleapis.com/drive/v2/files/1IE1kDzua0Bqg8f9bQWAfY0wXwi8ZBzBV?
+INFO:googleapiclient.discovery:URL being requested: DELETE https://www.googleapis.com/drive/v2/files/1W7U2VozUHmh2hp889QAFNDkf2qQFF0md?
+INFO:googleapiclient.discovery:URL being requested: POST https://www.googleapis.com/upload/drive/v2/files?alt=json&uploadType=resumable
+INFO:root:Successfully uploaded b2b_database_dump
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db'>: starting process
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 23641>: process started
+INFO:sh.command:<Command '/usr/bin/pg_dump -d falcon_db', pid 23641>: process completed
+INFO:root:Start uploading b2b_database_dump
+WARNING:googleapiclient.discovery_cache:file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 36, in autodetect
+    from google.appengine.api import memcache
+ModuleNotFoundError: No module named 'google.appengine'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 33, in <module>
+    from oauth2client.contrib.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.contrib.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 37, in <module>
+    from oauth2client.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 41, in autodetect
+    from . import file_cache
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 41, in <module>
+    'file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth')
+ImportError: file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/discovery/v1/apis/drive/v2/rest
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/drive/v2/files?q=%27root%27+in+parents&maxResults=1000&alt=json
+INFO:googleapiclient.discovery:URL being requested: DELETE https://www.googleapis.com/drive/v2/files/1-VKXOZM3kGakvwAtUOwdUucbjYYMDhRq?
+INFO:googleapiclient.discovery:URL being requested: POST https://www.googleapis.com/upload/drive/v2/files?alt=json&uploadType=resumable
+INFO:root:Successfully uploaded b2b_database_dump
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:59:24] "[37mGET / HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:59:24] "[37mGET /static/styles/style.css HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:59:25] "[37mGET /info_about_businesses HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:59:25] "[37mGET /mock HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:59:25] "[37mGET /mock HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:59:25] "[37mGET /get_orders/Головний%20офіс,%20Вінниця HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:59:25] "[37mGET /get_statistics/id/Головний%20офіс,%20Вінниця HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:59:25] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:59:50] "[37mPOST /add_new_business HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:59:50] "[37mGET /info_about_businesses HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:59:50] "[37mGET /mock HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:59:50] "[37mGET /get_statistics/id/Головний%20офіс,%20Вінниця HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:59:50] "[37mGET /mock HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:59:50] "[37mGET /get_orders/Головний%20офіс,%20Вінниця HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:59:59] "[37mPOST /add_new_business HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:59:59] "[37mGET /info_about_businesses HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:59:59] "[37mGET /get_statistics/id/test HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:59:59] "[37mGET /mock HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:59:59] "[37mGET /mock HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 22:59:59] "[37mGET /get_orders/test HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:00:04] "[37mGET /mock HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:00:04] "[37mGET /get_statistics/id/Головний%20офіс,%20Вінниця HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:00:04] "[37mGET /mock HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:00:04] "[37mGET /get_orders/Головний%20офіс,%20Вінниця HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:00:18] "[37mPOST /add_items_on_storage/id/Головний%20офіс,%20Вінниця HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:00:18] "[37mGET /get_statistics/id/Головний%20офіс,%20Вінниця HTTP/1.1[0m" 200 -
+INFO:sh.command:<Command '/usr/bin/pg_dump -d b2b_database'>: starting process
+INFO:sh.command:<Command '/usr/bin/pg_dump -d b2b_database', pid 24167>: process started
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:sh.command:<Command '/usr/bin/pg_dump -d b2b_database'>: starting process
+INFO:sh.command:<Command '/usr/bin/pg_dump -d b2b_database', pid 25305>: process started
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:sh.command:<Command '/usr/bin/pg_dump -d b2b_database'>: starting process
+INFO:sh.command:<Command '/usr/bin/pg_dump -d b2b_database', pid 25495>: process started
+INFO:sh.command:<Command '/usr/bin/pg_dump -d b2b_database', pid 25495>: process completed
+INFO:root:Start uploading b2b_database_dump
+INFO:oauth2client.client:access_token is expired. Now: 2020-02-25 22:41:46.151082, token_expiry: 2020-02-25 22:19:44
+INFO:oauth2client.client:Refreshing access_token
+WARNING:googleapiclient.discovery_cache:file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 36, in autodetect
+    from google.appengine.api import memcache
+ModuleNotFoundError: No module named 'google.appengine'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 33, in <module>
+    from oauth2client.contrib.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.contrib.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 37, in <module>
+    from oauth2client.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 41, in autodetect
+    from . import file_cache
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 41, in <module>
+    'file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth')
+ImportError: file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/discovery/v1/apis/drive/v2/rest
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/drive/v2/files?q=%27root%27+in+parents&maxResults=1000&alt=json
+INFO:googleapiclient.discovery:URL being requested: DELETE https://www.googleapis.com/drive/v2/files/1RtsYSJSL4MyrU2U2d8yl2RoNHWBKhxJY?
+INFO:googleapiclient.discovery:URL being requested: POST https://www.googleapis.com/upload/drive/v2/files?alt=json&uploadType=resumable
+INFO:root:Successfully uploaded b2b_database_dump
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:43:59] "[37mGET / HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:43:59] "[36mGET /static/scripts/index.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:43:59] "[36mGET /static/scripts/utils.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:44:00] "[36mGET /static/scripts/areas.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:44:00] "[36mGET /static/scripts/subareas.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:44:00] "[36mGET /static/scripts/data_dicts.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:44:00] "[36mGET /static/scripts/section.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:44:00] "[36mGET /static/scripts/order_manager.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:44:00] "[37mGET /static/styles/style.css HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:44:00] "[36mGET /static/scripts/concrete_order_manager.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:44:00] "[36mGET /static/scripts/storage_manager.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:44:00] "[36mGET /static/scripts/product_type_manager.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:44:00] "[36mGET /static/scripts/order_editor.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:44:00] "[36mGET /static/scripts/url_creators.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:44:00] "[36mGET /static/scripts/validators.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:44:00] "[37mGET /static/styles/Preloader_2.gif HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:44:00] "[37mGET /info_about_businesses HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:44:00] "[37mGET /get_statistics/id/Головний%20офіс,%20Вінниця HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:44:00] "[37mGET /mock HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:44:00] "[37mGET /get_orders/Головний%20офіс,%20Вінниця HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:44:00] "[37mGET /mock HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:44:00] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:44:11] "[37mPOST /add_new_business HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:44:11] "[37mGET /info_about_businesses HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:44:11] "[37mGET /get_statistics/id/Головний%20офіс,%20Вінниця HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:44:11] "[37mGET /mock HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:44:11] "[37mGET /mock HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:44:11] "[37mGET /get_orders/Головний%20офіс,%20Вінниця HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:44:34] "[37mPOST /add_items_on_storage/id/Головний%20офіс,%20Вінниця HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:44:34] "[37mGET /get_statistics/id/Головний%20офіс,%20Вінниця HTTP/1.1[0m" 200 -
+INFO:sh.command:<Command '/usr/bin/pg_dump -d b2b_database'>: starting process
+INFO:sh.command:<Command '/usr/bin/pg_dump -d b2b_database', pid 25576>: process started
+INFO:sh.command:<Command '/usr/bin/pg_dump -d b2b_database', pid 25576>: process completed
+INFO:root:Start uploading b2b_database_dump
+WARNING:googleapiclient.discovery_cache:file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 36, in autodetect
+    from google.appengine.api import memcache
+ModuleNotFoundError: No module named 'google.appengine'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 33, in <module>
+    from oauth2client.contrib.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.contrib.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 37, in <module>
+    from oauth2client.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 41, in autodetect
+    from . import file_cache
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 41, in <module>
+    'file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth')
+ImportError: file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/discovery/v1/apis/drive/v2/rest
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/drive/v2/files?q=%27root%27+in+parents&maxResults=1000&alt=json
+INFO:googleapiclient.discovery:URL being requested: DELETE https://www.googleapis.com/drive/v2/files/1lB9xAkPdV6-33KJKUYl5SIBfQDPti453?
+INFO:googleapiclient.discovery:URL being requested: POST https://www.googleapis.com/upload/drive/v2/files?alt=json&uploadType=resumable
+INFO:root:Successfully uploaded b2b_database_dump
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:40] "[37mGET / HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:40] "[36mGET /static/scripts/utils.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:40] "[36mGET /static/scripts/index.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:40] "[37mGET /static/styles/style.css HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:40] "[36mGET /static/scripts/areas.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:40] "[36mGET /static/scripts/subareas.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:40] "[36mGET /static/scripts/data_dicts.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:40] "[36mGET /static/scripts/order_manager.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:40] "[36mGET /static/scripts/section.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:40] "[36mGET /static/scripts/concrete_order_manager.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:40] "[36mGET /static/scripts/storage_manager.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:40] "[36mGET /static/scripts/product_type_manager.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:40] "[36mGET /static/scripts/order_editor.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:40] "[36mGET /static/scripts/url_creators.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:40] "[36mGET /static/scripts/validators.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:40] "[36mGET /static/styles/Preloader_2.gif HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:40] "[37mGET /mock HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:40] "[37mGET /mock HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:40] "[37mGET /info_about_businesses HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:40] "[37mGET /get_orders/Головний%20офіс,%20Вінниця HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:40] "[37mGET /get_statistics/id/Головний%20офіс,%20Вінниця HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:49] "[37mGET / HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:49] "[36mGET /static/styles/style.css HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:49] "[36mGET /static/scripts/index.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:49] "[36mGET /static/scripts/utils.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:49] "[36mGET /static/scripts/areas.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:49] "[36mGET /static/scripts/subareas.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:49] "[36mGET /static/scripts/data_dicts.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:49] "[36mGET /static/scripts/section.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:49] "[36mGET /static/scripts/order_manager.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:49] "[36mGET /static/scripts/concrete_order_manager.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:49] "[36mGET /static/scripts/storage_manager.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:49] "[36mGET /static/scripts/product_type_manager.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:49] "[36mGET /static/scripts/order_editor.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:49] "[36mGET /static/scripts/url_creators.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:49] "[36mGET /static/scripts/validators.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:49] "[36mGET /static/styles/Preloader_2.gif HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:49] "[37mGET /mock HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:49] "[37mGET /get_orders/Головний%20офіс,%20Вінниця HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:49] "[37mGET /info_about_businesses HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:49] "[37mGET /get_statistics/id/Головний%20офіс,%20Вінниця HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:49:49] "[37mGET /mock HTTP/1.1[0m" 200 -
+INFO:sh.command:<Command '/usr/bin/pg_dump -d b2b_database'>: starting process
+INFO:sh.command:<Command '/usr/bin/pg_dump -d b2b_database', pid 25900>: process started
+INFO:sh.command:<Command '/usr/bin/pg_dump -d b2b_database', pid 25900>: process completed
+INFO:root:Start uploading b2b_database_dump
+WARNING:googleapiclient.discovery_cache:file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 36, in autodetect
+    from google.appengine.api import memcache
+ModuleNotFoundError: No module named 'google.appengine'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 33, in <module>
+    from oauth2client.contrib.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.contrib.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 37, in <module>
+    from oauth2client.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 41, in autodetect
+    from . import file_cache
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 41, in <module>
+    'file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth')
+ImportError: file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/discovery/v1/apis/drive/v2/rest
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/drive/v2/files?q=%27root%27+in+parents&maxResults=1000&alt=json
+INFO:googleapiclient.discovery:URL being requested: DELETE https://www.googleapis.com/drive/v2/files/13E-zsZ-GP8vAijnKlpm8xpvn6ZwOBY45?
+INFO:googleapiclient.discovery:URL being requested: POST https://www.googleapis.com/upload/drive/v2/files?alt=json&uploadType=resumable
+INFO:root:Successfully uploaded b2b_database_dump
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:04] "[37mGET / HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:04] "[36mGET /static/scripts/index.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:04] "[36mGET /static/scripts/utils.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:04] "[36mGET /static/scripts/areas.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:04] "[36mGET /static/scripts/data_dicts.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:04] "[36mGET /static/scripts/subareas.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:04] "[36mGET /static/scripts/section.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:04] "[36mGET /static/scripts/concrete_order_manager.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:04] "[36mGET /static/scripts/order_manager.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:04] "[36mGET /static/scripts/storage_manager.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:04] "[36mGET /static/scripts/product_type_manager.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:04] "[36mGET /static/scripts/order_editor.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:04] "[36mGET /static/scripts/url_creators.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:04] "[36mGET /static/scripts/validators.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:04] "[37mGET /static/styles/style.css HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:04] "[36mGET /static/styles/Preloader_2.gif HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:04] "[37mGET /mock HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:04] "[37mGET /info_about_businesses HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:04] "[37mGET /mock HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:04] "[37mGET /get_statistics/id/Головний%20офіс,%20Вінниця HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:04] "[37mGET /get_orders/Головний%20офіс,%20Вінниця HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:08] "[37mGET / HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:08] "[36mGET /static/styles/style.css HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:08] "[36mGET /static/scripts/index.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:08] "[36mGET /static/scripts/utils.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:08] "[36mGET /static/scripts/data_dicts.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:08] "[36mGET /static/scripts/subareas.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:08] "[36mGET /static/scripts/areas.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:08] "[36mGET /static/scripts/order_manager.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:08] "[36mGET /static/scripts/section.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:08] "[36mGET /static/scripts/concrete_order_manager.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:08] "[36mGET /static/scripts/product_type_manager.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:08] "[36mGET /static/scripts/storage_manager.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:08] "[36mGET /static/scripts/order_editor.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:08] "[36mGET /static/scripts/url_creators.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:08] "[36mGET /static/scripts/validators.js HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:08] "[36mGET /static/styles/Preloader_2.gif HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:08] "[37mGET /info_about_businesses HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:08] "[37mGET /get_statistics/id/Головний%20офіс,%20Вінниця HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:08] "[37mGET /mock HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:08] "[37mGET /get_orders/Головний%20офіс,%20Вінниця HTTP/1.1[0m" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Feb/2020 23:56:08] "[37mGET /mock HTTP/1.1[0m" 200 -
+INFO:sh.command:<Command '/usr/bin/pg_dump -d b2b_database'>: starting process
+INFO:sh.command:<Command '/usr/bin/pg_dump -d b2b_database', pid 26111>: process started
+INFO:sh.command:<Command '/usr/bin/pg_dump -d b2b_database', pid 26111>: process completed
+INFO:root:Start uploading b2b_database_dump
+WARNING:googleapiclient.discovery_cache:file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 36, in autodetect
+    from google.appengine.api import memcache
+ModuleNotFoundError: No module named 'google.appengine'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 33, in <module>
+    from oauth2client.contrib.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.contrib.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 37, in <module>
+    from oauth2client.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 41, in autodetect
+    from . import file_cache
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 41, in <module>
+    'file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth')
+ImportError: file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/discovery/v1/apis/drive/v2/rest
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/drive/v2/files?q=%27root%27+in+parents&maxResults=1000&alt=json
+INFO:googleapiclient.discovery:URL being requested: DELETE https://www.googleapis.com/drive/v2/files/13uw9oLYjZNppGAeHWAmZzlZFv14pmlD1?
+INFO:googleapiclient.discovery:URL being requested: POST https://www.googleapis.com/upload/drive/v2/files?alt=json&uploadType=resumable
+INFO:root:Successfully uploaded b2b_database_dump
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:sh.command:<Command '/usr/bin/pg_dump -d b2b_database'>: starting process
+INFO:sh.command:<Command '/usr/bin/pg_dump -d b2b_database', pid 6798>: process started
+INFO:sh.command:<Command '/usr/bin/pg_dump -d b2b_database', pid 6798>: process completed
+INFO:root:Start uploading b2b_database_dump
+INFO:oauth2client.client:access_token is expired. Now: 2020-02-26 12:45:37.349661, token_expiry: 2020-02-25 23:41:45
+INFO:oauth2client.client:Refreshing access_token
+WARNING:googleapiclient.discovery_cache:file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+Traceback (most recent call last):
+  File "/home/bohdan/Projects/b2b_actual/test/lib/python3.7/site-packages/google_api_python_client-1.7.11-py3.7.egg/googleapiclient/discovery_cache/__init__.py", line 36, in autodetect
+    from google.appengine.api import memcache
+ModuleNotFoundError: No module named 'google.appengine'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/Projects/b2b_actual/test/lib/python3.7/site-packages/google_api_python_client-1.7.11-py3.7.egg/googleapiclient/discovery_cache/file_cache.py", line 33, in <module>
+    from oauth2client.contrib.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.contrib.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/Projects/b2b_actual/test/lib/python3.7/site-packages/google_api_python_client-1.7.11-py3.7.egg/googleapiclient/discovery_cache/file_cache.py", line 37, in <module>
+    from oauth2client.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/Projects/b2b_actual/test/lib/python3.7/site-packages/google_api_python_client-1.7.11-py3.7.egg/googleapiclient/discovery_cache/__init__.py", line 41, in autodetect
+    from . import file_cache
+  File "/home/bohdan/Projects/b2b_actual/test/lib/python3.7/site-packages/google_api_python_client-1.7.11-py3.7.egg/googleapiclient/discovery_cache/file_cache.py", line 41, in <module>
+    'file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth')
+ImportError: file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/discovery/v1/apis/drive/v2/rest
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/drive/v2/files?q=%27root%27+in+parents&maxResults=1000&alt=json
+INFO:googleapiclient.discovery:URL being requested: POST https://www.googleapis.com/upload/drive/v2/files?alt=json&uploadType=resumable
+INFO:root:Successfully uploaded b2b_database_dump
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:sh.command:<Command '/usr/bin/pg_dump -d b2b_database'>: starting process
+INFO:sh.command:<Command '/usr/bin/pg_dump -d b2b_database', pid 7154>: process started
+INFO:sh.command:<Command '/usr/bin/pg_dump -d b2b_database', pid 7154>: process completed
+INFO:root:Start uploading b2b_database_dump
+WARNING:googleapiclient.discovery_cache:file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+Traceback (most recent call last):
+  File "/home/bohdan/Projects/b2b_actual/test/lib/python3.7/site-packages/google_api_python_client-1.7.11-py3.7.egg/googleapiclient/discovery_cache/__init__.py", line 36, in autodetect
+    from google.appengine.api import memcache
+ModuleNotFoundError: No module named 'google.appengine'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/Projects/b2b_actual/test/lib/python3.7/site-packages/google_api_python_client-1.7.11-py3.7.egg/googleapiclient/discovery_cache/file_cache.py", line 33, in <module>
+    from oauth2client.contrib.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.contrib.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/Projects/b2b_actual/test/lib/python3.7/site-packages/google_api_python_client-1.7.11-py3.7.egg/googleapiclient/discovery_cache/file_cache.py", line 37, in <module>
+    from oauth2client.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/Projects/b2b_actual/test/lib/python3.7/site-packages/google_api_python_client-1.7.11-py3.7.egg/googleapiclient/discovery_cache/__init__.py", line 41, in autodetect
+    from . import file_cache
+  File "/home/bohdan/Projects/b2b_actual/test/lib/python3.7/site-packages/google_api_python_client-1.7.11-py3.7.egg/googleapiclient/discovery_cache/file_cache.py", line 41, in <module>
+    'file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth')
+ImportError: file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/discovery/v1/apis/drive/v2/rest
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/drive/v2/files?q=%27root%27+in+parents&maxResults=1000&alt=json
+INFO:googleapiclient.discovery:URL being requested: DELETE https://www.googleapis.com/drive/v2/files/1KZvONChaV9y1PavskqkzYKTMNsblo2jD?
+INFO:googleapiclient.discovery:URL being requested: POST https://www.googleapis.com/upload/drive/v2/files?alt=json&uploadType=resumable
+INFO:root:Successfully uploaded b2b_database_dump
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:sh.command:<Command '/usr/bin/pg_dump -d b2b_database'>: starting process
+INFO:sh.command:<Command '/usr/bin/pg_dump -d b2b_database', pid 7181>: process started
+INFO:sh.command:<Command '/usr/bin/pg_dump -d b2b_database', pid 7181>: process completed
+INFO:root:Start uploading b2b_database_dump

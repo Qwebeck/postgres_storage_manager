@@ -1,11 +1,12 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from config import SCHEMA_NAME, SQLALCHEMY_DATABASE_URI
+from config import SCHEMA_NAME, SQLALCHEMY_DATABASE_URI, SQLALCHEMY_TRACK_MODIFICATIONS
 from datetime import datetime
 # from eralchemy import render_er
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = SQLALCHEMY_TRACK_MODIFICATIONS
 app.config['JSON_SORT_KEYS'] = False
 db = SQLAlchemy(app)
 

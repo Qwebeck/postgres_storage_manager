@@ -1,3 +1,5 @@
+from cloud_backup import upload_dump
+import atexit
 from flask import (jsonify, render_template, request)
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func, update, delete, join, select, and_
@@ -7,24 +9,24 @@ from models import (app, db, Products, Businesses, Orders, SpecificOrders)
 from sqlalchemy.sql import text
 from datetime import datetime
 from queries import (client_supplier_query,
-                         types_query,
-                         statistics_query,
-                         expand_type_query,
-                         create_product,
-                         businesses_query,
-                         get_orders_query,
-                         expand_order_query,
-                         orders_from_to_query,
-                         change_owner,
-                         add_history_record,
-                         expand_history_order_query,
-                         unbind_from_order,
-                         bind_to_order,
-                         modify_specific_orders,
-                         unbind_all_from_order,
-                         expand_type_query_2,
-                         set_critical_level
-                         )
+                     types_query,
+                     statistics_query,
+                     expand_type_query,
+                     create_product,
+                     businesses_query,
+                     get_orders_query,
+                     expand_order_query,
+                     orders_from_to_query,
+                     change_owner,
+                     add_history_record,
+                     expand_history_order_query,
+                     unbind_from_order,
+                     bind_to_order,
+                     modify_specific_orders,
+                     unbind_all_from_order,
+                     expand_type_query_2,
+                     set_critical_level
+                     )
 
 from sqlalchemy.exc import IntegrityError, OperationalError
 import traceback
@@ -124,7 +126,8 @@ def count_types(owner_id):
 @app.route('/expand_types/id/<string:owner_id>/types/<string:type_name>')
 def get_details_about_type_2(owner_id, type_name):
     types = type_name.split(',')
-    products_query, ordered_amount_query, critical_level_query = expand_type_query_2(owner_id, types)
+    products_query, ordered_amount_query, critical_level_query = expand_type_query_2(
+        owner_id, types)
     products = products_query.all()
     ordered_amount = ordered_amount_query.first()
     critical_level = critical_level_query.first()
@@ -145,6 +148,7 @@ def get_details_about_type(owner_id, type_name, order_id):
     # result = pack_query_to_dict(result)
     return jsonify(result)
 
+
 @app.route('/modify_critical_level', methods=["POST"])
 def modify_cl():
     data = request.get_json()
@@ -153,6 +157,7 @@ def modify_cl():
     amount = data['amount']
     set_critical_level(owner_id, type_name, amount)
     return 'ok', 200
+
 
 @app.route('/add_items_on_storage/id/<string:owner_id>', methods=['POST'])
 def insert_items(owner_id):
@@ -272,14 +277,16 @@ def expand_history_order(order_id):
         order_info['available_products'].append(item._asdict())
         products_with_stats[item.type_name] += 1
 
-    order_info['order_stats'] = [{'Тип': i_type, 'Реализовано': amount} for i_type, amount in products_with_stats.items()]
+    order_info['order_stats'] = [{'Тип': i_type, 'Реализовано': amount}
+                                 for i_type, amount in products_with_stats.items()]
     print(order_info)
     return jsonify(order_info)
 
 # V
 @app.route('/expand_order/id/<int:order_id>')
 def expand_order(order_id):
-    order_sides, order_stats_query, available_products_query = expand_order_query(order_id)
+    order_sides, order_stats_query, available_products_query = expand_order_query(
+        order_id)
     stats = order_stats_query.all()
     stats = {item.Тип: item._asdict() for item in stats}
     counter = {type_: 0 for type_ in stats.keys()}
@@ -296,7 +303,6 @@ def expand_order(order_id):
     }
     return jsonify(expanded_order)
 
-    
     # query = expand_order_query(order_id).all()
     # order_sides = {'Клиент': query[0].client_id, 'Поставщик': query[0].supplier_id} if len(
     #     query) > 0 else {}
@@ -350,6 +356,9 @@ def complete_order(order_id):
 
 
 if __name__ == '__main__':
+    from functools import partial
     db.engine.execute(f"CREATE SCHEMA IF NOT EXISTS {SCHEMA_NAME};")
     db.create_all()
     app.run(debug=False)
+    atexit.register(partial(
+        upload_dump, backup_file_name=f"{DATABASE}_dump", database=DATABASE))
