@@ -1,18 +1,11 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from config import SCHEMA_NAME, SQLALCHEMY_DATABASE_URI, SQLALCHEMY_TRACK_MODIFICATIONS
+from admin.config import app, SCHEMA_NAME
 from datetime import datetime
-# from eralchemy import render_er
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = SQLALCHEMY_TRACK_MODIFICATIONS
-app.config['JSON_SORT_KEYS'] = False
 db = SQLAlchemy(app)
+db.engine.execute(f"CREATE SCHEMA IF NOT EXISTS {SCHEMA_NAME};")
 
-# Drawing ER diagram
-# Draw from SQLAlchemy base
-# render_er(SQLALCHEMY_DATABASE_URI, 'b2b_database.png')
 
 
 class Businesses(db.Model):
@@ -97,3 +90,6 @@ class SpecificOrders(db.Model):
     quantity = db.Column(db.Integer, default=1)
     type_name = db.Column(db.String(50), nullable=None)
     # assigned_products = db.relationship("Products", backref='order')
+
+
+db.create_all()

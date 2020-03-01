@@ -45,3 +45,11 @@ function createExpandOrderUrl(){
     let endpoint = is_history ? '/expand_history_order/id/' : '/expand_order/id/'  
     return createUrlDependingOnOrder(endpoint)
 }
+
+
+/**
+ * tmp handler to not break things
+ */
+function mockUrl() {
+    return '/mock'
+}

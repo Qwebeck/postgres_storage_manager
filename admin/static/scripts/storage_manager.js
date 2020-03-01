@@ -42,7 +42,6 @@ class StorageManager extends Section {
     }
 
     processStatisticsRow(row_info, _, rowNode){
-        console.log(row_info)
         let action_btn = createActionButton(row_info,
             rowNode,
             "Тип",

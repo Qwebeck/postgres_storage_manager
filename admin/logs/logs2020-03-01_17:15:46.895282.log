@@ -1,0 +1,4 @@
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 328-117-657
+INFO:werkzeug:127.0.0.1 - - [01/Mar/2020 17:15:50] "[37mGET /expand_types/id/Головний%20офіс,%20Вінниця/types/printer HTTP/1.1[0m" 200 -
+INFO:werkzeug: * Detected change in '/home/bohdan/Projects/b2b_actual/admin/server.py', reloading

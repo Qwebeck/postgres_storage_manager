@@ -7,3 +7,4 @@ dist
 .egg-info
 database_dump
 .log
+backup

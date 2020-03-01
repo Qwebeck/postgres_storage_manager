@@ -1,35 +1,33 @@
-from cloud_backup import upload_dump
-import atexit
-from flask import (jsonify, render_template, request)
+from flask import (Flask, jsonify, render_template, request)
 from flask_sqlalchemy import SQLAlchemy
+import traceback
+import atexit
+from functools import partial
+from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy import func, update, delete, join, select, and_
-from sqlalchemy.orm import aliased
-from config import *
-from models import (app, db, Products, Businesses, Orders, SpecificOrders)
 from sqlalchemy.sql import text
 from datetime import datetime
-from queries import (client_supplier_query,
-                     types_query,
-                     statistics_query,
-                     expand_type_query,
-                     create_product,
-                     businesses_query,
-                     get_orders_query,
-                     expand_order_query,
-                     orders_from_to_query,
-                     change_owner,
-                     add_history_record,
-                     expand_history_order_query,
-                     unbind_from_order,
-                     bind_to_order,
-                     modify_specific_orders,
-                     unbind_all_from_order,
-                     expand_type_query_2,
-                     set_critical_level
-                     )
-
-from sqlalchemy.exc import IntegrityError, OperationalError
-import traceback
+from admin.config import app, USER, DATABASE, SCHEMA_NAME
+from admin.src.cloud_backup import upload_dump
+from admin.src.models import (db, Products, Businesses, Orders, SpecificOrders)
+from admin.src.queries import (client_supplier_query,
+                               types_query,
+                               statistics_query,
+                               expand_type_query,
+                               create_product,
+                               businesses_query,
+                               get_orders_query,
+                               expand_order_query,
+                               orders_from_to_query,
+                               change_owner,
+                               add_history_record,
+                               expand_history_order_query,
+                               unbind_from_order,
+                               bind_to_order,
+                               modify_specific_orders,
+                               unbind_all_from_order,
+                               expand_type_query_2,
+                               set_critical_level)
 
 
 class InvalidUsage(Exception):
@@ -132,7 +130,9 @@ def get_details_about_type_2(owner_id, type_name):
     products = [item._asdict() for item in products]
     result = {
         'available_products': products,
-        'type_stats': {'Всего заказов на тип': ordered_amount.number or 0, 'Количество на складе': len(products)},
+        'type_stats': {'Всего заказов на тип': ordered_amount.number or 0,
+                       'Количество на складе': len(products),
+                       'К-во исправных': len(tuple(filter(lambda el: el['Состояние'] is True, products)))},
         'critical_level': critical_level.critical_amount if critical_level else None
     }
     return jsonify(result)
@@ -143,7 +143,6 @@ def get_details_about_type(owner_id, type_name, order_id):
     types = type_name.split(',')
     result = expand_type_query(owner_id, types, order_id).all()
     result = [item._asdict() for item in result]
-    # result = pack_query_to_dict(result)
     return jsonify(result)
 
 
@@ -203,7 +202,6 @@ def delete_order(order_id):
 def get_info():
     query = businesses_query()
     result = db.session.query(query).all()
-    # result = pack_query_to_dict(result)
     result = [item._asdict() for item in result]
     return jsonify(result)
 
@@ -213,7 +211,6 @@ def get_orders(business_id):
     history = request.args.get('history')
     result = get_orders_query(history, business_id).all()
     result = [item._asdict() for item in result]
-    # result = pack_query_to_dict(result)
     return jsonify(result)
 
 
@@ -222,7 +219,6 @@ def orders_in_period(from_, to, business_id):
     history = request.args.get('history')
     query = orders_from_to_query(history, from_, to, business_id)
     result = query.all()
-    # result = pack_query_to_dict(result)
     if not result:
         result = None
     else:
@@ -253,7 +249,6 @@ def add_order():
 @app.route('/sides_in_order/id/<int:order_id>')
 def get_order_sides(order_id):
     result = db.session.query(client_supplier_query(order_id)).all()
-    # result = pack_query_to_dict(result)
     result = [item._asdict() for item in result]
     return jsonify(result)
 
@@ -302,34 +297,6 @@ def expand_order(order_id):
     }
     return jsonify(expanded_order)
 
-    # query = expand_order_query(order_id).all()
-    # order_sides = {'Клиент': query[0].client_id, 'Поставщик': query[0].supplier_id} if len(
-    #     query) > 0 else {}
-    # item_info = {'available_products': [],
-    #              'order_stats': [],
-    #              'order_sides': order_sides
-    #              }
-    # products_with_stats = {}
-    # for row in query:
-    #     if row.type_name not in products_with_stats.keys():
-    #         item_stats = {
-    #             'Тип': row.type_name,
-    #             'Заказано': row.quantity,
-    #             'Сгенерировано в рамках заказа': row.available_number or 0,
-    #             'Всего на складе': row.number or 0,
-    #             # 'Останеться': row.number - (row.quantity or 0) if row.number else -row.quantity or 0,
-    #         }
-    #         item_info['order_stats'].append(item_stats)
-    #         # Quantity - number of products ,that should be added to order
-    #         # Used, because query returns all products, that satisfy conditions
-    #         products_with_stats[row.type_name] = row.quantity
-    #     # row.serial_number equviavalent to product existance.
-    #     if row.serial_number and (products_with_stats[row.type_name] or 0) > 0:
-    #         item_info['available_products'].append(row._asdict())
-    #         products_with_stats[row.type_name] -= 1
-    #         # item_info['order_stats'][row.type_name]['Останеться'] += 1
-    return jsonify(item_info)
-
 
 @app.route('/add_new_business', methods=['POST'])
 def add_info():
@@ -354,10 +321,7 @@ def complete_order(order_id):
     return 'ok'
 
 
-if __name__ == '__main__':
-    from functools import partial
-    db.engine.execute(f"CREATE SCHEMA IF NOT EXISTS {SCHEMA_NAME};")
-    db.create_all()
+def run():
     app.run(debug=True)
     atexit.register(partial(
-        upload_dump, backup_file_name=f"{DATABASE}_dump", database=DATABASE))
+        upload_dump, backup_file_name=f"{DATABASE}_dump", database=DATABASE, user=USER))

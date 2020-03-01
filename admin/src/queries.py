@@ -1,12 +1,12 @@
 """Module, where all query templates are constructed"""
 from sqlalchemy import func, update, delete, join, select, and_, between, or_, outerjoin, case
-from models import (db,
-                    Products,
-                    Businesses,
-                    Orders,
-                    SpecificOrders,
-                    ProductsMovement,
-                    CriticalLevels)
+from admin.src.models import (db,
+                              Products,
+                              Businesses,
+                              Orders,
+                              SpecificOrders,
+                              ProductsMovement,
+                              CriticalLevels)
 from sqlalchemy.orm import aliased
 from datetime import datetime
 from sqlalchemy.sql import text
@@ -14,7 +14,7 @@ from sqlalchemy.sql import text
 
 def client_supplier_query(order_id: int) -> Products:
     """Return query for get inforamtions about sides in order."""
-    
+
     Clients = aliased(Businesses)
     Suppliers = aliased(Businesses)
     ClientSupplier = join(Orders, Clients, Orders.client_id == Clients.name)\

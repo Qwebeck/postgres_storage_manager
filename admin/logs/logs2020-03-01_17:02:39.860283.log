@@ -1,0 +1,36 @@
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:werkzeug: * Restarting with stat
+INFO:root:Start uploading falcon_falcon_db_dump.gz
+WARNING:googleapiclient.discovery_cache:file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 36, in autodetect
+    from google.appengine.api import memcache
+ModuleNotFoundError: No module named 'google.appengine'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 33, in <module>
+    from oauth2client.contrib.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.contrib.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 37, in <module>
+    from oauth2client.locked_file import LockedFile
+ModuleNotFoundError: No module named 'oauth2client.locked_file'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/__init__.py", line 41, in autodetect
+    from . import file_cache
+  File "/home/bohdan/.local/lib/python3.7/site-packages/googleapiclient/discovery_cache/file_cache.py", line 41, in <module>
+    'file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth')
+ImportError: file_cache is unavailable when using oauth2client >= 4.0.0 or google-auth
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/discovery/v1/apis/drive/v2/rest
+INFO:googleapiclient.discovery:URL being requested: GET https://www.googleapis.com/drive/v2/files?q=%27root%27+in+parents&maxResults=1000&alt=json
+INFO:googleapiclient.discovery:URL being requested: DELETE https://www.googleapis.com/drive/v2/files/13NRxrPSG52LwJlhp5iEOMkqLJkitOmgm?
+INFO:googleapiclient.discovery:URL being requested: POST https://www.googleapis.com/upload/drive/v2/files?alt=json&uploadType=resumable
+INFO:root:Successfully uploaded falcon_falcon_db_dump.gz

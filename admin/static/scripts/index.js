@@ -109,17 +109,3 @@ function init() {
     // getInfoAboutStorage(main_storage_id);
 
 }
-
-/**
- * tmp handler to not break things
- */
-function mockUrl() {
-    return '/mock'
-}
-function on_work_with_storage() {
-    console.log('storage')
-}
-function on_work_with_orders() {
-    console.log('orders')
-}
-

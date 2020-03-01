@@ -16,15 +16,15 @@ class ProductTypeManager extends Section {
     checkForWarnings(data, type) {
         this.alert_area.hide()
         let critical_level = data.critical_level
-        let amount_on_st = data.type_stats['Количество на складе']
+        let amount_on_st = data.type_stats['К-во исправных']
         let ordered_amount = data.type_stats['Всего заказов на тип']
         if (amount_on_st < critical_level && ordered_amount == 0) {
-            let am_alert = createElement('div', { 'class': 'alert alert-critical', 'innerHTML': `Количество ${type} меньше критического уровня. Не хватает ${critical_level - amount_on_st} ${type}ов` })
+            let am_alert = createElement('div', { 'class': 'alert alert-critical', 'innerHTML': `Количество исправных ${type}ов меньше критического уровня. Не хватает ${critical_level - amount_on_st} ${type}ов` })
             // Fix me
             this.alert_area.element.appendChild(am_alert)
         }
         else if (amount_on_st - ordered_amount < critical_level) {
-            let am_alert = createElement('div', { 'class': 'alert alert-warning', 'innerHTML': `Количество ${type} будет меньше критического уровня после реализации всех заказов. Не хватает ${critical_level - (amount_on_st - ordered_amount)} ${type}ов` })
+            let am_alert = createElement('div', { 'class': 'alert alert-warning', 'innerHTML': `Количество исправных ${type}ов будет меньше критического уровня после реализации всех заказов. Не хватает ${critical_level - (amount_on_st - ordered_amount)} ${type}ов` })
             // Fix me
             this.alert_area.element.appendChild(am_alert)
         }
@@ -72,6 +72,7 @@ class ProductTypeManager extends Section {
             amount: amount
         }
         sendRequest(url, data, "POST").then(_ => {
+            productTypeManager.current_storage_stats.is_actual = false
             this.current_type_data.critical_level = amount
             this.checkForWarnings(this.current_type_data, this.current_type)
         }

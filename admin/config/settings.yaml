@@ -1,0 +1,4 @@
+save_credentials: True
+save_credentials_backend: file
+save_credentials_file: admin/config/credentials.json
+client_config_file: admin/config/client_secrets.json
