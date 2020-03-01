@@ -116,9 +116,7 @@ def get_types(owner_id):
 @app.route('/get_statistics/id/<string:owner_id>')
 def count_types(owner_id):
     """Return count of products on storage."""
-    statistics = statistics_query(owner_id)
-    result = db.session.query(statistics).all()
-    # result = pack_query_to_dict(result)
+    result = statistics_query(owner_id).all()
     result = [item._asdict() for item in result]
     return jsonify(result)
 
@@ -292,12 +290,13 @@ def expand_order(order_id):
     counter = {type_: 0 for type_ in stats.keys()}
     available_products = available_products_query.all()
     assigned_products = []
+    order_sides = order_sides.first()
     for item in available_products:
         if counter[item.Тип] < stats[item.Тип]['Заказано']:
             assigned_products.append(item._asdict())
             counter[item.Тип] += 1
     expanded_order = {
-        'order_sides': order_sides.first()._asdict(),
+        'order_sides': order_sides._asdict(),
         'order_stats': stats,
         'available_products': assigned_products
     }
@@ -359,6 +358,6 @@ if __name__ == '__main__':
     from functools import partial
     db.engine.execute(f"CREATE SCHEMA IF NOT EXISTS {SCHEMA_NAME};")
     db.create_all()
-    app.run(debug=False)
+    app.run(debug=True)
     atexit.register(partial(
         upload_dump, backup_file_name=f"{DATABASE}_dump", database=DATABASE))

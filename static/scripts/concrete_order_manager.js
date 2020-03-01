@@ -34,7 +34,7 @@ class ConcreteOrderManager extends Section {
         this.alert_area.hide()
         for(let item of data){
             let type = item['Тип']
-            let left = ((item['К-во свободных'] + item['К-во привязаных']) - item['Заказано'])
+            let left = ((item['К-во исправных свободных'] + item['К-во привязаных']) - item['Заказано'])
             if(left < 0){
                 let am_alert = createElement('div', { 'class': 'alert alert-critical', 'innerHTML': `Количества ${type} недостаточно для выполнения. Не хватает ${-left} ${type}ов` })
                 // Fix me
@@ -50,7 +50,7 @@ class ConcreteOrderManager extends Section {
         // Fix me
         if(data.order_sides[0]['Поставщик'] != sessionStorage.getItem('active_storage')) {
             this.actual_order_toolbar.complete_btn.hide()
-            stats_ignore_columns =  ['К-во свободных', 'К-во на складе']
+            stats_ignore_columns =  ['К-во исправных свободных', 'К-во на складе']
         }
         else{
             this.showAlerts(data.order_stats)
@@ -90,9 +90,7 @@ class ConcreteOrderManager extends Section {
         }
         let url = '/complete_order/id/' + order_id
         sendRequest(url, data, "POST").then(_ => {
-            data_dicts.current_storage_statistics.is_actual = false
-            data_dicts.orders_with_current_storage.is_actual = false
-            document.dispatchEvent(data_item_modified)
+            this.update()
             orderManager.show()
         })
 
@@ -101,10 +99,15 @@ class ConcreteOrderManager extends Section {
         let order_id = sessionStorage.getItem('current_order_id')
         let url = '/delete_order/id/' + order_id
         sendRequest(url, '', "DELETE").then(_ => {
-            this.pending_orders.is_actual = false
+            this.update()
             orderManager.show()
-            document.dispatchEvent(data_item_modified)
         }
         )
+    }
+    update(){
+        this.pending_orders.is_actual = false
+        data_dicts.current_storage_statistics.is_actual = false
+        document.dispatchEvent(data_item_modified)
+    
     }
 }

@@ -39,7 +39,7 @@ function init() {
     document.getElementById('is_history').checked = false
     sessionStorage.setItem('is_history', false)
     sessionStorage.setItem('active_storage', main_storage_id)
-
+    sessionStorage.removeItem('current_order_id')
     data_item_modified = new Event('data_item_modified')
     document.addEventListener('data_item_modified', updateData)
     

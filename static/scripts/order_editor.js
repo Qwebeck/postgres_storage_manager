@@ -82,6 +82,7 @@ class OrderEditor extends Section {
         e.target.parentElement.remove()
         delete this.order_description.data.order_types[e.target.value]
         // delete this.order_description.data.order_stats[e.target.value]
+        data_dicts.current_storage_statistics.is_actual = false
         this.order_description.is_actual = false
     }
 
@@ -104,7 +105,9 @@ class OrderEditor extends Section {
 
     orderParamsChanged(e) {
         this.order_description.is_actual = false
-        this.order_description.is_modified = true
+        // 
+        data_dicts.current_storage_statistics.is_actual = false
+
         var q_input = e.target
         var new_quantity = parseInt(e.target.value)
         var parent = q_input.parentElement

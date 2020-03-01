@@ -338,6 +338,12 @@ table{
     background-color: #8b43005c;
 }
 
+/* .critical td{
+    border: 2px solid rgba(233, 6, 6, 0.53);    
+}
+.warning{
+    border: 2px solid rgba(233, 89, 6, 0.53);    
+} */
 .info-table{
     overflow: auto;
 }

@@ -64,14 +64,6 @@ class Products(db.Model):
     def __repr__(self):
         return f'{self.type_name} {self.serial_number}, produced by {self.producent}'
 
-# FIX
-# Currently every product could be displayed only in one order, after order completion.
-# It is connected with many-to-many realtionship between SpecificOrders and Products
-
-# class History(db.Model):
-#     order_id = ForeignKey to order
-#     products_id = ForeignKey to product primary key
-
 
 class CriticalLevels(db.Model):
     __table_args__ = {"schema": SCHEMA_NAME}

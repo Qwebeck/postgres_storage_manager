@@ -1,7 +1,0 @@
-flask
-flask_sqlalchemy
-psycopg2
-pydrive
-sh
-sqlalchemy
-urllib2

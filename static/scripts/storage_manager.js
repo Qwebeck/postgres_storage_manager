@@ -22,7 +22,7 @@ class StorageManager extends Section {
             toolbar)
         this.existing_businesses = existing_businesses
         this.storage_statistics = storage_statistics
-        this.existing_types = Array.isArray(storage_statistics.data) ? storage_statistics.data.map(x => x["Tип"]) : []
+        this.existing_types = Array.isArray(storage_statistics.data) ? storage_statistics.data.map(x => x["Тип"]) : []
         this.active_business = active_business
 
         this.product_type_manager = productTypeManager
@@ -31,18 +31,33 @@ class StorageManager extends Section {
         document.addEventListener(storage_statistics.emit, statListener, false)
     }
     storageStatisticsUpdate(data) {
-        this.existing_types = data.map(x => x["Tип"])
+        this.existing_types = data.map(x => x["Тип"])
         updateDatalist(this.storage_statistics.related_list, this.existing_types)
-        createTable(data, (row_info, _, rowNode) => {
-            createActionButton(row_info,
-                rowNode,
-                "Tип",
-                "Подробнее",
-                this.expandForTypes
+        
+        createTable(data, (row_info, _, rowNode) => this.processStatisticsRow(row_info, _, rowNode),
+            this.rightColumn.element,
+            false,
+            ['owner_id']
             )
-        },
-            this.rightColumn.element)
     }
+
+    processStatisticsRow(row_info, _, rowNode){
+        console.log(row_info)
+        let action_btn = createActionButton(row_info,
+            rowNode,
+            "Тип",
+            "Подробнее",
+            this.expandForTypes
+        )
+        if(row_info['К-во исправных'] < row_info['Критический уровень'] && row_info['Заказано'] == 0){
+            action_btn.className = 'action-button alert-critical'
+        }
+        if(row_info['К-во исправных']-row_info['Заказано'] < row_info['Критический уровень']){
+            action_btn.className = 'action-button alert-warning'
+        }
+        
+    }
+
     availableBusinessesUpdate(data) {
         let active_business = sessionStorage.getItem('active_storage')
         updateDatalist(this.existing_businesses.related_list, data, [active_business])

@@ -1,6 +1,0 @@
-setup.py
-b2b_database.egg-info/PKG-INFO
-b2b_database.egg-info/SOURCES.txt
-b2b_database.egg-info/dependency_links.txt
-b2b_database.egg-info/requires.txt
-b2b_database.egg-info/top_level.txt

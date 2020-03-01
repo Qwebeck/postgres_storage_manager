@@ -1,4 +1,9 @@
 __pycache__
-b2bbd
+b2bdb
 test
 .eggs
+build
+dist
+.egg-info
+database_dump
+.log

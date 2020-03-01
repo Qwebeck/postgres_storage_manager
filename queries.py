@@ -12,8 +12,9 @@ from datetime import datetime
 from sqlalchemy.sql import text
 
 
-def client_supplier_query(order_id):
+def client_supplier_query(order_id: int) -> Products:
     """Return query for get inforamtions about sides in order."""
+    
     Clients = aliased(Businesses)
     Suppliers = aliased(Businesses)
     ClientSupplier = join(Orders, Clients, Orders.client_id == Clients.name)\
@@ -45,6 +46,22 @@ def statistics_query(owner_id):
         FROM products
         GROUP BY (owner_id, type_name)
     ),
+    """
+    p_count = db.session.query(
+        Products.type_name,
+        Products.owner_id,
+        func.count(Products.type_name).label('product_count'),
+        func.count(case([
+                        (Products.product_condition == True, Products.type_name)
+                        ],
+                        else_=None
+                        )).label('valid')
+    )\
+        .select_from(Products)\
+        .filter(Products.owner_id == owner_id)\
+        .group_by(Products.owner_id, Products.type_name)\
+        .subquery(name='p_count')
+    """
     so AS (
         SELECT 
             type_name,
@@ -54,6 +71,19 @@ def statistics_query(owner_id):
         JOIN specific_orders USING(order_id) 
         GROUP BY (type_name, supplier_id)
     )
+
+    """
+    specific_orders = db.session.query(
+        SpecificOrders.type_name,
+        Orders.supplier_id,
+        func.sum(SpecificOrders.quantity).label('ordered')
+    )\
+        .select_from(Orders)\
+        .join(SpecificOrders, Orders.order_id == SpecificOrders.order_id)\
+        .filter(Orders.supplier_id == owner_id)\
+        .group_by(SpecificOrders.type_name, Orders.supplier_id)\
+        .subquery(name='specific_orders')
+    """
     SELECT 
         owner_id,
         p.type_name,
@@ -63,12 +93,27 @@ def statistics_query(owner_id):
     LEFT JOIN so ON p.type_name = so.type_name AND p.owner_id = so.supplier_id
     ORDER BY 1  
     """
-    # query = db.session.quer
-    query = select([Products.type_name.label('Tип'),
-                    func.count(Products.type_name).label('Всего')])\
-        .where(Products.owner_id == owner_id)\
-        .group_by(Products.type_name)
-    return aliased(query)
+    stats_query = db.session.query(
+        p_count.c.owner_id,
+        p_count.c.type_name.label('Тип'),
+        p_count.c.product_count.label('К-во'),
+        p_count.c.valid.label('К-во исправных'),
+        (func.coalesce(specific_orders.c.ordered, 0)).label('Заказано'),
+        CriticalLevels.critical_amount.label('Критический уровень')
+    )\
+        .select_entity_from(p_count)\
+        .outerjoin(CriticalLevels, and_(CriticalLevels.business == p_count.c.owner_id,
+                                        CriticalLevels.type_name == p_count.c.type_name))\
+        .outerjoin(specific_orders, and_(p_count.c.type_name == specific_orders.c.type_name,
+                                         p_count.c.owner_id == specific_orders.c.supplier_id))\
+        .order_by(p_count.c.owner_id)
+
+    # query = select([Products.type_name.label('Tип'),
+    #                 func.count(Products.type_name).label('Всего')])\
+    #     .where(Products.owner_id == owner_id)\
+    #     .group_by(Products.type_name)
+    # aliased(query),
+    return stats_query
 
 
 def set_critical_level(owner_id, type_name, new_critical_level):
@@ -304,7 +349,7 @@ def expand_order_query(order_id):
             [
                 (and_(Products.appear_in_order == None,
                       Products.product_condition == True),
-                Products.type_name)
+                 Products.type_name)
             ],
             else_=None
         )
@@ -353,10 +398,10 @@ def expand_order_query(order_id):
             SpecificOrders.type_name == Products.type_name
         )
     )\
-        .filter(and_(or_(Products.appear_in_order == None, 
-                        Products.appear_in_order == order_id),
-                    Products.product_condition == True
-                ))\
+        .filter(and_(or_(Products.appear_in_order == None,
+                         Products.appear_in_order == order_id),
+                     Products.product_condition == True
+                     ))\
         .order_by(Products.type_name, Products.appear_in_order.asc())
 
     return order_sides, order_stats_query, available_products_query

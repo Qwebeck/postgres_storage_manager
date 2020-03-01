@@ -251,6 +251,7 @@ function createActionButton(row_info, node, identifier_name, action_name, callba
     button.onclick = callback
     button.className = "action-button"
     node.appendChild(button)
+    return button
 }
 
 

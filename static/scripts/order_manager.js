@@ -86,6 +86,7 @@ class OrderManager extends Section {
         waitingAnimation(true)
         addOrder.then(_ => {
             this.pending_orders.is_actual = false
+            data_dicts.current_storage_statistics.is_actual = false
             document.dispatchEvent(data_item_modified)
             waitingAnimation(false)
         })
