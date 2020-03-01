@@ -7,7 +7,6 @@ import argparse
 import logging
 import traceback
 import gzip
-from sh import pg_dump
 from datetime import datetime
 from socket import gethostname
 import urllib.request
@@ -16,8 +15,8 @@ from datetime import datetime
 
 
 now = datetime.now()
-logging.basicConfig(
-    filename=f'admin/logs/logs{datetime.date(now)}_{datetime.time(now)}.log', level=logging.INFO)
+# logging.basicConfig(
+#     filename=f'admin/logs/logs{datetime.date(now)}_{datetime.time(now)}.log', level=logging.INFO)
 
 parser = argparse.ArgumentParser(description='Uploads file to cloud.')
 parser.add_argument('-f', '--filename', nargs=1, type=str,
@@ -34,7 +33,7 @@ def check_connection():
 
 def upload(filepath):
     filename = os.path.basename(filepath)
-    logging.info(f'Start uploading {filename}')
+    # logging.info(f'Start uploading {filename}')
     try:
         if not check_connection():
             print('Нет доступа к интернету. База не была выгружена на диск')
@@ -54,11 +53,11 @@ def upload(filepath):
              'mimetype': 'application/gzip'})
         file_drive.SetContentFile(filepath)
         file_drive.Upload()
-        logging.info(f'Successfully uploaded {filename}')
+        # logging.info(f'Successfully uploaded {filename}')
         return 0
     except Exception:
         exc = traceback.format_exc()
-        logging.exception(exc)
+        # logging.exception(exc)
         return 1
 
 
