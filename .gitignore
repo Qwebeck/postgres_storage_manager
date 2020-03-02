@@ -6,5 +6,5 @@ build
 dist
 .egg-info
 database_dump
-.log
+.logs
 backup
