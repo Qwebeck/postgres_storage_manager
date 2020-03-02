@@ -28,7 +28,7 @@ use_cases = {
     }
 }
 
-actual_config = use_cases['production']
+actual_config = use_cases['prodcution']
 USER = actual_config['user_name']
 DATABASE = actual_config['database']
 host_connection_string = f"{USER}:{actual_config['password']}@{actual_config['host']}"

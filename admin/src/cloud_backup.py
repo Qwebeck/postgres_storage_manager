@@ -53,6 +53,7 @@ def upload(filepath):
              'mimetype': 'application/gzip'})
         file_drive.SetContentFile(filepath)
         file_drive.Upload()
+        print(f'\nSuccessfully uploaded {filename}')
         # logging.info(f'Successfully uploaded {filename}')
         return 0
     except Exception:
@@ -65,7 +66,7 @@ def upload_dump(backup_file_name, database, user):
     backup_file = f'admin/backups/{user}_{backup_file_name}.gz'
     with gzip.open(backup_file, 'wb') as f:
         popen = subprocess.Popen(
-            ['pg_dump', '-U', user, '-d', database], stdout=subprocess.PIPE, universal_newlines=True)
+            ['pg_dump', '-U', user, '-d', database,'-E', 'UTF8'], stdout=subprocess.PIPE, universal_newlines=True)
 
         for stdout_line in iter(popen.stdout.readline, ""):
             f.write(stdout_line.encode('utf-8'))
