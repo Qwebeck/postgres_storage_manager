@@ -7,7 +7,7 @@ from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy import func, update, delete, join, select, and_
 from sqlalchemy.sql import text
 from datetime import datetime
-from admin.config import app, USER, DATABASE, SCHEMA_NAME
+from admin.config import app, USER, DATABASE, SCHEMA_NAME, actual_config
 from admin.src.cloud_backup import upload_dump
 from admin.src.models import (db, Products, Businesses, Orders, SpecificOrders)
 from admin.src.queries import (client_supplier_query,
@@ -49,7 +49,7 @@ class InvalidUsage(Exception):
 @app.errorhandler(IntegrityError)
 def handle_invalid_usage(error):
     response = InvalidUsage(
-        message='Подобный ключ уже существует в базе данных')
+        message='Provided key already exists')
     response.status_code = 500
     response = response.to_dict()
     return jsonify(response), 400
@@ -58,7 +58,7 @@ def handle_invalid_usage(error):
 @app.errorhandler(OperationalError)
 def handle_invalid_usage(error):
     response = InvalidUsage(
-        message='Потеряно соединение с сервером базы данных')
+        message='Lost connection with databaase')
     response.status_code = 500
     response = response.to_dict()
     return jsonify(response), 400
@@ -323,5 +323,6 @@ def complete_order(order_id):
 
 def run():
     app.run(debug=True)
-    atexit.register(partial(
-        upload_dump, backup_file_name=f"{DATABASE}_dump", database=DATABASE, user=USER))
+    if actual_config != actual_config['cloud_demo']: 
+        atexit.register(partial(
+            upload_dump, backup_file_name=f"{DATABASE}_dump", database=DATABASE, user=USER))

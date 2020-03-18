@@ -19,16 +19,6 @@
     <script src="{{ url_for('static',filename='scripts/order_editor.js') }}"></script>
     <script src="{{ url_for('static',filename='scripts/url_creators.js') }}"></script>
     <script src="{{ url_for('static',filename='scripts/validators.js') }}"></script>
-
-    <!-- <script src="{{ url_for('static',filename='scripts/storage_logic.js') }}"></script> -->
-    <!-- <script src="{{ url_for('static',filename='scripts/gui_updaters.js') }}"></script>
-    <script src="{{ url_for('static',filename='scripts/element_creators.js') }}"></script>
-    <script src="{{ url_for('static',filename='scripts/data_nodes_updaters.js') }}"></script>
-    <script src="{{ url_for('static',filename='scripts/utils.js') }}"></script>
-    <script src="{{ url_for('static',filename='scripts/validators.js') }}"></script>
-    <script src="{{ url_for('static',filename='scripts/orders_logic.js') }}"></script>
-    <script src="{{ url_for('static',filename='scripts/on_work_with.js') }}"></script>
-    <script src="{{ url_for('static',filename='scripts/orders_utils.js') }}"></script> -->
     <title>B2B db admin</title>
 </head>
 
@@ -46,16 +36,16 @@
 
     <div class="menu">
         <button class="menu-item" onclick="storageManager.show()">
-            Работа со складом
+            Work with storage
         </button>
         <button class="menu-item" onclick="orderManager.show()">
-            Работа с заказами
+            Work with orders
         </button>
     </div>
     <div class="container">
         <div id='query_section' class="query_section">
             <form id='order_modification_section'>
-                <h1>Изменение заказа</h1>
+                <h1>Order editing</h1>
                 <div id='specific_order_modification'>
 
                 </div>
@@ -72,7 +62,7 @@
                 </div>    
             </div>
             <div id="specific_order_editing_area" class="hidden">
-                <h1>Изменение заказа</h1>
+                <h1>Order editing</h1>
                 <form id="specific_order_editing_order_param">
 
                 </form>
@@ -86,10 +76,10 @@
                 <div id="expanded_type_stats">
 
                 </div>
-                <h1>Критический уровень</h1>
+                <h1>Critical level</h1>
                 <form id="critical_level" class="form-container product_order" onsubmit="productTypeManager.setCriticalLevel(event)">
-                        <input type="text" name="new_cl" placeholder="Установить критический уровень" autocomplete="off"/>
-                        <input type="submit" value="Установить"/>
+                        <input type="text" name="new_cl" placeholder="Apply new critical level" autocomplete="off"/>
+                        <input type="submit" value="Set"/>
     
                 </form>
             </div>
@@ -97,25 +87,25 @@
             <div id="work_with_storage" class="hidden">
                 <h1 name='storage_header'></h1>
                 <div id="add_on_storage">
-                    <h1>Добавить товары на склад </h1>
+                    <h1>Add products on storage </h1>
                     <form id="storage_name" onsubmit="storageManager.switchBusiness(event)" class="product_order">
                         <input list="available_businesses" type="text" name="active_storage" id="active_storage"
-                            placeholder="Переключиться на бизнес ..." autocomplete="off" />
-                        <input type="submit" value="Перейти">
+                            placeholder="Switch on business ..." autocomplete="off" />
+                        <input type="submit" value="Go">
                     </form>
                     <form id="add_on_storage_form" onsubmit="storageManager.addProductToBusiness(event)">
 
-                        <input type="text" name="producent" placeholder="Производитель" autocomplete="off">
-                        <input type="text" name="serial_number" placeholder="Серийный номер" autocomplete="off">
-                        <input type="text" name="model" placeholder="Модель" autocomplete="off">
-                        <input type="text" name="type_name" placeholder="Тип товара" autocomplete="off"
+                        <input type="text" name="producent" placeholder="Producent" autocomplete="off">
+                        <input type="text" name="serial_number" placeholder="Serial number" autocomplete="off">
+                        <input type="text" name="model" placeholder="Model" autocomplete="off">
+                        <input type="text" name="type_name" placeholder="Product type" autocomplete="off"
                             list="available_types">
                         <select name="product_condition">
-                            <option value='true'>Исправное</option>
-                            <option value='false'>Неисправное</option>
+                            <option value='true'>Proper</option>
+                            <option value='false'>Broken</option>
                         </select>
                         <textarea name="additional_info" id="" cols="30" rows="10"
-                            placeholder="Дополнительная информация"></textarea>
+                            placeholder="Additional information ..."></textarea>
                         <input class='submit action-button' type="submit" value="Добавить">
                     </form>
                 </div>
@@ -123,50 +113,50 @@
             </div>
             <div id="order_creation" class="hidden">
                 <div id="history_info_area" class="hidden">
-                    <h1>Историческая справка</h1>
+                    <h1>History overview</h1>
                 </div>
                                 
                 <form class="hidden" class="form-container" class="action" id='orders_add' onsubmit="orderManager.addOrder(event)">
                     <h1 name='storage_header'></h1>
-                    <h1 id='action_name_1'>Добавить новый заказ</h1>
-                    <h4>Заказчик</h4>
-                    <input type="text" name="clients_ids" list="available_businesses" placeholder="Заказчик"
+                    <h1 id='action_name_1'>Add new order</h1>
+                    <h4>Client</h4>
+                    <input type="text" name="clients_ids" list="available_businesses" placeholder="Client name"
                         autocomplete="off">
             <div class="product_order">
-                <h4>Дата заказа</h4>
+                <h4>Order date</h4>
                 <input id='order_date' type="date">
             </div>
-            <h4>Товары</h4>
+            <h4>Products</h4>
             <div id='orders_on_specific_products'>
                 <div name="product_order" class="product_order">
-                    <input type="text" name="product_type" list="available_types" placeholder="Тип" autocomplete="off">
-                    <input type="text" name="number" placeholder="Количество" autocomplete="off"
+                    <input type="text" name="product_type" list="available_types" placeholder="Type" autocomplete="off">
+                    <input type="text" name="number" placeholder="Amount" autocomplete="off"
                         onchange="addProductField(this.parentElement.parentElement, null, 1)">
                 </div>
 
                 <div name="product_order" class="product_order">
-                    <input type="text" name="product_type" list="available_types" placeholder="Тип" autocomplete="off">
-                    <input type="text" name="number" placeholder="Количество" autocomplete="off"
+                    <input type="text" name="product_type" list="available_types" placeholder="Type" autocomplete="off">
+                    <input type="text" name="number" placeholder="Amount" autocomplete="off"
                         onchange="addProductField(this.parentElement.parentElement, null, 1)">
                 </div>
             </div>
 
 
-            <input class="action-button" type="submit" value="Добавить заказ">
+            <input class="action-button" type="submit" value="Add order">
             </form>
 
         </div>
     </div>
     <div class="hidden" name="toolbar" id="orders_toolbar">
         <form id="order_history" onsubmit="orderManager.showForPeriod(event)">
-            <label for="from_date">Заказы от</label>
+            <label for="from_date">Orders from</label>
             <input type="date" name="from" id="from_date">
-            <label for="to_date">до</label>
+            <label for="to_date">to</label>
             <input type="date" name="to" id="to_date">
             <input class="tlb-btn" type="submit" value="Найти">
         <button class="tlb-btn" onclick="{this.parentElement.reset();orderManager.showForPeriod(event)}">Показать всё</button>
         </form>
-        <span>История</span>
+        <span>History</span>
         <label class="switch">
         <input type="checkbox" id='is_history' onchange="orderManager.toggleOrders(event)">
             <span class="slider round"></span>

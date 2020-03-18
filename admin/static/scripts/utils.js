@@ -213,7 +213,7 @@ function createTable(data, action, outputSection = containers_and_elements.outpu
     if (!append) outputSection.innerHTML = ""
     if (!data || data.length == 0) {
         var empty = document.createElement('h3')
-        empty.innerHTML = "Не найдено результатов"
+        empty.innerHTML = "No results found"
         outputSection.appendChild(empty)
         return
     }

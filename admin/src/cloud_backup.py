@@ -36,7 +36,7 @@ def upload(filepath):
     # logging.info(f'Start uploading {filename}')
     try:
         if not check_connection():
-            print('Нет доступа к интернету. База не была выгружена на диск')
+            print('No access to the Interent. Database could not be loaded')
             return False
         g_login = GoogleAuth(settings_file='admin/config/settings.yaml')
         g_login.LocalWebserverAuth()

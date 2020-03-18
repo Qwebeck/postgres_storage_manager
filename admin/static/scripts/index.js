@@ -1,17 +1,5 @@
-/**
- * Two problems:
- * 1. No. 1 - different library version. 
- * Solution:
- *      1. Create wrappers everywhere
- *      2. Create setup.py
- *      3. Docker image
- * 2. Problem with encodings in database 
- */
-
 var active_section = null
 var active_toolbar = null
-// Change on query
-var main_storage_id = "Головний офіс, Вінниця";
 
 /*
 Code convetions:
@@ -19,23 +7,8 @@ Code convetions:
 2. camel case for functions and objects
 */
 
-/*TODO
-1. Allow user to create order on types, that aren't available on storage
-
-/**
- * Keys with data
- * businesses - business name + id
- * storage_stats - statistics of current storage
- * pending_orders - active orders
- * history - orders in history
- * current_storage 
- * types - types on storage
- * active_storage - active storage
- */
-
-
-
 function init() {
+    main_storage_id = localStorage.getItem('active_storage') || 'No storage selected'
     document.getElementById('is_history').checked = false
     sessionStorage.setItem('is_history', false)
     sessionStorage.setItem('active_storage', main_storage_id)

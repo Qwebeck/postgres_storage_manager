@@ -45,7 +45,7 @@ class StorageManager extends Section {
         let action_btn = createActionButton(row_info,
             rowNode,
             "Тип",
-            "Подробнее",
+            "Details",
             this.expandForTypes
         )
         if(row_info['К-во исправных'] < row_info['Критический уровень'] && row_info['Заказано'] == 0){
@@ -65,7 +65,7 @@ class StorageManager extends Section {
     switchBusiness(e) {
         e.preventDefault()
         let new_business = e.target.active_storage.value
-        
+        localStorage.setItem('active_storage', new_business)
         if (this.existing_businesses.data.includes(new_business)) {
             sessionStorage.setItem('active_storage', new_business)
             updateHeaders()
