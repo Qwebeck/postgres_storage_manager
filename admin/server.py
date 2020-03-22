@@ -30,6 +30,7 @@ from admin.src.queries import (client_supplier_query,
                                set_critical_level,
                                get_models_query,
                                get_producents_query)
+import re
 
 
 class InvalidUsage(Exception):
@@ -50,8 +51,13 @@ class InvalidUsage(Exception):
 
 @app.errorhandler(IntegrityError)
 def handle_invalid_usage(error):
+    print(error)
+    if re.search("violates foreign key constraint", str(getattr(error, 'orig'))):
+        message = "Невозможно удалить бизнес поскольку он уже принимал участие в заказах"
+    else:
+        message = "Подобный ключ уже существует в базе данных"
     response = InvalidUsage(
-        message='Подобный ключ уже существует в базе данных')
+        message=message)
     response.status_code = 500
     response = response.to_dict()
     return jsonify(response), 400
@@ -184,6 +190,16 @@ def insert_items(owner_id):
     return 'ok'
 
 
+@app.route('/delete_business', methods=['DELETE'])
+def delete_business():
+    name = request.get_json()['id']
+    db.session.query(Businesses.name)\
+              .filter_by(name=name)\
+              .delete()
+    db.session.commit()
+    return 'ok'
+
+
 @app.route('/delete_product', methods=['DELETE'])
 def delete_product():
     serial_number = request.get_json()['serial_number']
@@ -244,8 +260,10 @@ def orders_in_period(from_, to, business_id):
 @app.route('/add_order', methods=["POST"])
 def add_order():
     data = request.get_json()
+    print(data)
     new_order = Orders(client_id=data.pop('client_id'),
-                       supplier_id=data.pop('supplier_id'))
+                       supplier_id=data.pop('supplier_id'),
+                       order_date=data.pop('order_date') or None)
     db.session.add(new_order)
     db.session.commit()
     for item in data:

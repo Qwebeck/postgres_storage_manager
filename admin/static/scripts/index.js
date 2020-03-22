@@ -36,7 +36,7 @@ Code convetions:
 
 
 function init() {
-    document.getElementById('is_history').checked = false
+    $('is_history').checked = false
     sessionStorage.setItem('is_history', false)
     sessionStorage.setItem('active_storage', main_storage_id)
     sessionStorage.removeItem('current_order_id')

@@ -83,7 +83,7 @@ function validateStorageForm(form) {
  */
 function isUserInputForType(e, input_id = 'new_type') {
     const select = e.target
-    const userInput = document.getElementById(input_id)
+    const userInput = $(input_id)
     if (!select.value.localeCompare("new")) {
         userInput.style = "display:block"
         userInput.name = "type_name"
@@ -101,8 +101,8 @@ function isUserInputForType(e, input_id = 'new_type') {
  * @param {string} input_id - id of active input
  */
 function hideUserInputForType(select_id, input_id) {
-    const select = document.getElementById(select_id)
-    const input = document.getElementById(input_id)
+    const select = $(select_id)
+    const input = $(input_id)
     select.name = "type_name"
     input.style = "display:none"
     input.name = "not_type_name"

@@ -97,17 +97,24 @@ class StorageManager extends Section {
      */
     switchBusiness(e) {
         e.preventDefault()
-        let new_business = e.target.active_storage.value
-
+        let form = e.target.parentElement
+        let new_business = form.active_storage.value
+        if (!new_business) {
+            alert("Бизнес не выбран")
+            return
+        }
+        waitingAnimation(true)
         if (this.existing_businesses.data.includes(new_business)) {
             sessionStorage.setItem('active_storage', new_business)
             updateHeaders()
             updateDatalist(this.existing_businesses.related_list, this.existing_businesses.data, [new_business])
             for (let item in data_dicts) {
                 if (item === 'existing_businesses') continue
+                // globel variable
                 data_dicts[item].is_actual = false
+                form.reset()
+
             }
-            waitingAnimation(true)
             document.dispatchEvent(data_item_modified)
         } else {
             this.addNewBusiness(new_business,
@@ -115,7 +122,33 @@ class StorageManager extends Section {
                     sessionStorage.setItem('active_storage', new_business)
                     updateHeaders()
                     for (let item in data_dicts) data_dicts[item].is_actual = false
+                    form.reset()
+
                 })
+        }
+    }
+    /**
+     * Deletes business, typed in form
+     */
+    deleteBusiness(event) {
+        event.preventDefault()
+        let form = event.target.parentElement
+        let new_business = form.active_storage.value
+        if (!new_business) {
+            alert("Бизнес не выбран")
+            return
+        }
+
+        if(this.existing_businesses.data.includes(new_business)) {
+            let url = '/delete_business'
+            let data = {id:new_business}
+            sendRequest(url,data,"DELETE").then(_ => {
+                this.existing_businesses.is_actual = false
+                form.reset()
+                document.dispatchEvent(data_item_modified)
+            })
+        } else {
+            alert(`Бизнеса ${new_business} не существует`)
         }
     }
     /**
@@ -164,7 +197,6 @@ class StorageManager extends Section {
         let post = sendRequest(url, data, "POST")
         Array.from(form.elements).forEach(el =>el.className = el.className.replace("error", ""))
         form.reset()
-        waitingAnimation(true)
         post.then(_ => {
             this.storage_statistics.is_actual = false
             this.producents_and_models.is_actual = false

@@ -7,7 +7,6 @@ db = SQLAlchemy(app)
 db.engine.execute(f"CREATE SCHEMA IF NOT EXISTS {SCHEMA_NAME};")
 
 
-
 class Businesses(db.Model):
     __table_args__ = {"schema": SCHEMA_NAME}
     name = db.Column(db.String, primary_key=True)
@@ -61,7 +60,8 @@ class Products(db.Model):
 class CriticalLevels(db.Model):
     __table_args__ = {"schema": SCHEMA_NAME}
     business = db.Column(db.String,
-                         db.ForeignKey(f'{SCHEMA_NAME}.businesses.name'),
+                         db.ForeignKey(
+                             f'{SCHEMA_NAME}.businesses.name', ondelete="DELETE"),
                          primary_key=True)
     type_name = db.Column(db.String(50),
                           primary_key=True)

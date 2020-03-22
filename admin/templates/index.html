@@ -94,10 +94,11 @@
                 <h1 name='storage_header'></h1>
                 <div id="add_on_storage">
                     <h1>Добавить товары на склад </h1>
-                    <form id="storage_name" onsubmit="storageManager.switchBusiness(event)" class="product_order">
+                    <form id="storage_name"  class="product_order">
                         <input list="available_businesses" type="text" name="active_storage" id="active_storage"
                             placeholder="Переключиться на бизнес ..." autocomplete="off" />
-                        <input type="submit" value="Перейти">
+                        <input onclick="storageManager.switchBusiness(event)" type="submit" value="Перейти">
+                        <input onclick="storageManager.deleteBusiness(event)" type="submit" value="Удалить">
                     </form>
                     <form id="add_on_storage_form" onsubmit="storageManager.addProductToBusiness(event)">
 

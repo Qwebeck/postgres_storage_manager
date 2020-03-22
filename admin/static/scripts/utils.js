@@ -32,7 +32,7 @@ function sendRequest(url, data, method) {
         xhr.onreadystatechange = function () {
             if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
                 if (method == "GET") {
-                    result = JSON.parse(xhr.responseText)
+                    var result = JSON.parse(xhr.responseText)
                     resolve(result)
                 } else {
                     resolve();
@@ -102,7 +102,7 @@ function updateData() {
  * @param {boolean} condition 
  */
 function waitingAnimation(condition) {
-    let block_with_waiting_anim = document.getElementById('waiting')
+    let block_with_waiting_anim = $('waiting')
     if (condition == true) {
         block_with_waiting_anim.style = "display:block;"
     }
@@ -357,7 +357,7 @@ function addProductField(container, new_el_processor = null, last_entered_val_fr
 }
 
 /**
- * Wrapper around document.getElementById
+ * Wrapper around $
  * @param {string} id 
  */
 function $(id) {
