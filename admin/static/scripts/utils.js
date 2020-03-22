@@ -128,14 +128,15 @@ function convertToObject(key_name, data) {
     return converted
 }
 
-
 /**
  * Util for filling select with values. Work with assumption, that options are list 
  * of Objects with one key and one value:  {key:value} 
  * @package element_creators
- * @param {Element[]} list_of_selects - list of selects, to fill with new options, provided in data
- * @param {string[]} options - list of new options
- * @param {string[]} ignore - options, that should be ignored
+ * @param {Element[]} list_of_selects list of selects, to fill with new options, provided in data
+ * @param {Object} options list of new options
+ * @param {*} options._ Any key 
+ * @param {string} options.value Value that will be added to datalist 
+ * @param {string[]} ignore options, that should be ignored
  * @param
  */
 function updateDatalist(datalist, options, ignore = []) {
@@ -355,4 +356,10 @@ function addProductField(container, new_el_processor = null, last_entered_val_fr
 
 }
 
-
+/**
+ * Wrapper around document.getElementById
+ * @param {string} id 
+ */
+function $(id) {
+    return document.getElementById(id)
+}

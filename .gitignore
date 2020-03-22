@@ -8,3 +8,6 @@ dist
 database_dump
 .logs
 backup
+develop
+venv
+*.pyc

@@ -107,12 +107,6 @@ def statistics_query(owner_id):
         .outerjoin(specific_orders, and_(p_count.c.type_name == specific_orders.c.type_name,
                                          p_count.c.owner_id == specific_orders.c.supplier_id))\
         .order_by(p_count.c.owner_id)
-
-    # query = select([Products.type_name.label('Tип'),
-    #                 func.count(Products.type_name).label('Всего')])\
-    #     .where(Products.owner_id == owner_id)\
-    #     .group_by(Products.type_name)
-    # aliased(query),
     return stats_query
 
 
@@ -257,27 +251,6 @@ def get_orders_query(history, business_id):
     return query
 
 
-"""
-Super query in SQL
-WITH a AS (
-    SELECT type_name, supplier_id, quantity
-    FROM b2b.orders
-    JOIN b2b.specific_orders USING (order_id)
-    WHERE order_id = 11),
-    b as (
-        SELECT serial_number, owner_id, quantity,
-        ROW_NUMBER()  OVER (
-            PARTITION BY a.type_name
-        ) r_n,
-    COUNT(*) OVER (
-            PARTITION BY a.type_name
-        ) c
-    FROM b2b.products p
-    JOIN a ON a.supplier_id = p.owner_id AND a.type_name = p.type_name )
-SELECT *, c-quantity  AS "Left" FROM b WHERE r_n <= quantity
-"""
-
-
 def expand_order_query(order_id):
     """Return query object.
 
@@ -292,35 +265,6 @@ def expand_order_query(order_id):
 
         Max number of returned rows is 100
      """
-    # SupplierProducts = outerjoin(
-    #     Orders, Products, Orders.supplier_id == Products.owner_id)
-    # print(SupplierProducts)
-    # count = aliased(
-    #     select([
-    #         Products.type_name,
-    #         func.count().label('number')
-    #     ])
-    #     .select_from(SupplierProducts)
-    #     .where(Orders.order_id == order_id)
-    #     .group_by(Products.type_name))
-
-    # count_of_available = aliased(
-    #     select([
-    #         Products.type_name,
-    #         func.count().label('available_number')
-    #     ])
-    #     .select_from(SupplierProducts)
-    #     .where(and_(Orders.order_id == order_id, or_(Products.appear_in_order == order_id, Products.appear_in_order == None)))
-    #     .group_by(Products.type_name))
-
-    # ProductsSupplierCanSupply = join(Orders, SpecificOrders, Orders.order_id == SpecificOrders.order_id)\
-    #     .join(Businesses, Orders.supplier_id == Businesses.name)\
-    #     .outerjoin(Products, and_(Products.owner_id == Businesses.name,
-    #                               Products.type_name == SpecificOrders.type_name))\
-    #     .outerjoin(count, SpecificOrders.type_name == count.c.type_name)\
-    #     .outerjoin(count_of_available, SpecificOrders.type_name == count_of_available.c.type_name)
-
-    # # 1
 
     """
     SELECT 
@@ -374,15 +318,6 @@ def expand_order_query(order_id):
         .filter(Orders.order_id == order_id)\
         .group_by(SpecificOrders.type_name, SpecificOrders.quantity)
 
-    # .join(Orders, and_(Orders.order_id == order_id,
-    #                    Orders.supplier_id == Products.owner_id))\
-    #     .join(SpecificOrders, and_(
-    #         SpecificOrders.order_id == Orders.order_id,
-    #         SpecificOrders.type_name == Products.type_name
-    #     )
-    # )\
-    # .group_by(Products.type_name, SpecificOrders.quantity)
-    # 2
     available_products_query = db.session.query(
         Products.type_name.label('Тип'),
         Products.producent.label('Производитель'),
@@ -405,31 +340,6 @@ def expand_order_query(order_id):
         .order_by(Products.type_name, Products.appear_in_order.asc())
 
     return order_sides, order_stats_query, available_products_query
-    # column dublicates, that needed because of there usage in server.py
-    # query = aliased(select([
-    #     Orders.supplier_id,
-    #     Orders.client_id,
-    #     SpecificOrders.type_name.label('Тип'),
-    #     Products.producent.label('Производитель'),
-    #     Products.model.label('Модель'),
-    #     Products.appear_in_order.label(
-    #         'Привязан к заказу'),
-    #     SpecificOrders.type_name,
-    #     SpecificOrders.quantity,
-    #     Products.serial_number,
-    #     Products.serial_number.label('Серийный номер'),
-
-    #     Products.additonal_info.label(
-    #         'Дополнительная информация'),
-    #     count.c.number,
-    #     count_of_available.c.available_number
-    # ])
-    #     .select_from(ProductsSupplierCanSupply).where(and_(Orders.order_id == order_id,
-    #                                                        or_(Products.appear_in_order == order_id,
-    #                                                            Products.appear_in_order == None)))
-    #     .order_by(Products.type_name, Products.appear_in_order.asc())
-    #     .limit(100))
-    # return db.session.query(query)
 
 
 def orders_from_to_query(is_history, from_, to, business_id):
@@ -557,3 +467,15 @@ def expand_history_order_query(order_id):
         .order_by(ProductsMovement.type_name)
 
     return db.session.query(aliased(query))
+
+
+def get_models_query():
+    """Return query, with all existing models."""
+    query = db.session.query(Products.model).distinct()
+    return query
+
+
+def get_producents_query():
+    """Return query, on all existing producents."""
+    query = db.session.query(Products.producent).distinct()
+    return query

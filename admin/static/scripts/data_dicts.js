@@ -33,7 +33,7 @@ function getDataDicts() {
             data_processor: (data) => {
                 if (!data) return null
                 let available_products = convertToObject('Серийный номер', data.available_products)
-                let order_stats =  data.order_stats
+                let order_stats = data.order_stats
                 let order_sides = data.order_sides
                 return {
                     available_products: available_products,
@@ -60,6 +60,12 @@ function getDataDicts() {
         current_history_order_description: {
             is_actual: false,
             url_creation_handler: () => createUrlDependingOnOrder('/expand_history_order/id/'),
+            data: {}
+        },
+        producents_and_models: {
+            is_actual: false,
+            url_creation_handler: () => '/get_producents_and_models',
+            emit: 'producent_and_models_update',
             data: {}
         }
     }

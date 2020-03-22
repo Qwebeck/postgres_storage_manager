@@ -95,7 +95,8 @@ function init() {
         data_dicts.existing_businesses,
         data_dicts.current_storage_statistics,
         main_storage_id,
-        productTypeManager)
+        productTypeManager,
+        data_dicts.producents_and_models)
 
     storageManager.hide()
     updateData().then(

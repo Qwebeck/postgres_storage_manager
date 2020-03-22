@@ -19,16 +19,6 @@
     <script src="{{ url_for('static',filename='scripts/order_editor.js') }}"></script>
     <script src="{{ url_for('static',filename='scripts/url_creators.js') }}"></script>
     <script src="{{ url_for('static',filename='scripts/validators.js') }}"></script>
-
-    <!-- <script src="{{ url_for('static',filename='scripts/storage_logic.js') }}"></script> -->
-    <!-- <script src="{{ url_for('static',filename='scripts/gui_updaters.js') }}"></script>
-    <script src="{{ url_for('static',filename='scripts/element_creators.js') }}"></script>
-    <script src="{{ url_for('static',filename='scripts/data_nodes_updaters.js') }}"></script>
-    <script src="{{ url_for('static',filename='scripts/utils.js') }}"></script>
-    <script src="{{ url_for('static',filename='scripts/validators.js') }}"></script>
-    <script src="{{ url_for('static',filename='scripts/orders_logic.js') }}"></script>
-    <script src="{{ url_for('static',filename='scripts/on_work_with.js') }}"></script>
-    <script src="{{ url_for('static',filename='scripts/orders_utils.js') }}"></script> -->
     <title>B2B db admin</title>
 </head>
 
@@ -40,6 +30,12 @@
 
     </datalist>
     <datalist id="available_businesses">
+
+    </datalist>
+    <datalist id="existing_producents">
+    
+    </datalist>
+    <datalist id="existing_models">
 
     </datalist>
 
@@ -105,9 +101,9 @@
                     </form>
                     <form id="add_on_storage_form" onsubmit="storageManager.addProductToBusiness(event)">
 
-                        <input type="text" name="producent" placeholder="Производитель" autocomplete="off">
+                        <input type="text" name="producent" placeholder="Производитель" autocomplete="off" list="existing_producents">
                         <input type="text" name="serial_number" placeholder="Серийный номер" autocomplete="off">
-                        <input type="text" name="model" placeholder="Модель" autocomplete="off">
+                        <input type="text" name="model" placeholder="Модель" autocomplete="off" list="existing_models">
                         <input type="text" name="type_name" placeholder="Тип товара" autocomplete="off"
                             list="available_types">
                         <select name="product_condition">

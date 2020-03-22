@@ -27,7 +27,9 @@ from admin.src.queries import (client_supplier_query,
                                modify_specific_orders,
                                unbind_all_from_order,
                                expand_type_query_2,
-                               set_critical_level)
+                               set_critical_level,
+                               get_models_query,
+                               get_producents_query)
 
 
 class InvalidUsage(Exception):
@@ -102,15 +104,28 @@ def edit_order(order_id):
 def mock():
     return jsonify(None)
 
-# V Depracated
+
+@app.route('/get_producents_and_models')
+def get_producents_and_models():
+    """Return data about existing models and producents."""
+    models = get_models_query().all()
+    producents = get_producents_query().all()
+    result =\
+        {
+            'models': [item._asdict() for item in models],
+            'producents': [item._asdict() for item in producents]
+        }
+    return jsonify(result)
+
+
 @app.route('/get_types/id/<string:owner_id>')
 def get_types(owner_id):
+    """Return data about types on current storage ."""
     available_types = types_query(owner_id).all()
-    # result = pack_query_to_dict(available_types)
     available_types = [item._asdict() for item in available_types]
     return jsonify(available_types)
 
-# V
+
 @app.route('/get_statistics/id/<string:owner_id>')
 def count_types(owner_id):
     """Return count of products on storage."""
@@ -122,8 +137,8 @@ def count_types(owner_id):
 @app.route('/expand_types/id/<string:owner_id>/types/<string:type_name>')
 def get_details_about_type_2(owner_id, type_name):
     types = type_name.split(',')
-    products_query, ordered_amount_query, critical_level_query = expand_type_query_2(
-        owner_id, types)
+    products_query, ordered_amount_query, critical_level_query = \
+        expand_type_query_2(owner_id, types)
     products = products_query.all()
     ordered_amount = ordered_amount_query.first()
     critical_level = critical_level_query.first()

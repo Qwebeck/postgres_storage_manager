@@ -1,0 +1,7 @@
+sqlalchemy
+flask
+flask_sqlalchemy
+psycopg2
+sh
+pydrive
+
