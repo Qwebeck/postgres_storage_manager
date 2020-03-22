@@ -36,18 +36,18 @@ class OrderEditor extends Section {
         var serial_number = e.target.value
         var current_order_products = current_order.binded_products
         var is_assigned = current_order_products.has(serial_number)
-
+        let row = e.target.parentElement.parentElement 
         if (is_assigned) {
             e.target.innerHTML = "Привязать"
             current_order_products.delete(serial_number)
             current_order.unbinded_products.add(serial_number)
-            e.target.parentElement.className = ""
+            row.className = ""
         }
         else {
             current_order.unbinded_products.delete(serial_number)
             e.target.innerHTML = "Отвязать"
             current_order_products.add(serial_number)
-            e.target.parentElement.className = "assigned"
+            row.className = "assigned"
         }
     }
 

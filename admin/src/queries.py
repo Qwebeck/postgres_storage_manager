@@ -163,7 +163,7 @@ def expand_type_query_2(owner_id: str, type_name: []) -> 'session query':
             Products.owner_id == owner_id,
             Products.type_name.in_(type_name)
         )
-    )
+    ).order_by(Products.appear_in_order.asc())
     return db.session.query(aliased(query)), ordered, critical_level
 
 

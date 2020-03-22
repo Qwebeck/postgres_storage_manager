@@ -341,6 +341,12 @@ def add_info():
     db.session.commit()
     return 'done'
 
+@app.route('/unbind_products', methods=["POST"])
+def unbind():
+    data = request.get_json()
+    product_serial_numbers = data['products']
+    unbind_from_order(product_serial_numbers)
+    return 'ok'
 
 # Possibly - the main reason of too many connections to database/
 @app.route('/complete_order/id/<int:order_id>', methods=["POST"])

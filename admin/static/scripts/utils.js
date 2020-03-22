@@ -240,18 +240,20 @@ function createTable(data, action, outputSection = containers_and_elements.outpu
  * Creates button for provided action and bind it with object
  * @package element_creators
  * @param {*} row_info - inforamtion in current row 
- * @param {*} node - html node, to append button
+ * @param {*} tableRow - row of table, where newly created button will be appended
  * @param {*} identifier_name - name of field in `row_info` which value, that will be assigned to button
  * @param {*} action_name - text, that will be displayed on button
  * @param {*} callback - callback for action
  */
-function createActionButton(row_info, node, identifier_name, action_name, callback) {
+function createActionButton(row_info, tableRow, identifier_name, action_name, callback) {
     var button = document.createElement('button')
     button.value = row_info[identifier_name]
     button.innerHTML = action_name
     button.onclick = callback
     button.className = "action-button"
-    node.appendChild(button)
+    let cell = createElement('td')
+    cell.appendChild(button)
+    tableRow.appendChild(cell)
     return button
 }
 

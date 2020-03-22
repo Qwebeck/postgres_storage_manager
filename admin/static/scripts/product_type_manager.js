@@ -8,9 +8,10 @@ class ProductTypeManager extends Section {
             productsArea,
             toolbar)
         this.current_storage_stats = current_storage_stats
-        this.alert_area = sections.product_alert_section 
+        this.alert_area = sections.product_alert_section
         this.current_type = null
         this.current_type_data = null
+        this.products_to_unbind = []
     }
 
     checkForWarnings(data, type) {
@@ -45,12 +46,24 @@ class ProductTypeManager extends Section {
             let type_stats = [data.type_stats]
 
             createTable(available_products,
-                (row_info, _, rowNode) =>
-                    createActionButton(row_info,
+                (row_info, _, rowNode) => {
+                    if (row_info["Привязан к заказу"]) {
+                        createActionButton(
+                            row_info,
+                            rowNode,
+                            "Серийный номер",
+                            "Отвязать",
+                            (e) => this.unbindFromOrder(e.target)
+                        )
+                    }
+
+                    createActionButton(
+                        row_info,
                         rowNode,
                         "Серийный номер",
                         "Удалить",
-                        this.deleteProduct),
+                        this.deleteProduct)
+                },
                 this.rightColumn.element
             )
 
@@ -60,6 +73,28 @@ class ProductTypeManager extends Section {
         })
     }
 
+    /**
+     * Add unbinded product to unbind list
+     * @param {*} button
+     */
+    unbindFromOrder(button) {
+        let serial_number = button.value
+        this.products_to_unbind.push(serial_number)
+        button.innerHTML = "Отменить"
+        button.parentElement.parentElement.className = "assigned_to_other"
+        button.onclick = (e) => this.cancellUnbinding(e.target)
+    }
+    /**
+     * Remove product from unbind array
+     */
+    cancellUnbinding(button) {
+        let serial_number = button.value
+        let serial_number_index = this.products_to_unbind.indexOf(serial_number)
+        delete this.products_to_unbind[serial_number_index]
+        button.innerHTML = "Отвязать"
+        button.parentElement.parentElement.className = button.parentElement.parentElement.className.replace("assigned_to_other","")
+        button.onclick = (e) => this.unbindFromOrder(e.target)
+    }
     setCriticalLevel(e) {
         e.preventDefault()
         let form = e.target
@@ -78,7 +113,10 @@ class ProductTypeManager extends Section {
         }
         )
     }
-
+    /**
+     * Replace with method, which will be called only on hide
+     * @param {*} e 
+     */
     deleteProduct(e) {
         let serial_number = e.target.value;
         let url = '/delete_product'
@@ -94,6 +132,11 @@ class ProductTypeManager extends Section {
 
     hide() {
         super.hide()
+        if (this.products_to_unbind.length) {
+            let data = { 'products': this.products_to_unbind }
+            let url = "/unbind_products"
+            sendRequest(url, data, "POST")
+        }
         document.dispatchEvent(data_item_modified)
     }
 }

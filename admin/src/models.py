@@ -43,12 +43,12 @@ class Products(db.Model):
     __table_args__ = {"schema": SCHEMA_NAME}
     serial_number = db.Column(db.String(20), primary_key=True)
     type_name = db.Column(db.String(50), nullable=False)
-    producent = db.Column(db.String(20), nullable=False)
-    model = db.Column(db.String(20), nullable=False)
+    producent = db.Column(db.String(50), nullable=False)
+    model = db.Column(db.String(50), nullable=False)
     owner_id = db.Column(db.String, db.ForeignKey(f'{SCHEMA_NAME}.businesses.name'),
                          nullable=False)
     product_condition = db.Column(db.Boolean, default=True)
-    additonal_info = db.Column(db.String(100))
+    additonal_info = db.Column(db.String(500))
     adding_date = db.Column(db.DateTime, default=datetime.utcnow)
     appear_in_order = db.Column(db.Integer,
                                 db.ForeignKey(f'{SCHEMA_NAME}.orders.order_id'))
@@ -78,8 +78,8 @@ class ProductsMovement(db.Model):
                          nullable=False)
     serial_number = db.Column(db.String(20))
     type_name = db.Column(db.String(50), nullable=False)
-    producent = db.Column(db.String(20), nullable=False)
-    model = db.Column(db.String(20), nullable=False)
+    producent = db.Column(db.String(50), nullable=False)
+    model = db.Column(db.String(50), nullable=False)
 
 
 class SpecificOrders(db.Model):

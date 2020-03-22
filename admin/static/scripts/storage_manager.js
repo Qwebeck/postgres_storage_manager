@@ -148,7 +148,7 @@ class StorageManager extends Section {
                 document.dispatchEvent(data_item_modified)
             })
         } else {
-            alert(`Бизнеса ${new_business} не существует`)
+            alert(`Бизнес ${new_business} не существует`)
         }
     }
     /**
@@ -205,10 +205,3 @@ class StorageManager extends Section {
     }
 
 }
-
-// function statListener(e) {
-//     storageManager.storageStatisticsUpdate(e.detail)
-// }
-// function bussListener(e) {
-//     storageManager.availableBusinessesUpdate(e.detail)
-// }

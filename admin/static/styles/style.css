@@ -43,9 +43,13 @@ body{
     overflow: auto;
     height: 80vh;
 }
-table th,td{
+table th,td :not(td button){
     padding: 0px 15px 0px 15px;
 }
+td button {
+    margin: 0px;
+}
+
 .query_section h1{
     font-size: medium;
 }
@@ -289,10 +293,10 @@ table{
     width: 100%;
     margin: 0px;
 }
-.assigned td{
+.assigned .data-cell {
     background-color: rgba(0, 100, 0, 0.493);
 }
-.assigned_to_other td{
+.assigned_to_other .data-cell {
     background-color: rgba(100, 0, 0, 0.493);
 }
 
