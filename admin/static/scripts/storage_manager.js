@@ -20,14 +20,14 @@ class StorageManager extends Section {
             productAddingArea,
             productsArea,
             toolbar)
+
         this.existing_businesses = existing_businesses
         this.storage_statistics = storage_statistics
         this.existing_types = Array.isArray(storage_statistics.data) ? storage_statistics.data.map(x => x["Тип"]) : []
         this.active_business = active_business
-        // Added here
         this.producents_and_models = producents_and_models
         this.product_type_manager = productTypeManager
-        
+
         document.addEventListener(existing_businesses.emit, (e) => this.availableBusinessesUpdate(e.detail), false)
         document.addEventListener(storage_statistics.emit, (e) => this.storageStatisticsUpdate(e.detail), false)
         document.addEventListener(this.producents_and_models.emit, (e) => this.producentAndModelsUpdate(e.detail), false)
@@ -39,7 +39,7 @@ class StorageManager extends Section {
      * @param data.Тип Type of product
      */
     storageStatisticsUpdate(data) {
-        this.existing_types = data.map(x => x["Тип"])
+        this.existing_types = data && data.map(x => x["Тип"])
         updateDatalist(this.storage_statistics.related_list, this.existing_types)
 
         createTable(data, (row_info, _, rowNode) => this.processStatisticsRow(row_info, _, rowNode),
@@ -50,10 +50,22 @@ class StorageManager extends Section {
     }
 
     /**
+     * Changes business status from and to service center 
+     * @param {*} event 
+     */
+    businessStatusChanged(event) {
+        console.log(event.target.checked)
+        let url = '/update_business_status'
+        let data = {
+            'name': sessionStorage.getItem('active_storage'),
+            'is_service': event.target.checked
+        }
+        sendRequest(url, data, "POST")
+    }
+    /**
      * Called when new product is added and on init
      */
-    producentAndModelsUpdate(data)
-    {
+    producentAndModelsUpdate(data) {
         updateDatalist($('existing_models'), data.models)
         updateDatalist($('existing_producents'), data.producents)
     }
@@ -103,14 +115,13 @@ class StorageManager extends Section {
             alert("Бизнес не выбран")
             return
         }
-        waitingAnimation(true)
         if (this.existing_businesses.data.includes(new_business)) {
             sessionStorage.setItem('active_storage', new_business)
             updateHeaders()
             updateDatalist(this.existing_businesses.related_list, this.existing_businesses.data, [new_business])
             for (let item in data_dicts) {
                 if (item === 'existing_businesses') continue
-                // globel variable
+                // global variable
                 data_dicts[item].is_actual = false
                 form.reset()
 
@@ -139,10 +150,10 @@ class StorageManager extends Section {
             return
         }
 
-        if(this.existing_businesses.data.includes(new_business)) {
+        if (this.existing_businesses.data.includes(new_business)) {
             let url = '/delete_business'
-            let data = {id:new_business}
-            sendRequest(url,data,"DELETE").then(_ => {
+            let data = { id: new_business }
+            sendRequest(url, data, "DELETE").then(_ => {
                 this.existing_businesses.is_actual = false
                 form.reset()
                 document.dispatchEvent(data_item_modified)
@@ -175,7 +186,7 @@ class StorageManager extends Section {
         let addBusiness = sendRequest(url, data, 'POST')
         addBusiness.then(
             _ => {
-                waitingAnimation(true)
+                // waitingAnimation(true)
                 if (callback) callback()
                 data_dicts.existing_businesses.is_actual = false
                 document.dispatchEvent(data_item_modified)
@@ -195,7 +206,7 @@ class StorageManager extends Section {
         let data = formToDict(form.elements)
         let url = createUrlDependingOnStorage('/add_items_on_storage/id/')
         let post = sendRequest(url, data, "POST")
-        Array.from(form.elements).forEach(el =>el.className = el.className.replace("error", ""))
+        Array.from(form.elements).forEach(el => el.className = el.className.replace("error", ""))
         form.reset()
         post.then(_ => {
             this.storage_statistics.is_actual = false

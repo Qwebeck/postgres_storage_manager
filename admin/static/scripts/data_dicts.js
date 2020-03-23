@@ -4,6 +4,17 @@
  */
 function getDataDicts() {
     return {
+        actual_business: {
+            is_actual: false,
+            url_creation_handler: () => createUrlDependingOnStorage('/get_storage_info/id/'),
+            emit: 'business_changed',
+            data_processor: (data) => {
+                if(data) $('service_ind').style = 'display: block'
+                else $('service_ind').style = 'display: none'
+                $('is_service').checked = data && data.is_service 
+            },
+            data: {}
+        },
         existing_businesses: {
             is_actual: false,
             url_creation_handler: () => '/info_about_businesses',

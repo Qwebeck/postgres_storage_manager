@@ -10,6 +10,7 @@ db.engine.execute(f"CREATE SCHEMA IF NOT EXISTS {SCHEMA_NAME};")
 class Businesses(db.Model):
     __table_args__ = {"schema": SCHEMA_NAME}
     name = db.Column(db.String, primary_key=True)
+    is_service = db.Column(db.Boolean, default=False)
     products = db.relationship('Products', backref='owner',
                                lazy='select')
 
@@ -61,7 +62,7 @@ class CriticalLevels(db.Model):
     __table_args__ = {"schema": SCHEMA_NAME}
     business = db.Column(db.String,
                          db.ForeignKey(
-                             f'{SCHEMA_NAME}.businesses.name', ondelete="DELETE"),
+                             f'{SCHEMA_NAME}.businesses.name', ondelete="CASCADE"),
                          primary_key=True)
     type_name = db.Column(db.String(50),
                           primary_key=True)

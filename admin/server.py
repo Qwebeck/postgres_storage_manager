@@ -212,27 +212,39 @@ def delete_product():
 
 @app.route('/delete_order/id/<int:order_id>', methods=['DELETE'])
 def delete_order(order_id):
-    try:
-        db.session.query(Products).filter(Products.appear_in_order == order_id)\
-                  .update({Products.appear_in_order: None}, synchronize_session=False)
-        db.session.query(SpecificOrders)\
-            .filter_by(order_id=order_id)\
-            .delete()
-        db.session.query(Orders)\
-                  .filter_by(order_id=order_id)\
-                  .delete()
-        db.session.commit()
-    except Exception:
-        tb = traceback.format_exc()
-        print(tb)
+    db.session.query(Products).filter(Products.appear_in_order == order_id)\
+              .update({Products.appear_in_order: None}, synchronize_session=False)
+    db.session.query(SpecificOrders)\
+        .filter_by(order_id=order_id)\
+        .delete()
+    db.session.query(Orders)\
+              .filter_by(order_id=order_id)\
+              .delete()
+    db.session.commit()
     return 'ok'
 
 # Info about existing businesse
 # V
+@app.route('/get_storage_info/id/<string:storage>')
+def get_info_about_storage(storage):
+    result = db.session.query(Businesses.is_service,
+                              Businesses.name).filter(Businesses.name == storage).first()
+    result = result._asdict()
+    return jsonify(result)
+
+
+@app.route('/update_business_status', methods=["POST"])
+def update_status():
+    data = request.get_json()
+    db.session.query(Businesses).filter(Businesses.name == data['name'])\
+              .update({Businesses.is_service: data['is_service']}, synchronize_session=False)
+    db.session.commit()
+    return 'ok'
+
+
 @app.route('/info_about_businesses')
 def get_info():
-    query = businesses_query()
-    result = db.session.query(query).all()
+    result = businesses_query().all()
     result = [item._asdict() for item in result]
     return jsonify(result)
 
@@ -340,6 +352,7 @@ def add_info():
     db.session.add(new_business)
     db.session.commit()
     return 'done'
+
 
 @app.route('/unbind_products', methods=["POST"])
 def unbind():

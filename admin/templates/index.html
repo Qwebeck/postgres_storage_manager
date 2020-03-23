@@ -73,7 +73,7 @@
 
                 </form>
             </div>
-            <div id='waiting' class="waiting"></div>
+            <div id='waiting' class="waiting" style="display:none"></div>
             <div id="product_managing_area" class="hidden">
                 <h1 name='type_name'></h1>
                 <div id='product_alert_area'>
@@ -92,6 +92,10 @@
 
             <div id="work_with_storage" class="hidden">
                 <h1 name='storage_header'></h1>
+                <div id='service_ind'>
+                    <input type="checkbox" id="is_service" onchange="storageManager.businessStatusChanged(event)">
+                    <label for="vehicle1"> Сервис </label>
+                </div>
                 <div id="add_on_storage">
                     <h1>Добавить товары на склад </h1>
                     <form id="storage_name"  class="product_order">

@@ -72,10 +72,11 @@ function sendRequest(url, data, method) {
  * @returns {Promise} - promise, that resolves only after all data was updated
  */
 function updateData() {
-    waitingAnimation(true)
+
     var itemUpdators = []
     for (let data_item of Object.values(data_dicts)) {
         if (!data_item.is_actual) {
+            waitingAnimation(true)
             var url = data_item.url_creation_handler()
             var req = sendRequest(url, "", "GET")
             let toUpdate = req.then(data => {
@@ -87,12 +88,12 @@ function updateData() {
                 }
                 data_item.data = data
                 data_item.is_actual = true
+                waitingAnimation(false)
                 return Promise.resolve()
             })
             itemUpdators.push(toUpdate)
         }
     }
-    waitingAnimation(false)
     return Promise.all(itemUpdators)
 }
 
@@ -103,7 +104,7 @@ function updateData() {
  */
 function waitingAnimation(condition) {
     let block_with_waiting_anim = $('waiting')
-    if (condition == true) {
+    if (condition) {
         block_with_waiting_anim.style = "display:block;"
     }
     else {
@@ -211,6 +212,7 @@ function optionExists(select, value) {
  * @param {string[]} ignore_columns - columns from data, that shouldn't be added to table
  */
 function createTable(data, action, outputSection = containers_and_elements.output_section, append = false, ignore_columns = []) {
+    waitingAnimation(true)
     if (!append) outputSection.innerHTML = ""
     if (!data || data.length == 0) {
         var empty = document.createElement('h3')
@@ -234,6 +236,7 @@ function createTable(data, action, outputSection = containers_and_elements.outpu
         newTable.appendChild(newRow)
     }
     outputSection.appendChild(newTable)
+    waitingAnimation(false)
 }
 
 /**

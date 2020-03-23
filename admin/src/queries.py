@@ -163,7 +163,7 @@ def expand_type_query_2(owner_id: str, type_name: []) -> 'session query':
             Products.owner_id == owner_id,
             Products.type_name.in_(type_name)
         )
-    ).order_by(Products.appear_in_order.asc())
+    ).order_by(Products.appear_in_order.asc(), Products.product_condition.asc())
     return db.session.query(aliased(query)), ordered, critical_level
 
 
@@ -209,10 +209,10 @@ def create_product(new_product, owner_id):
 
 
 def businesses_query():
-    query = select(
-        [Businesses.name.label("name")]
-    )
-    return aliased(query)
+    query = db.session.query(
+        Businesses.name,
+        Businesses.is_service)
+    return query
 
 
 # Fix. Add owner id check
@@ -318,16 +318,27 @@ def expand_order_query(order_id):
         .filter(Orders.order_id == order_id)\
         .group_by(SpecificOrders.type_name, SpecificOrders.quantity)
 
+    is_service = db.session.query(
+        Businesses.is_service    
+        )\
+        .join(Orders, and_(or_(Orders.supplier_id == Businesses.name,
+                           Orders.client_id == Businesses.name),
+                           Orders.order_id == order_id)).all()
+
+    any_side_of_order_is_service = any([item.is_service for item in is_service])
+
     available_products_query = db.session.query(
         Products.type_name.label('Тип'),
         Products.producent.label('Производитель'),
         Products.model.label('Модель'),
         Products.serial_number.label('Серийный номер'),
         Products.appear_in_order.label('Привязан к заказу'),
+        Products.product_condition.label('Cостояние'),
         Products.additonal_info.label('Дополнительная информация'),
     )\
         .join(Orders, and_(Orders.order_id == order_id,
                            Orders.supplier_id == Products.owner_id))\
+        .join(Businesses, Orders.client_id == Businesses.name)\
         .join(SpecificOrders, and_(
             SpecificOrders.order_id == Orders.order_id,
             SpecificOrders.type_name == Products.type_name
@@ -335,9 +346,10 @@ def expand_order_query(order_id):
     )\
         .filter(and_(or_(Products.appear_in_order == None,
                          Products.appear_in_order == order_id),
-                     Products.product_condition == True
+                     or_(Products.product_condition == True,
+                         any_side_of_order_is_service)
                      ))\
-        .order_by(Products.type_name, Products.appear_in_order.asc())
+        .order_by(Products.product_condition, Products.type_name, Products.appear_in_order.asc())
 
     return order_sides, order_stats_query, available_products_query
 

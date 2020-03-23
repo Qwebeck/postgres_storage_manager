@@ -11,7 +11,7 @@
 var active_section = null
 var active_toolbar = null
 // Change on query
-var main_storage_id = "Головний офіс, Вінниця";
+// var main_storage_id = "Головний офіс, Вінниця";
 
 /*
 Code convetions:
@@ -23,14 +23,9 @@ Code convetions:
 1. Allow user to create order on types, that aren't available on storage
 
 /**
- * Keys with data
- * businesses - business name + id
- * storage_stats - statistics of current storage
- * pending_orders - active orders
- * history - orders in history
- * current_storage 
- * types - types on storage
- * active_storage - active storage
+ * Keys in session storage
+ * is_history - indicates if last history mode where turned on in orders
+ * active_storage - stores informatoin about current storage
  */
 
 
@@ -38,11 +33,13 @@ Code convetions:
 function init() {
     $('is_history').checked = false
     sessionStorage.setItem('is_history', false)
-    sessionStorage.setItem('active_storage', main_storage_id)
+    if (!sessionStorage.getItem('active_storage')) {
+        sessionStorage.setItem('active_storage', '')
+    }
     sessionStorage.removeItem('current_order_id')
     data_item_modified = new Event('data_item_modified')
     document.addEventListener('data_item_modified', updateData)
-    
+
     buttons = getButtons()
     forms = getForms()
     datalists = getDatalist()
@@ -94,19 +91,21 @@ function init() {
         null,
         data_dicts.existing_businesses,
         data_dicts.current_storage_statistics,
-        main_storage_id,
+        sessionStorage.getItem('active_storage'),
         productTypeManager,
         data_dicts.producents_and_models)
 
     storageManager.hide()
-    updateData().then(
-        () => {
-            waitingAnimation(false)
+    if (sessionStorage.getItem('active_storage')) {
+        updateData().then(
+            () => {
+                // waitingAnimation(false)
 
-        }
-    )
-    updateHeaders()
+            }
+        )
+        updateHeaders()
 
-    // getInfoAboutStorage(main_storage_id);
-
+    } else {
+        // waitingAnimation(false)
+    }
 }

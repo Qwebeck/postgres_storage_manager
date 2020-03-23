@@ -13,7 +13,7 @@ class OrderEditor extends Section {
     }
 
     show() {
-        waitingAnimation(true)
+        // waitingAnimation(true)
         let active_storage = sessionStorage.getItem('active_storage')
         let current_order_id = sessionStorage.getItem('current_order_id')
         let order_types = Object.keys(this.order_description.data.order_types)
@@ -25,7 +25,7 @@ class OrderEditor extends Section {
             createTable(data,
                 this.markAssigned,
                 this.rightColumn.element)
-            waitingAnimation(false)
+            // waitingAnimation(false)
         })
         super.show()
     }
@@ -129,12 +129,12 @@ class OrderEditor extends Section {
         let order_id = sessionStorage.getItem("current_order_id")
         var url = "/edit_order/id/" + order_id
         let tmp = this.order_description.pack()
-        waitingAnimation(true)
+        // waitingAnimation(true)
         sendRequest(url, tmp, "POST").then(
             _ => {
                 document.dispatchEvent(data_item_modified)
                 concreteOrderManager.show()
-                waitingAnimation(false)
+                // waitingAnimation(false)
             }
         )
     }
