@@ -29,7 +29,8 @@ from admin.src.queries import (client_supplier_query,
                                expand_type_query_2,
                                set_critical_level,
                                get_models_query,
-                               get_producents_query)
+                               get_producents_query,
+                               change_product_condition)
 import re
 
 
@@ -354,11 +355,12 @@ def add_info():
     return 'done'
 
 
-@app.route('/unbind_products', methods=["POST"])
+@app.route('/change_products_state', methods=["POST"])
 def unbind():
     data = request.get_json()
-    product_serial_numbers = data['products']
-    unbind_from_order(product_serial_numbers)
+    print(data)
+    unbind_from_order(data.setdefault('unbind', []))
+    change_product_condition(data.setdefault('change_condition', []))
     return 'ok'
 
 # Possibly - the main reason of too many connections to database/

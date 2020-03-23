@@ -63,12 +63,12 @@ def statistics_query(owner_id):
         .subquery(name='p_count')
     """
     so AS (
-        SELECT 
+        SELECT
             type_name,
             supplier_id,
             SUM(quantity) ordered
-        FROM orders 
-        JOIN specific_orders USING(order_id) 
+        FROM orders
+        JOIN specific_orders USING(order_id)
         GROUP BY (type_name, supplier_id)
     )
 
@@ -84,14 +84,14 @@ def statistics_query(owner_id):
         .group_by(SpecificOrders.type_name, Orders.supplier_id)\
         .subquery(name='specific_orders')
     """
-    SELECT 
+    SELECT
         owner_id,
         p.type_name,
         so.ordered,
         p.product_count
     FROM p_count p
     LEFT JOIN so ON p.type_name = so.type_name AND p.owner_id = so.supplier_id
-    ORDER BY 1  
+    ORDER BY 1
     """
     stats_query = db.session.query(
         p_count.c.owner_id,
@@ -163,7 +163,7 @@ def expand_type_query_2(owner_id: str, type_name: []) -> 'session query':
             Products.owner_id == owner_id,
             Products.type_name.in_(type_name)
         )
-    ).order_by(Products.appear_in_order.asc(), Products.product_condition.asc())
+    ).order_by(Products.appear_in_order.asc(),Products.serial_number.asc())
     return db.session.query(aliased(query)), ordered, critical_level
 
 
@@ -267,16 +267,16 @@ def expand_order_query(order_id):
      """
 
     """
-    SELECT 
+    SELECT
         b2b.products.type_name AS b2b_products_type_name,
         specific_orders.quantity,
-        count(*) AS number, 
-        count(CASE WHEN (b2b.products.appear_in_order IS NULL) THEN b2b.products.type_name END) AS available_number 
-    FROM b2b.products 
+        count(*) AS number,
+        count(CASE WHEN (b2b.products.appear_in_order IS NULL) THEN b2b.products.type_name END) AS available_number
+    FROM b2b.products
     JOIN b2b.orders ON b2b.orders.order_id = 12
-                    AND b2b.orders.supplier_id = b2b.products.owner_id 
-    JOIN b2b.specific_orders ON b2b.specific_orders.order_id = b2b.orders.order_id 
-                             AND b2b.specific_orders.type_name = b2b.products.type_name 
+                    AND b2b.orders.supplier_id = b2b.products.owner_id
+    JOIN b2b.specific_orders ON b2b.specific_orders.order_id = b2b.orders.order_id
+                             AND b2b.specific_orders.type_name = b2b.products.type_name
     GROUP BY (b2b.products.type_name, specific_orders.quantity);
     """
     order_sides = db.session.query(
@@ -319,13 +319,14 @@ def expand_order_query(order_id):
         .group_by(SpecificOrders.type_name, SpecificOrders.quantity)
 
     is_service = db.session.query(
-        Businesses.is_service    
-        )\
+        Businesses.is_service
+    )\
         .join(Orders, and_(or_(Orders.supplier_id == Businesses.name,
-                           Orders.client_id == Businesses.name),
+                               Orders.client_id == Businesses.name),
                            Orders.order_id == order_id)).all()
 
-    any_side_of_order_is_service = any([item.is_service for item in is_service])
+    any_side_of_order_is_service = any(
+        [item.is_service for item in is_service])
 
     available_products_query = db.session.query(
         Products.type_name.label('Тип'),
@@ -375,8 +376,19 @@ def change_owner(client, serial_numbers):
     db.session.commit()
 
 
+def change_product_condition(serial_numbers):
+    if not serial_numbers:
+        return
+
+    db.session.query(Products).filter(Products.serial_number.in_(serial_numbers)).\
+        update({Products.product_condition: ~ Products.product_condition
+                }, synchronize_session=False)
+    db.session.commit()
+
+
 def unbind_from_order(serial_numbers):
-    print(serial_numbers)
+    if not serial_numbers:
+        return
     db.session.query(Products).filter(Products.serial_number.in_(serial_numbers)).\
         update({Products.appear_in_order: None
                 }, synchronize_session=False)
@@ -399,8 +411,8 @@ def bind_to_order(order_id, serial_numbers):
 
 def modify_specific_orders(order_id, order_stats):
     presented_types = db.session.query(SpecificOrders.type_name)\
-                        .filter(SpecificOrders.order_id == order_id)\
-                        .all()
+        .filter(SpecificOrders.order_id == order_id)\
+        .all()
 
     presented_types = [p_type.type_name for p_type in presented_types]
     deleted_types = set(presented_types)

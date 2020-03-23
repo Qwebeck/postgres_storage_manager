@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/components.css') }}">
     <script src="{{ url_for('static',filename='scripts/index.js') }}"></script>
     <script src="{{ url_for('static',filename='scripts/utils.js') }}"></script>
     <script src="{{ url_for('static',filename='scripts/areas.js') }}"></script>
@@ -180,6 +181,10 @@
         <button id='delete_order_btn' class="tlb-btn order-button" onclick="concreteOrderManager.deleteOrder()">Удалить</button>
     </div>
 
+
+    <div class="hidden" name="toolbar" id="product_type_editing_toolbar">
+        <button  class="tlb-btn order-button" onclick="productTypeManager.applyChanges()">Применить заданные правила</button>
+    </div>
 
 
     <div class="hidden" name="toolbar" id="order_edit_toolbar">

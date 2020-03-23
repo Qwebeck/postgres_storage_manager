@@ -1,9 +1,11 @@
 
+
+
 /**
  * Update values of headers, with name of actively selected storage 
  * @package classes/utils
  */
-function updateHeaders(name='storage_header', value = ()=> sessionStorage.getItem('active_storage')) {
+function updateHeaders(name = 'storage_header', value = () => sessionStorage.getItem('active_storage')) {
     let existing_headers = document.getElementsByName(name)
     let st_name = value()
     for (let header of existing_headers) {
@@ -49,15 +51,15 @@ function sendRequest(url, data, method) {
         // Trims all keys,and values because often could be that dict key/value is a primary key in db. 
         // For example product type, so it ouldd happend, that two same types 
         // ( one with space another without  ) would be trackted differently
-        for(let key in data){
-            if (typeof data[key] === "string"){
+        for (let key in data) {
+            if (typeof data[key] === "string") {
                 data[key] = data[key].trim()
-            }else{
-                for(let subkey in data[key]){
-                    let val = data[key][subkey] 
+            } else {
+                for (let subkey in data[key]) {
+                    let val = data[key][subkey]
                     delete data[key][subkey]
-                    data[key][subkey.trim()] = typeof val === "string" ? val.trim() : val 
-                }    
+                    data[key][subkey.trim()] = typeof val === "string" ? val.trim() : val
+                }
             }
         }
         xhr.send(JSON.stringify(data))
@@ -147,7 +149,7 @@ function updateDatalist(datalist, options, ignore = []) {
         child = datalist.lastElementChild;
     }
 
-    
+
     if (!options) {
         console.log('fillSelects: No options provided.')
         return
@@ -176,7 +178,7 @@ function updateDatalist(datalist, options, ignore = []) {
 function createElement(type, options = {}) {
     var element = document.createElement(type)
     for (const [key, val] of Object.entries(options)) {
-        if (key.localeCompare("innerHTML") == 0) {
+        if (key.toLowerCase().localeCompare("innerhtml") == 0) {
             element.innerHTML = val
             continue
         }
@@ -240,23 +242,62 @@ function createTable(data, action, outputSection = containers_and_elements.outpu
 }
 
 /**
+ * Function returns row, that contain this element
+ * @param {Element} element elemnt whose row should be found
+ * @returns row where this element is placed
+ */
+function getContainingRow(element) {
+    if (element.tagName.toLowerCase() != 'tr') {
+        element = getContainingRow(element.parentElement)
+    } 
+    return element
+}
+/**
+ * Creates dropdown list where actions are listed 
+ * @param {Object} rowInfo Information based on which actions will be created
+ * @param {Element} node Node to append dropdown
+ * @param {Object} actions dict  describing action
+ * @param {string} actions.accessKey
+ * @param {CallableFunction} actions.callback
+ * @param {string} actions.actionName
+ * @param {CallableFunction} actions.predicate Condition that shoud be satisfied to add this node
+ * @param {string} dropdownName text that will be placed on dropdown
+ */
+function createDropdownList(rowInfo, node, actions, dropdownName = "Опции") {
+    let container = createElement("div", { "class": "dropdown" })
+    let activatebutton = createElement("button", { "innerHTML": dropdownName, "class": "dropbtn" })
+    let dropdownContent = createElement("div", { "class": "dropdown-content" })
+    container.appendChild(activatebutton)
+    container.appendChild(dropdownContent)
+    for (let action of Object.values(actions)) {
+        if (action.predicate && action.predicate(rowInfo) || !action.predicate)
+            createActionButton(rowInfo, dropdownContent, action.accessKey, action.actionName, action.callback, null)
+    }
+    node.appendChild(container)
+}
+
+/**
  * Creates button for provided action and bind it with object
  * @package element_creators
- * @param {*} row_info - inforamtion in current row 
- * @param {*} tableRow - row of table, where newly created button will be appended
- * @param {*} identifier_name - name of field in `row_info` which value, that will be assigned to button
- * @param {*} action_name - text, that will be displayed on button
- * @param {*} callback - callback for action
+ * @param {*} rowInfo inforamtion in current row 
+ * @param {*} node row of table, where newly created button will be appended
+ * @param {*} identifierName name of field in `row_info` which value, that will be assigned to button
+ * @param {*} actionName text, that will be displayed on button
+ * @param {*} callback callback for action
  */
-function createActionButton(row_info, tableRow, identifier_name, action_name, callback) {
+function createActionButton(rowInfo, node, identifierName, actionName, callback, wrapper = "td") {
     var button = document.createElement('button')
-    button.value = row_info[identifier_name]
-    button.innerHTML = action_name
+    button.value = rowInfo[identifierName]
+    button.innerHTML = actionName
     button.onclick = callback
     button.className = "action-button"
-    let cell = createElement('td')
-    cell.appendChild(button)
-    tableRow.appendChild(cell)
+    let newElement = button
+    if (wrapper) {
+        let wrapperEl = createElement(wrapper)
+        wrapperEl.appendChild(button)
+        newElement = wrapperEl
+    }
+    node.appendChild(newElement)
     return button
 }
 

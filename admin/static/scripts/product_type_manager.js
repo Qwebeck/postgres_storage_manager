@@ -11,7 +11,8 @@ class ProductTypeManager extends Section {
         this.alert_area = sections.product_alert_section
         this.current_type = null
         this.current_type_data = null
-        this.products_to_unbind = []
+        this.products_change = {}
+        this.unbind_from_order_buttons = []
     }
 
     checkForWarnings(data, type) {
@@ -35,8 +36,10 @@ class ProductTypeManager extends Section {
         this.current_type = type
         let storage_id = sessionStorage.getItem('active_storage')
         let url = '/expand_types/id/' + storage_id + '/types/' + type
+        waitingAnimation(true)
         let query = sendRequest(url, "", "GET")
         query.then(data => {
+            waitingAnimation(false)
             forms.type_critical_level.element.new_cl.value = data.critical_level
             this.checkForWarnings(data, type)
             this.current_type_data = data
@@ -47,22 +50,25 @@ class ProductTypeManager extends Section {
 
             createTable(available_products,
                 (row_info, _, rowNode) => {
-                    if (row_info["Привязан к заказу"]) {
-                        createActionButton(
-                            row_info,
-                            rowNode,
-                            "Серийный номер",
-                            "Отвязать",
-                            (e) => this.unbindFromOrder(e.target)
-                        )
+                    let actions = {
+                        'unbind': {
+                            'accessKey': "Серийный номер",
+                            'callback': (e) => this.changeCondition(e.target, 'unbind', 'assigned_to_other', 'Отменить отвязку от заказа'),
+                            'actionName': "Отвязать от заказа",
+                            'predicate': (rowInfo) => rowInfo["Привязан к заказу"]
+                        },
+                        'change_state': {
+                            'accessKey': "Серийный номер",
+                            'callback': (e) => this.changeCondition(e.target, 'change_condition', 'assigned', "Отменить изменение состояния"),
+                            'actionName': "Пометить на изменение состояния"
+                        },
+                        'delete': {
+                            'accessKey': "Серийный номер",
+                            'callback': (e) => this.deleteProduct(e.target),
+                            'actionName': "Удалить"
+                        }
                     }
-
-                    createActionButton(
-                        row_info,
-                        rowNode,
-                        "Серийный номер",
-                        "Удалить",
-                        this.deleteProduct)
+                    createDropdownList(row_info, rowNode, actions)
                 },
                 this.rightColumn.element
             )
@@ -74,27 +80,33 @@ class ProductTypeManager extends Section {
     }
 
     /**
-     * Add unbinded product to unbind list
-     * @param {*} button
+     * Mark product as product, that should change it's condition
+     * @param {Element} button Pressed button 
+     * @param {string} changeName Key that indicates what should happend with this product
+     * @param {string} className Classname, that will be assigned to row with product after change this change
+     * @param {string} newName Text that will appear on button after change
      */
-    unbindFromOrder(button) {
+    changeCondition(button, changeName, className, newName = null) {
         let serial_number = button.value
-        this.products_to_unbind.push(serial_number)
-        button.innerHTML = "Отменить"
-        button.parentElement.parentElement.className = "assigned_to_other"
-        button.onclick = (e) => this.cancellUnbinding(e.target)
+        if (changeName in this.products_change) this.products_change[changeName].push(serial_number)
+        else this.products_change[changeName] = [serial_number]
+        getContainingRow(button).className = className
+        let standardName = button.innerHTML
+        button.onclick = (e) => this.cancellChange(e.target, changeName, className, standardName)
+        if (newName) button.innerHTML = newName
     }
-    /**
-     * Remove product from unbind array
-     */
-    cancellUnbinding(button) {
+
+    cancellChange(button, changeName, className, standardName) {
         let serial_number = button.value
-        let serial_number_index = this.products_to_unbind.indexOf(serial_number)
-        delete this.products_to_unbind[serial_number_index]
-        button.innerHTML = "Отвязать"
-        button.parentElement.parentElement.className = button.parentElement.parentElement.className.replace("assigned_to_other","")
-        button.onclick = (e) => this.unbindFromOrder(e.target)
+        let serial_number_index = this.products_change[changeName].indexOf(serial_number)
+        delete this.products_change[changeName][serial_number_index]
+        let alternativeName = button.innerHTML
+        button.onclick = (e) => this.changeCondition(e.target, changeName, className, alternativeName)
+        button.innerHTML = standardName
+        // Fix me
+        getContainingRow(button).className = getContainingRow(button).className.replace(className, "")
     }
+
     setCriticalLevel(e) {
         e.preventDefault()
         let form = e.target
@@ -117,26 +129,36 @@ class ProductTypeManager extends Section {
      * Replace with method, which will be called only on hide
      * @param {*} e 
      */
-    deleteProduct(e) {
-        let serial_number = e.target.value;
+    deleteProduct(button) {
+        let serial_number = button.value;
         let url = '/delete_product'
         let data = {
             'serial_number': serial_number
         }
         let post = sendRequest(url, data, "DELETE")
-        e.target.parentElement.remove()
+        getContainingRow(button).remove()
+        // e.target.parentElement.parentElement.parentElement.remove()
         post.then(_ => {
             productTypeManager.current_storage_stats.is_actual = false
         })
     }
 
+    applyChanges() {
+        if (Object.values(this.products_change)) {
+            waitingAnimation(true)
+            let url = "/change_products_state"
+            data_dicts.current_storage_statistics.is_actual = false
+            sendRequest(url, this.products_change, "POST").then(
+                (_) => {
+                    this.products_change = {}
+                    this.update(this.current_type)
+                }
+            )
+        }
+    }
+
     hide() {
         super.hide()
-        if (this.products_to_unbind.length) {
-            let data = { 'products': this.products_to_unbind }
-            let url = "/unbind_products"
-            sendRequest(url, data, "POST")
-        }
         document.dispatchEvent(data_item_modified)
     }
 }
