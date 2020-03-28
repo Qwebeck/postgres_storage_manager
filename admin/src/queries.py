@@ -503,3 +503,5 @@ def get_producents_query():
     """Return query, on all existing producents."""
     query = db.session.query(Products.producent).distinct()
     return query
+
+
