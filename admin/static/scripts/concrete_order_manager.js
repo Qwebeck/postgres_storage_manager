@@ -38,7 +38,7 @@ class ConcreteOrderManager extends Section {
             let type = item['Type']
             let left = ((item['Amount of functional'] + item['Amount of binded']) - item['Ordered'])
             if(left < 0){
-                let am_alert = createElement('div', { 'class': 'alert alert-critical', 'innerHTML': `Amount of ${type} is not enough to complete order. You need more ${-left} units of ${type}ов` })
+                let am_alert = createElement('div', { 'class': 'alert alert-critical', 'innerHTML': `Amount of ${type} is not enough to complete order. You need ${-left} more units of ${type}s` })
                 // Fix me
                 this.alert_area.element.appendChild(am_alert)
             }
