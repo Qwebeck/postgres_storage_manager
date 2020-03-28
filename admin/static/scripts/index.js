@@ -81,7 +81,7 @@ function init() {
     productTypeManager = new ProductTypeManager(
         areas.product_managing_area,
         areas.product_output_area,
-        toolbars.order_editing_toolbar,
+        toolbars.product_editing_toolbar,
         data_dicts.current_storage_statistics
     )
 

@@ -53,7 +53,7 @@ function getToolbars() {
         order_editing_toolbar: {
             element: $('order_edit_toolbar')
         },
-        order_editing_toolbar: {
+        product_editing_toolbar: {
             element: $('product_type_editing_toolbar')
         }
     }
