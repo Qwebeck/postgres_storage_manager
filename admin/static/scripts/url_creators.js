@@ -11,6 +11,7 @@ function createUrlDependingOnOrder(endpoint){
 
 function createUrlDependingOnStorage(endpoint){
     var current_storage = sessionStorage.getItem('active_storage')
+    if( !current_storage ) return '/mock'
     return endpoint + current_storage
 }
 
@@ -20,6 +21,8 @@ function createUrlDependingOnStorage(endpoint){
  * Generates an appropriate order url, based on time inputs and history selection
  */
 function createOrderUrl() {
+    let active_storage = sessionStorage.getItem('active_storage')
+    if(!active_storage) return '/mock'
     let form = forms.order_lookup.element
     const from = form.from.value;
     let to = form.to.value;
@@ -31,7 +34,6 @@ function createOrderUrl() {
 
         var url = `/get_orders/from/${from}/to/${to.toISOString().split('T')[0]}`;
     };
-    let active_storage = sessionStorage.getItem('active_storage')
     let is_history = sessionStorage.getItem('is_history')
     url += `/${active_storage}` 
     if(JSON.parse(is_history)){

@@ -1,3 +1,5 @@
+/**
+ * @module OrderEditor contain functions that describe how user can edit his order. */
 class OrderEditor extends Section {
     constructor(orderInfoArea,
         availableProductsArea,
@@ -13,19 +15,17 @@ class OrderEditor extends Section {
     }
 
     show() {
-        waitingAnimation(true)
         let active_storage = sessionStorage.getItem('active_storage')
         let current_order_id = sessionStorage.getItem('current_order_id')
         let order_types = Object.keys(this.order_description.data.order_types)
         let url = '/expand_types/id/' + active_storage + '/types/' + order_types.join(',') + '/for_order/' + current_order_id
         let getFreeProductsOnStorage = sendRequest(url, '', 'GET')
         getFreeProductsOnStorage.then(data => {
-            this.available_products_for_assigment = convertToObject("Серийный номер", data)
+            this.available_products_for_assigment = convertToObject("Serial number", data)
             this.createLayoutForSpecificOrderEditing()
             createTable(data,
                 this.markAssigned,
                 this.rightColumn.element)
-            waitingAnimation(false)
         })
         super.show()
     }
@@ -36,18 +36,18 @@ class OrderEditor extends Section {
         var serial_number = e.target.value
         var current_order_products = current_order.binded_products
         var is_assigned = current_order_products.has(serial_number)
-
+        let row = e.target.parentElement.parentElement 
         if (is_assigned) {
-            e.target.innerHTML = "Привязать"
+            e.target.innerHTML = "Bind to order"
             current_order_products.delete(serial_number)
             current_order.unbinded_products.add(serial_number)
-            e.target.parentElement.className = ""
+            row.className = ""
         }
         else {
             current_order.unbinded_products.delete(serial_number)
-            e.target.innerHTML = "Отвязать"
+            e.target.innerHTML = "Unbind from order"
             current_order_products.add(serial_number)
-            e.target.parentElement.className = "assigned"
+            row.className = "assigned"
         }
     }
 
@@ -57,7 +57,7 @@ class OrderEditor extends Section {
         if (type && select) select.value = type
         if (number && quantity_input) quantity_input.value = number
         if (!type) return
-        let button = createElement('button', { 'class': 'action-button', 'value': type, 'innerHTML': 'Удалить' })
+        let button = createElement('button', { 'class': 'action-button', 'value': type, 'innerHTML': 'Delete' })
         button.onclick = (e) => this.deleteSpecificOrder(e)
         container.appendChild(button)
     }
@@ -88,19 +88,19 @@ class OrderEditor extends Section {
 
     markAssigned(data, _, element) {
         var current_order_id = sessionStorage.getItem('current_order_id')
-        var is_assigned = data['Привязан к заказу']
-        var is_assigned_to_current = is_assigned && data['Привязан к заказу'] == current_order_id 
-        var action_name = "Привязать"
+        var is_assigned = data['Bind to order']
+        var is_assigned_to_current = is_assigned && data['Bind to order'] == current_order_id 
+        var action_name = "Bind to order"
         if (is_assigned_to_current) {
             element.className = "assigned"
-            var action_name = "Отвязать"
-            data_dicts.current_actual_order_description.data.binded_products.add(data["Серийный номер"])
+            var action_name = "Unbind from order"
+            data_dicts.current_actual_order_description.data.binded_products.add(data["Serial number"])
         }
         else if(is_assigned){
             element.className = "assigned_to_other"
         }
         // find another solution
-        createActionButton(data, element, 'Серийный номер', action_name, (e) => orderEditor.toggleAssigment(e))
+        createActionButton(data, element, 'Serial number', action_name, (e) => orderEditor.toggleAssigment(e))
     }
 
     orderParamsChanged(e) {
@@ -114,7 +114,7 @@ class OrderEditor extends Section {
         var type_input = parent.querySelector("[name=product_type]")
         var modified_type = type_input.value
         if (!modified_type) {
-            alert('Укажите тип')
+            alert('Select a type')
             return
         }
         this.order_description.data.order_types[modified_type] = new_quantity
@@ -129,12 +129,12 @@ class OrderEditor extends Section {
         let order_id = sessionStorage.getItem("current_order_id")
         var url = "/edit_order/id/" + order_id
         let tmp = this.order_description.pack()
-        waitingAnimation(true)
+        // waitingAnimation(true)
         sendRequest(url, tmp, "POST").then(
             _ => {
                 document.dispatchEvent(data_item_modified)
                 concreteOrderManager.show()
-                waitingAnimation(false)
+                // waitingAnimation(false)
             }
         )
     }

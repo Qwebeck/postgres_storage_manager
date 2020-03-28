@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/components.css') }}">
     <script src="{{ url_for('static',filename='scripts/index.js') }}"></script>
     <script src="{{ url_for('static',filename='scripts/utils.js') }}"></script>
     <script src="{{ url_for('static',filename='scripts/areas.js') }}"></script>
@@ -32,11 +33,17 @@
     <datalist id="available_businesses">
 
     </datalist>
+    <datalist id="existing_producents">
+    
+    </datalist>
+    <datalist id="existing_models">
+
+    </datalist>
 
 
     <div class="menu">
         <button class="menu-item" onclick="storageManager.show()">
-            Work with storage
+            Work wih warehouse
         </button>
         <button class="menu-item" onclick="orderManager.show()">
             Work with orders
@@ -67,7 +74,7 @@
 
                 </form>
             </div>
-            <div id='waiting' class="waiting"></div>
+            <div id='waiting' class="waiting" style="display:none"></div>
             <div id="product_managing_area" class="hidden">
                 <h1 name='type_name'></h1>
                 <div id='product_alert_area'>
@@ -78,7 +85,7 @@
                 </div>
                 <h1>Critical level</h1>
                 <form id="critical_level" class="form-container product_order" onsubmit="productTypeManager.setCriticalLevel(event)">
-                        <input type="text" name="new_cl" placeholder="Apply new critical level" autocomplete="off"/>
+                        <input type="text" name="new_cl" placeholder="Set critical level" autocomplete="off"/>
                         <input type="submit" value="Set"/>
     
                 </form>
@@ -86,41 +93,46 @@
 
             <div id="work_with_storage" class="hidden">
                 <h1 name='storage_header'></h1>
+                <div id='service_ind'>
+                    <input type="checkbox" id="is_service" onchange="storageManager.businessStatusChanged(event)">
+                    <label for="is_service"> Is repair service </label>
+                </div>
                 <div id="add_on_storage">
-                    <h1>Add products on storage </h1>
-                    <form id="storage_name" onsubmit="storageManager.switchBusiness(event)" class="product_order">
+                    <h1> Add products on warehouse </h1>
+                    <form id="storage_name"  class="product_order">
                         <input list="available_businesses" type="text" name="active_storage" id="active_storage"
-                            placeholder="Switch on business ..." autocomplete="off" />
-                        <input type="submit" value="Go">
+                            placeholder="Business name ..." autocomplete="off" />
+                        <input onclick="storageManager.switchBusiness(event)" type="submit" value="Go to">
+                        <input onclick="storageManager.deleteBusiness(event)" type="submit" value="Delete">
                     </form>
                     <form id="add_on_storage_form" onsubmit="storageManager.addProductToBusiness(event)">
 
-                        <input type="text" name="producent" placeholder="Producent" autocomplete="off">
+                        <input type="text" name="producent" placeholder="Producent" autocomplete="off" list="existing_producents">
                         <input type="text" name="serial_number" placeholder="Serial number" autocomplete="off">
-                        <input type="text" name="model" placeholder="Model" autocomplete="off">
+                        <input type="text" name="model" placeholder="Model" autocomplete="off" list="existing_models">
                         <input type="text" name="type_name" placeholder="Product type" autocomplete="off"
                             list="available_types">
                         <select name="product_condition">
-                            <option value='true'>Proper</option>
-                            <option value='false'>Broken</option>
+                            <option value='true'>Good condition</option>
+                            <option value='false'>Defective</option>
                         </select>
                         <textarea name="additional_info" id="" cols="30" rows="10"
-                            placeholder="Additional information ..."></textarea>
-                        <input class='submit action-button' type="submit" value="Добавить">
+                            placeholder="Additional information"></textarea>
+                        <input class='submit action-button' type="submit" value="Add">
                     </form>
                 </div>
 
             </div>
             <div id="order_creation" class="hidden">
                 <div id="history_info_area" class="hidden">
-                    <h1>History overview</h1>
+                    <h1>Historical overview</h1>
                 </div>
                                 
                 <form class="hidden" class="form-container" class="action" id='orders_add' onsubmit="orderManager.addOrder(event)">
                     <h1 name='storage_header'></h1>
                     <h1 id='action_name_1'>Add new order</h1>
                     <h4>Client</h4>
-                    <input type="text" name="clients_ids" list="available_businesses" placeholder="Client name"
+                    <input type="text" name="clients_ids" list="available_businesses" placeholder="Client"
                         autocomplete="off">
             <div class="product_order">
                 <h4>Order date</h4>
@@ -151,10 +163,10 @@
         <form id="order_history" onsubmit="orderManager.showForPeriod(event)">
             <label for="from_date">Orders from</label>
             <input type="date" name="from" id="from_date">
-            <label for="to_date">to</label>
+            <label for="to_date">untill</label>
             <input type="date" name="to" id="to_date">
-            <input class="tlb-btn" type="submit" value="Найти">
-        <button class="tlb-btn" onclick="{this.parentElement.reset();orderManager.showForPeriod(event)}">Показать всё</button>
+            <input class="tlb-btn" type="submit" value="Find">
+        <button class="tlb-btn" onclick="{this.parentElement.reset();orderManager.showForPeriod(event)}">Show all</button>
         </form>
         <span>History</span>
         <label class="switch">
@@ -164,16 +176,20 @@
     </div>
     
     <div class="hidden" name="toolbar" id="concrete_order_toolbar">
-        <button id='edit_order_btn' class="tlb-btn order-button" onclick="concreteOrderManager.editOrder()">Изменить</button>
-        <button id='complete_order_btn' class="tlb-btn order-button" onclick="concreteOrderManager.completeOrder()">Выполнить</button>
-        <button id='delete_order_btn' class="tlb-btn order-button" onclick="concreteOrderManager.deleteOrder()">Удалить</button>
+        <button id='edit_order_btn' class="tlb-btn order-button" onclick="concreteOrderManager.editOrder()">Edit</button>
+        <button id='complete_order_btn' class="tlb-btn order-button" onclick="concreteOrderManager.completeOrder()">Complete</button>
+        <button id='delete_order_btn' class="tlb-btn order-button" onclick="concreteOrderManager.deleteOrder()">Delete</button>
     </div>
 
 
+    <div class="hidden" name="toolbar" id="product_type_editing_toolbar">
+        <button  class="tlb-btn order-button" onclick="productTypeManager.applyChanges()">Apply given rules</button>
+    </div>
+
 
     <div class="hidden" name="toolbar" id="order_edit_toolbar">
-        <button id='edit_order_btn' class="tlb-btn order-button" onclick="orderEditor.saveModifiedOrder(event)">Сохранить всё</button>
-        <button id='disable_editing_btn' class="tlb-btn order-button" onclick="concreteOrderManager.show()">Отменить</button>
+        <button id='edit_order_btn' class="tlb-btn order-button" onclick="orderEditor.saveModifiedOrder(event)">Save all</button>
+        <button id='disable_editing_btn' class="tlb-btn order-button" onclick="concreteOrderManager.show()">Cancell</button>
     </div>
    
    

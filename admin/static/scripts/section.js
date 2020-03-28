@@ -1,3 +1,6 @@
+/**
+ * @module Section describes common function that exists in order.
+ */
 class Section{
     /**
      * 

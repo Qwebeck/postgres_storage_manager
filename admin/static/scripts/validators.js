@@ -6,7 +6,7 @@
  */
 function validateOrderForm(form) {
     var error = false
-    message = 'Заполните все необходимые поля'
+    message = 'Fill all required fields'
     if(!form.clients_ids.value){
         error = true
         form.clients_ids.className = "error"
@@ -29,7 +29,7 @@ function validateOrderForm(form) {
         }
     }
     if(!order_exists) {
-        message = 'Заказ должен быть сделан на что-то'
+        message = 'Order should be done on something'
         error = true
     }
     if (error) {
@@ -68,7 +68,7 @@ function validateStorageForm(form) {
         form.type_name.className = 'error'
     }
     if (error) {
-        alert('Заполните необходимые поля')
+        alert('Fill all selected rules')
         return false
     }
     return true
@@ -83,7 +83,7 @@ function validateStorageForm(form) {
  */
 function isUserInputForType(e, input_id = 'new_type') {
     const select = e.target
-    const userInput = document.getElementById(input_id)
+    const userInput = $(input_id)
     if (!select.value.localeCompare("new")) {
         userInput.style = "display:block"
         userInput.name = "type_name"
@@ -101,8 +101,8 @@ function isUserInputForType(e, input_id = 'new_type') {
  * @param {string} input_id - id of active input
  */
 function hideUserInputForType(select_id, input_id) {
-    const select = document.getElementById(select_id)
-    const input = document.getElementById(input_id)
+    const select = $(select_id)
+    const input = $(input_id)
     select.name = "type_name"
     input.style = "display:none"
     input.name = "not_type_name"
@@ -129,7 +129,7 @@ function validateNewBusiness(form){
     error = false
     field = form.querySelector("[name=new_business_name")
     if(!field.value){
-        message="Подайте название бизнеса"
+        message="Provide the business name"
         error = true
     }
     if(error) {

@@ -1,9 +1,23 @@
 
 /**
- * Return data used by application in dict format
+ * Contains all information in form of dict, that allows easily update it. 
+ * Each dict contains data, event it should emit while updating and url_creation_hanler 
+ * that points to url from whic this dict should take info.
+ * @returns data used by application in dict format
  */
 function getDataDicts() {
     return {
+        actual_business: {
+            is_actual: false,
+            url_creation_handler: () => createUrlDependingOnStorage('/get_storage_info/id/'),
+            emit: 'business_changed',
+            data_processor: (data) => {
+                if(data) $('service_ind').style = 'display: block'
+                else $('service_ind').style = 'display: none'
+                $('is_service').checked = data && data.is_service 
+            },
+            data: {}
+        },
         existing_businesses: {
             is_actual: false,
             url_creation_handler: () => '/info_about_businesses',
@@ -32,14 +46,14 @@ function getDataDicts() {
             url_creation_handler: () => createExpandOrderUrl(),
             data_processor: (data) => {
                 if (!data) return null
-                let available_products = convertToObject('Серийный номер', data.available_products)
-                let order_stats =  data.order_stats
+                let available_products = convertToObject('Serial number', data.available_products)
+                let order_stats = data.order_stats
                 let order_sides = data.order_sides
                 return {
                     available_products: available_products,
                     order_sides: [order_sides],
                     order_types: Object.values(order_stats).reduce((accumulator, el) => {
-                        accumulator[el['Тип']] = el['Заказано']
+                        accumulator[el['Type']] = el['Ordered']
                         return accumulator
                     }, {}),
                     order_stats: Object.values(order_stats),
@@ -60,6 +74,12 @@ function getDataDicts() {
         current_history_order_description: {
             is_actual: false,
             url_creation_handler: () => createUrlDependingOnOrder('/expand_history_order/id/'),
+            data: {}
+        },
+        producents_and_models: {
+            is_actual: false,
+            url_creation_handler: () => '/get_producents_and_models',
+            emit: 'producent_and_models_update',
             data: {}
         }
     }

@@ -7,13 +7,12 @@ from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy import func, update, delete, join, select, and_
 from sqlalchemy.sql import text
 from datetime import datetime
-from admin.config import app, USER, DATABASE, SCHEMA_NAME, actual_config
-from admin.src.cloud_backup import upload_dump
+from admin.config import app, USER, DATABASE, SCHEMA_NAME
 from admin.src.models import (db, Products, Businesses, Orders, SpecificOrders)
 from admin.src.queries import (client_supplier_query,
                                types_query,
                                statistics_query,
-                               expand_type_query,
+                               expand_types_order,
                                create_product,
                                businesses_query,
                                get_orders_query,
@@ -26,8 +25,12 @@ from admin.src.queries import (client_supplier_query,
                                bind_to_order,
                                modify_specific_orders,
                                unbind_all_from_order,
-                               expand_type_query_2,
-                               set_critical_level)
+                               expand_type_query,
+                               set_critical_level,
+                               get_models_query,
+                               get_producents_query,
+                               change_product_condition)
+import re
 
 
 class InvalidUsage(Exception):
@@ -48,8 +51,13 @@ class InvalidUsage(Exception):
 
 @app.errorhandler(IntegrityError)
 def handle_invalid_usage(error):
+    print(error)
+    if re.search("violates foreign key constraint", str(getattr(error, 'orig'))):
+        message = "You an delete business because it already was a part of order"
+    else:
+        message = "Provided key already exists in database"
     response = InvalidUsage(
-        message='Provided key already exists')
+        message=message)
     response.status_code = 500
     response = response.to_dict()
     return jsonify(response), 400
@@ -58,7 +66,7 @@ def handle_invalid_usage(error):
 @app.errorhandler(OperationalError)
 def handle_invalid_usage(error):
     response = InvalidUsage(
-        message='Lost connection with databaase')
+        message='Connection with database server lost')
     response.status_code = 500
     response = response.to_dict()
     return jsonify(response), 400
@@ -102,15 +110,28 @@ def edit_order(order_id):
 def mock():
     return jsonify(None)
 
-# V Depracated
+
+@app.route('/get_producents_and_models')
+def get_producents_and_models():
+    """Return data about existing models and producents."""
+    models = get_models_query().all()
+    producents = get_producents_query().all()
+    result =\
+        {
+            'models': [item._asdict() for item in models],
+            'producents': [item._asdict() for item in producents]
+        }
+    return jsonify(result)
+
+
 @app.route('/get_types/id/<string:owner_id>')
 def get_types(owner_id):
+    """Return data about types on current storage ."""
     available_types = types_query(owner_id).all()
-    # result = pack_query_to_dict(available_types)
     available_types = [item._asdict() for item in available_types]
     return jsonify(available_types)
 
-# V
+
 @app.route('/get_statistics/id/<string:owner_id>')
 def count_types(owner_id):
     """Return count of products on storage."""
@@ -120,28 +141,28 @@ def count_types(owner_id):
 
 
 @app.route('/expand_types/id/<string:owner_id>/types/<string:type_name>')
-def get_details_about_type_2(owner_id, type_name):
+def get_details_about_type(owner_id, type_name):
     types = type_name.split(',')
-    products_query, ordered_amount_query, critical_level_query = expand_type_query_2(
-        owner_id, types)
+    products_query, ordered_amount_query, critical_level_query = \
+        expand_type_query(owner_id, types)
     products = products_query.all()
     ordered_amount = ordered_amount_query.first()
     critical_level = critical_level_query.first()
     products = [item._asdict() for item in products]
     result = {
         'available_products': products,
-        'type_stats': {'Всего заказов на тип': ordered_amount.number or 0,
-                       'Количество на складе': len(products),
-                       'К-во исправных': len(tuple(filter(lambda el: el['Состояние'] is True, products)))},
+        'type_stats': {'Total ordered amount': ordered_amount.number or 0,
+                       'All amount on warehouse': len(products),
+                       'Amount of functional': len(tuple(filter(lambda el: el['Condition'] is True, products)))},
         'critical_level': critical_level.critical_amount if critical_level else None
     }
     return jsonify(result)
 
 
 @app.route('/expand_types/id/<string:owner_id>/types/<string:type_name>/for_order/<int:order_id>')
-def get_details_about_type(owner_id, type_name, order_id):
+def expand_types_for_order(owner_id, type_name, order_id):
     types = type_name.split(',')
-    result = expand_type_query(owner_id, types, order_id).all()
+    result = expand_types_order(owner_id, types, order_id).all()
     result = [item._asdict() for item in result]
     return jsonify(result)
 
@@ -169,6 +190,16 @@ def insert_items(owner_id):
     return 'ok'
 
 
+@app.route('/delete_business', methods=['DELETE'])
+def delete_business():
+    name = request.get_json()['id']
+    db.session.query(Businesses.name)\
+              .filter_by(name=name)\
+              .delete()
+    db.session.commit()
+    return 'ok'
+
+
 @app.route('/delete_product', methods=['DELETE'])
 def delete_product():
     serial_number = request.get_json()['serial_number']
@@ -181,27 +212,39 @@ def delete_product():
 
 @app.route('/delete_order/id/<int:order_id>', methods=['DELETE'])
 def delete_order(order_id):
-    try:
-        db.session.query(Products).filter(Products.appear_in_order == order_id)\
-                  .update({Products.appear_in_order: None}, synchronize_session=False)
-        db.session.query(SpecificOrders)\
-            .filter_by(order_id=order_id)\
-            .delete()
-        db.session.query(Orders)\
-                  .filter_by(order_id=order_id)\
-                  .delete()
-        db.session.commit()
-    except Exception:
-        tb = traceback.format_exc()
-        print(tb)
+    db.session.query(Products).filter(Products.appear_in_order == order_id)\
+              .update({Products.appear_in_order: None}, synchronize_session=False)
+    db.session.query(SpecificOrders)\
+        .filter_by(order_id=order_id)\
+        .delete()
+    db.session.query(Orders)\
+              .filter_by(order_id=order_id)\
+              .delete()
+    db.session.commit()
     return 'ok'
 
 # Info about existing businesse
 # V
+@app.route('/get_storage_info/id/<string:storage>')
+def get_info_about_storage(storage):
+    result = db.session.query(Businesses.is_service,
+                              Businesses.name).filter(Businesses.name == storage).first()
+    result = result._asdict()
+    return jsonify(result)
+
+
+@app.route('/update_business_status', methods=["POST"])
+def update_status():
+    data = request.get_json()
+    db.session.query(Businesses).filter(Businesses.name == data['name'])\
+              .update({Businesses.is_service: data['is_service']}, synchronize_session=False)
+    db.session.commit()
+    return 'ok'
+
+
 @app.route('/info_about_businesses')
 def get_info():
-    query = businesses_query()
-    result = db.session.query(query).all()
+    result = businesses_query().all()
     result = [item._asdict() for item in result]
     return jsonify(result)
 
@@ -229,8 +272,10 @@ def orders_in_period(from_, to, business_id):
 @app.route('/add_order', methods=["POST"])
 def add_order():
     data = request.get_json()
+    print(data)
     new_order = Orders(client_id=data.pop('client_id'),
-                       supplier_id=data.pop('supplier_id'))
+                       supplier_id=data.pop('supplier_id'),
+                       order_date=data.pop('order_date') or None)
     db.session.add(new_order)
     db.session.commit()
     for item in data:
@@ -256,7 +301,7 @@ def get_order_sides(order_id):
 @app.route('/expand_history_order/id/<int:order_id>')
 def expand_history_order(order_id):
     query = expand_history_order_query(order_id).all()
-    order_sides = {'Клиент': query[0].client_id, 'Поставщик': query[0].supplier_id} if len(
+    order_sides = {'Client': query[0].client_id, 'Supplier': query[0].supplier_id} if len(
         query) > 0 else {}
     order_info = {'available_products': [],
                   'order_stats': [],
@@ -270,7 +315,7 @@ def expand_history_order(order_id):
         order_info['available_products'].append(item._asdict())
         products_with_stats[item.type_name] += 1
 
-    order_info['order_stats'] = [{'Тип': i_type, 'Реализовано': amount}
+    order_info['order_stats'] = [{'Type': i_type, 'Sold': amount}
                                  for i_type, amount in products_with_stats.items()]
     print(order_info)
     return jsonify(order_info)
@@ -281,15 +326,15 @@ def expand_order(order_id):
     order_sides, order_stats_query, available_products_query = expand_order_query(
         order_id)
     stats = order_stats_query.all()
-    stats = {item.Тип: item._asdict() for item in stats}
+    stats = {item.Type: item._asdict() for item in stats}
     counter = {type_: 0 for type_ in stats.keys()}
     available_products = available_products_query.all()
     assigned_products = []
     order_sides = order_sides.first()
     for item in available_products:
-        if counter[item.Тип] < stats[item.Тип]['Заказано']:
+        if counter[item.Type] < stats[item.Type]['Ordered']:
             assigned_products.append(item._asdict())
-            counter[item.Тип] += 1
+            counter[item.Type] += 1
     expanded_order = {
         'order_sides': order_sides._asdict(),
         'order_stats': stats,
@@ -309,6 +354,14 @@ def add_info():
     return 'done'
 
 
+@app.route('/change_products_state', methods=["POST"])
+def unbind():
+    data = request.get_json()
+    print(data)
+    unbind_from_order(data.setdefault('unbind', []))
+    change_product_condition(data.setdefault('change_condition', []))
+    return 'ok'
+
 # Possibly - the main reason of too many connections to database/
 @app.route('/complete_order/id/<int:order_id>', methods=["POST"])
 def complete_order(order_id):
@@ -322,7 +375,5 @@ def complete_order(order_id):
 
 
 def run():
-    app.run(debug=True)
-    if actual_config != actual_config['cloud_demo']: 
-        atexit.register(partial(
-            upload_dump, backup_file_name=f"{DATABASE}_dump", database=DATABASE, user=USER))
+    app.run(debug=False)
+

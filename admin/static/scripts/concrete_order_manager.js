@@ -1,4 +1,6 @@
-// Check why describeurrentorder called twice
+/**
+ * @module ConcreteManager Contains functions that allows user to manage one concrete order. 
+ */
 class ConcreteOrderManager extends Section {
     constructor(orderInfoArea,
         productsInOrderArea,
@@ -33,10 +35,10 @@ class ConcreteOrderManager extends Section {
     showAlerts(data){
         this.alert_area.hide()
         for(let item of data){
-            let type = item['Тип']
-            let left = ((item['К-во исправных свободных'] + item['К-во привязаных']) - item['Заказано'])
+            let type = item['Type']
+            let left = ((item['Amount of functional'] + item['Amount of binded']) - item['Ordered'])
             if(left < 0){
-                let am_alert = createElement('div', { 'class': 'alert alert-critical', 'innerHTML': `Количества ${type} недостаточно для выполнения. Не хватает ${-left} ${type}ов` })
+                let am_alert = createElement('div', { 'class': 'alert alert-critical', 'innerHTML': `Amount of ${type} is not enough to complete order. You need more ${-left} units of ${type}ов` })
                 // Fix me
                 this.alert_area.element.appendChild(am_alert)
             }
@@ -48,9 +50,9 @@ class ConcreteOrderManager extends Section {
         if(!data) return
         let stats_ignore_columns = []        
         // Fix me
-        if(data.order_sides[0]['Поставщик'] != sessionStorage.getItem('active_storage')) {
+        if(data.order_sides[0]['Supplier'] != sessionStorage.getItem('active_storage')) {
             this.actual_order_toolbar.complete_btn.hide()
-            stats_ignore_columns =  ['К-во исправных свободных', 'К-во на складе']
+            stats_ignore_columns =  ['Amount of functional', 'Amount on warehouse']
         }
         else{
             this.showAlerts(data.order_stats)
@@ -83,7 +85,7 @@ class ConcreteOrderManager extends Section {
     completeOrder() {
         let order_id = sessionStorage.getItem('current_order_id')
         let assignedProductsSerialNumbers = Object.keys(this.order_description.data.available_products)
-        let client_id = data_dicts.current_actual_order_description.data.order_sides[0]["Клиент"]
+        let client_id = data_dicts.current_actual_order_description.data.order_sides[0]["Client"]
         let data = {
             customer: client_id,
             products: assignedProductsSerialNumbers

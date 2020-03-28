@@ -1,9 +1,11 @@
 
+
+
 /**
  * Update values of headers, with name of actively selected storage 
  * @package classes/utils
  */
-function updateHeaders(name='storage_header', value = ()=> sessionStorage.getItem('active_storage')) {
+function updateHeaders(name = 'storage_header', value = () => sessionStorage.getItem('active_storage')) {
     let existing_headers = document.getElementsByName(name)
     let st_name = value()
     for (let header of existing_headers) {
@@ -32,7 +34,7 @@ function sendRequest(url, data, method) {
         xhr.onreadystatechange = function () {
             if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
                 if (method == "GET") {
-                    result = JSON.parse(xhr.responseText)
+                    var result = JSON.parse(xhr.responseText)
                     resolve(result)
                 } else {
                     resolve();
@@ -49,15 +51,15 @@ function sendRequest(url, data, method) {
         // Trims all keys,and values because often could be that dict key/value is a primary key in db. 
         // For example product type, so it ouldd happend, that two same types 
         // ( one with space another without  ) would be trackted differently
-        for(let key in data){
-            if (typeof data[key] === "string"){
+        for (let key in data) {
+            if (typeof data[key] === "string") {
                 data[key] = data[key].trim()
-            }else{
-                for(let subkey in data[key]){
-                    let val = data[key][subkey] 
+            } else {
+                for (let subkey in data[key]) {
+                    let val = data[key][subkey]
                     delete data[key][subkey]
-                    data[key][subkey.trim()] = typeof val === "string" ? val.trim() : val 
-                }    
+                    data[key][subkey.trim()] = typeof val === "string" ? val.trim() : val
+                }
             }
         }
         xhr.send(JSON.stringify(data))
@@ -72,10 +74,11 @@ function sendRequest(url, data, method) {
  * @returns {Promise} - promise, that resolves only after all data was updated
  */
 function updateData() {
-    waitingAnimation(true)
+
     var itemUpdators = []
     for (let data_item of Object.values(data_dicts)) {
         if (!data_item.is_actual) {
+            waitingAnimation(true)
             var url = data_item.url_creation_handler()
             var req = sendRequest(url, "", "GET")
             let toUpdate = req.then(data => {
@@ -87,12 +90,12 @@ function updateData() {
                 }
                 data_item.data = data
                 data_item.is_actual = true
+                waitingAnimation(false)
                 return Promise.resolve()
             })
             itemUpdators.push(toUpdate)
         }
     }
-    waitingAnimation(false)
     return Promise.all(itemUpdators)
 }
 
@@ -102,8 +105,8 @@ function updateData() {
  * @param {boolean} condition 
  */
 function waitingAnimation(condition) {
-    let block_with_waiting_anim = document.getElementById('waiting')
-    if (condition == true) {
+    let block_with_waiting_anim = $('waiting')
+    if (condition) {
         block_with_waiting_anim.style = "display:block;"
     }
     else {
@@ -128,14 +131,15 @@ function convertToObject(key_name, data) {
     return converted
 }
 
-
 /**
  * Util for filling select with values. Work with assumption, that options are list 
  * of Objects with one key and one value:  {key:value} 
  * @package element_creators
- * @param {Element[]} list_of_selects - list of selects, to fill with new options, provided in data
- * @param {string[]} options - list of new options
- * @param {string[]} ignore - options, that should be ignored
+ * @param {Element[]} list_of_selects list of selects, to fill with new options, provided in data
+ * @param {Object} options list of new options
+ * @param {*} options._ Any key 
+ * @param {string} options.value Value that will be added to datalist 
+ * @param {string[]} ignore options, that should be ignored
  * @param
  */
 function updateDatalist(datalist, options, ignore = []) {
@@ -145,7 +149,7 @@ function updateDatalist(datalist, options, ignore = []) {
         child = datalist.lastElementChild;
     }
 
-    
+
     if (!options) {
         console.log('fillSelects: No options provided.')
         return
@@ -174,7 +178,7 @@ function updateDatalist(datalist, options, ignore = []) {
 function createElement(type, options = {}) {
     var element = document.createElement(type)
     for (const [key, val] of Object.entries(options)) {
-        if (key.localeCompare("innerHTML") == 0) {
+        if (key.toLowerCase().localeCompare("innerhtml") == 0) {
             element.innerHTML = val
             continue
         }
@@ -210,6 +214,7 @@ function optionExists(select, value) {
  * @param {string[]} ignore_columns - columns from data, that shouldn't be added to table
  */
 function createTable(data, action, outputSection = containers_and_elements.output_section, append = false, ignore_columns = []) {
+    waitingAnimation(true)
     if (!append) outputSection.innerHTML = ""
     if (!data || data.length == 0) {
         var empty = document.createElement('h3')
@@ -233,24 +238,66 @@ function createTable(data, action, outputSection = containers_and_elements.outpu
         newTable.appendChild(newRow)
     }
     outputSection.appendChild(newTable)
+    waitingAnimation(false)
+}
+
+/**
+ * Function returns row, that contain this element
+ * @param {Element} element elemnt whose row should be found
+ * @returns row where this element is placed
+ */
+function getContainingRow(element) {
+    if (element.tagName.toLowerCase() != 'tr') {
+        element = getContainingRow(element.parentElement)
+    } 
+    return element
+}
+/**
+ * Creates dropdown list where actions are listed 
+ * @param {Object} rowInfo Information based on which actions will be created
+ * @param {Element} node Node to append dropdown
+ * @param {Object} actions dict  describing action
+ * @param {string} actions.accessKey
+ * @param {CallableFunction} actions.callback
+ * @param {string} actions.actionName
+ * @param {CallableFunction} actions.predicate Condition that shoud be satisfied to add this node
+ * @param {string} dropdownName text that will be placed on dropdown
+ */
+function createDropdownList(rowInfo, node, actions, dropdownName = "Options") {
+    let container = createElement("div", { "class": "dropdown" })
+    let activatebutton = createElement("button", { "innerHTML": dropdownName, "class": "dropbtn" })
+    let dropdownContent = createElement("div", { "class": "dropdown-content" })
+    container.appendChild(activatebutton)
+    container.appendChild(dropdownContent)
+    for (let action of Object.values(actions)) {
+        if (action.predicate && action.predicate(rowInfo) || !action.predicate)
+            createActionButton(rowInfo, dropdownContent, action.accessKey, action.actionName, action.callback, null)
+    }
+    node.appendChild(container)
 }
 
 /**
  * Creates button for provided action and bind it with object
  * @package element_creators
- * @param {*} row_info - inforamtion in current row 
- * @param {*} node - html node, to append button
- * @param {*} identifier_name - name of field in `row_info` which value, that will be assigned to button
- * @param {*} action_name - text, that will be displayed on button
- * @param {*} callback - callback for action
+ * @param {*} rowInfo inforamtion in current row 
+ * @param {*} node row of table, where newly created button will be appended
+ * @param {*} identifierName name of field in `row_info` which value, that will be assigned to button
+ * @param {*} actionName text, that will be displayed on button
+ * @param {*} callback callback for action
  */
-function createActionButton(row_info, node, identifier_name, action_name, callback) {
+function createActionButton(rowInfo, node, identifierName, actionName, callback, wrapper = "td") {
     var button = document.createElement('button')
-    button.value = row_info[identifier_name]
-    button.innerHTML = action_name
+    button.value = rowInfo[identifierName]
+    button.innerHTML = actionName
     button.onclick = callback
     button.className = "action-button"
-    node.appendChild(button)
+    let newElement = button
+    if (wrapper) {
+        let wrapperEl = createElement(wrapper)
+        wrapperEl.appendChild(button)
+        newElement = wrapperEl
+    }
+    node.appendChild(newElement)
     return button
 }
 
@@ -339,8 +386,8 @@ function addProductField(container, new_el_processor = null, last_entered_val_fr
     // var available_types = getItemFromStorage(sessionStorage,'types');
     if (last_entered_val_from_end_pos && quantityInputs[quantityInputs.length - last_entered_val_from_end_pos] && !quantityInputs[quantityInputs.length - last_entered_val_from_end_pos].value) return
     var prod_ord = createElement('div', { 'class': 'product_order', 'name': 'product_order' })
-    var data_input = createElement('input', { 'type': 'text', 'name': 'product_type', 'list': 'available_types', 'placeholder': 'Тип', 'autocomplete': 'off' })
-    var quantity_input = createElement('input', { 'type': 'text', 'name': 'number', 'placeholder': 'Количество', 'autocomplete': 'off' })
+    var data_input = createElement('input', { 'type': 'text', 'name': 'product_type', 'list': 'available_types', 'placeholder': 'Type', 'autocomplete': 'off' })
+    var quantity_input = createElement('input', { 'type': 'text', 'name': 'number', 'placeholder': 'Amount', 'autocomplete': 'off' })
     if (!onchange) {
         quantity_input.onchange = _ => {
             addProductField(container, null, 1)
@@ -355,4 +402,10 @@ function addProductField(container, new_el_processor = null, last_entered_val_fr
 
 }
 
-
+/**
+ * Wrapper around $
+ * @param {string} id 
+ */
+function $(id) {
+    return document.getElementById(id)
+}
