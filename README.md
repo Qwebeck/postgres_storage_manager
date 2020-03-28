@@ -15,7 +15,7 @@ To run the application clone it to your local machine, install all dependecies w
 ## Save information about products on warehouse
 The application allows you to view statistics about goods in stock. It allows you to see such things as the total number, number of ordered products, number of broken, assigned critical levels.
 The critical level is a configurable parameter that serves to notify the user if the number of items in stock is not enough to complete all orders.
-In the image below, we see this situation for our customers, iPhones, laptops.
+In the image below, we see this situation for headphones, iphones and laptops.
 
 ![Products overview](/images/products_overview.png)
 Products overview
