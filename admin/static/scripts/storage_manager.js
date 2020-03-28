@@ -48,7 +48,7 @@ class StorageManager extends Section {
         createTable(data, (row_info, _, rowNode) => this.processStatisticsRow(row_info, _, rowNode),
             this.rightColumn.element,
             false,
-            ['owner_id']
+            ['owner_name']
         )
     }
 

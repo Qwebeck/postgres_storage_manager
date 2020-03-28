@@ -70,8 +70,8 @@ class OrderManager extends Section {
         let active_storage = sessionStorage.getItem('active_storage')
         let date = new Date()
         let order_date = $('order_date').value ? $('order_date').value + " "  + date.getHours() + ":" + date.getMinutes() : null 
-        specific_orders['supplier_id'] = active_storage
-        specific_orders['client_id'] = client
+        specific_orders['supplier_name'] = active_storage
+        specific_orders['client_name'] = client
         specific_orders['order_date'] = order_date
         if (!validateOrderForm(form)) return
         // 

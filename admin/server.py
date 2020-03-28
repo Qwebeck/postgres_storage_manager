@@ -124,27 +124,27 @@ def get_producents_and_models():
     return jsonify(result)
 
 
-@app.route('/get_types/id/<string:owner_id>')
-def get_types(owner_id):
+@app.route('/get_types/id/<string:owner_name>')
+def get_types(owner_name):
     """Return data about types on current storage ."""
-    available_types = types_query(owner_id).all()
+    available_types = types_query(owner_name).all()
     available_types = [item._asdict() for item in available_types]
     return jsonify(available_types)
 
 
-@app.route('/get_statistics/id/<string:owner_id>')
-def count_types(owner_id):
+@app.route('/get_statistics/id/<string:owner_name>')
+def count_types(owner_name):
     """Return count of products on storage."""
-    result = statistics_query(owner_id).all()
+    result = statistics_query(owner_name).all()
     result = [item._asdict() for item in result]
     return jsonify(result)
 
 
-@app.route('/expand_types/id/<string:owner_id>/types/<string:type_name>')
-def get_details_about_type(owner_id, type_name):
+@app.route('/expand_types/id/<string:owner_name>/types/<string:type_name>')
+def get_details_about_type(owner_name, type_name):
     types = type_name.split(',')
     products_query, ordered_amount_query, critical_level_query = \
-        expand_type_query(owner_id, types)
+        expand_type_query(owner_name, types)
     products = products_query.all()
     ordered_amount = ordered_amount_query.first()
     critical_level = critical_level_query.first()
@@ -159,10 +159,10 @@ def get_details_about_type(owner_id, type_name):
     return jsonify(result)
 
 
-@app.route('/expand_types/id/<string:owner_id>/types/<string:type_name>/for_order/<int:order_id>')
-def expand_types_for_order(owner_id, type_name, order_id):
+@app.route('/expand_types/id/<string:owner_name>/types/<string:type_name>/for_order/<int:order_id>')
+def expand_types_for_order(owner_name, type_name, order_id):
     types = type_name.split(',')
-    result = expand_types_order(owner_id, types, order_id).all()
+    result = expand_types_order(owner_name, types, order_id).all()
     result = [item._asdict() for item in result]
     return jsonify(result)
 
@@ -170,19 +170,19 @@ def expand_types_for_order(owner_id, type_name, order_id):
 @app.route('/modify_critical_level', methods=["POST"])
 def modify_cl():
     data = request.get_json()
-    owner_id = data['owner']
+    owner_name = data['owner']
     type_name = data['type_name']
     amount = data['amount']
-    set_critical_level(owner_id, type_name, amount)
+    set_critical_level(owner_name, type_name, amount)
     return 'ok', 200
 
 
-@app.route('/add_items_on_storage/id/<string:owner_id>', methods=['POST'])
-def insert_items(owner_id):
+@app.route('/add_items_on_storage/id/<string:owner_name>', methods=['POST'])
+def insert_items(owner_name):
     new_product = request.get_json()
     if 'additional_info' not in new_product.keys():
         new_product['additional_info'] = ""
-    new_product, new_critical_entry = create_product(new_product, owner_id)
+    new_product, new_critical_entry = create_product(new_product, owner_name)
     db.session.add(new_product)
     if new_critical_entry:
         db.session.add(new_critical_entry)
@@ -273,8 +273,8 @@ def orders_in_period(from_, to, business_id):
 def add_order():
     data = request.get_json()
     print(data)
-    new_order = Orders(client_id=data.pop('client_id'),
-                       supplier_id=data.pop('supplier_id'),
+    new_order = Orders(client_name=data.pop('client_name'),
+                       supplier_name=data.pop('supplier_name'),
                        order_date=data.pop('order_date') or None)
     db.session.add(new_order)
     db.session.commit()
@@ -301,7 +301,7 @@ def get_order_sides(order_id):
 @app.route('/expand_history_order/id/<int:order_id>')
 def expand_history_order(order_id):
     query = expand_history_order_query(order_id).all()
-    order_sides = {'Client': query[0].client_id, 'Supplier': query[0].supplier_id} if len(
+    order_sides = {'Client': query[0].client_name, 'Supplier': query[0].supplier_name} if len(
         query) > 0 else {}
     order_info = {'available_products': [],
                   'order_stats': [],

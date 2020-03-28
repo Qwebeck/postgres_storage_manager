@@ -24,20 +24,20 @@ class Orders(db.Model):
     order_date = db.Column(db.DateTime, default=datetime.now)
     details = db.Column(db.String(100))
     completion_date = db.Column(db.DateTime)
-    client_id = db.Column(db.String, db.ForeignKey(f'{SCHEMA_NAME}.businesses.name'),
+    client_name = db.Column(db.String, db.ForeignKey(f'{SCHEMA_NAME}.businesses.name'),
                           nullable=False)
-    supplier_id = db.Column(db.String, db.ForeignKey(f'{SCHEMA_NAME}.businesses.name'),
+    supplier_name = db.Column(db.String, db.ForeignKey(f'{SCHEMA_NAME}.businesses.name'),
                             nullable=False)
     specific_orders = db.relationship('SpecificOrders', backref='orders',
                                       lazy='select')
     clients = db.relationship('Businesses',
                               lazy='select',
                               backref='orders_as_client',
-                              foreign_keys=[client_id])
+                              foreign_keys=[client_name])
     suppliers = db.relationship('Businesses',
                                 lazy='select',
                                 backref='orders_as_supplier',
-                                foreign_keys=[supplier_id])
+                                foreign_keys=[supplier_name])
 
 
 class Products(db.Model):
@@ -46,7 +46,7 @@ class Products(db.Model):
     type_name = db.Column(db.String(50), nullable=False)
     producent = db.Column(db.String(50), nullable=False)
     model = db.Column(db.String(50), nullable=False)
-    owner_id = db.Column(db.String, db.ForeignKey(f'{SCHEMA_NAME}.businesses.name'),
+    owner_name = db.Column(db.String, db.ForeignKey(f'{SCHEMA_NAME}.businesses.name'),
                          nullable=False)
     product_condition = db.Column(db.Boolean, default=True)
     additonal_info = db.Column(db.String(500))
@@ -69,7 +69,7 @@ class CriticalLevels(db.Model):
     critical_amount = db.Column(db.Integer)
 
 
-class ProductsMovement(db.Model):
+class ProductsMovementHistory(db.Model):
     __table_args__ = {"schema": SCHEMA_NAME}
     record_id = db.Column(db.Integer,
                           primary_key=True
@@ -77,7 +77,9 @@ class ProductsMovement(db.Model):
     order_id = db.Column(db.Integer,
                          db.ForeignKey(f'{SCHEMA_NAME}.orders.order_id'),
                          nullable=False)
-    serial_number = db.Column(db.String(20))
+    serial_number = db.Column(db.String(20),
+                              db.ForeignKey(f'{SCHEMA_NAME}.products.serial_number'),
+                              nullable=True)
     type_name = db.Column(db.String(50), nullable=False)
     producent = db.Column(db.String(50), nullable=False)
     model = db.Column(db.String(50), nullable=False)

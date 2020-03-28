@@ -75,7 +75,7 @@ class ConcreteOrderManager extends Section {
             null,
             this.rightColumn.element,
             false,
-            ['supplier_id', 'client_id', 'type_name', 'quantity', 'serial_number', 'number', 'available_number']
+            ['supplier_name', 'client_name', 'type_name', 'quantity', 'serial_number', 'number', 'available_number']
         )
     }
 
