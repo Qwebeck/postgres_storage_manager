@@ -1,5 +1,9 @@
+/**
+ * @module Areas Module contains all html elements, with which programmer could interact.
+ */
 
-// change subareas on dicts
+
+
 function getAreas() {
     return {
         control_panel_for_storage_manager: {

@@ -218,7 +218,7 @@ function createTable(data, action, outputSection = containers_and_elements.outpu
     if (!append) outputSection.innerHTML = ""
     if (!data || data.length == 0) {
         var empty = document.createElement('h3')
-        empty.innerHTML = "Не найдено результатов"
+        empty.innerHTML = "No results found"
         outputSection.appendChild(empty)
         return
     }
@@ -263,7 +263,7 @@ function getContainingRow(element) {
  * @param {CallableFunction} actions.predicate Condition that shoud be satisfied to add this node
  * @param {string} dropdownName text that will be placed on dropdown
  */
-function createDropdownList(rowInfo, node, actions, dropdownName = "Опции") {
+function createDropdownList(rowInfo, node, actions, dropdownName = "Options") {
     let container = createElement("div", { "class": "dropdown" })
     let activatebutton = createElement("button", { "innerHTML": dropdownName, "class": "dropbtn" })
     let dropdownContent = createElement("div", { "class": "dropdown-content" })
@@ -386,8 +386,8 @@ function addProductField(container, new_el_processor = null, last_entered_val_fr
     // var available_types = getItemFromStorage(sessionStorage,'types');
     if (last_entered_val_from_end_pos && quantityInputs[quantityInputs.length - last_entered_val_from_end_pos] && !quantityInputs[quantityInputs.length - last_entered_val_from_end_pos].value) return
     var prod_ord = createElement('div', { 'class': 'product_order', 'name': 'product_order' })
-    var data_input = createElement('input', { 'type': 'text', 'name': 'product_type', 'list': 'available_types', 'placeholder': 'Тип', 'autocomplete': 'off' })
-    var quantity_input = createElement('input', { 'type': 'text', 'name': 'number', 'placeholder': 'Количество', 'autocomplete': 'off' })
+    var data_input = createElement('input', { 'type': 'text', 'name': 'product_type', 'list': 'available_types', 'placeholder': 'Type', 'autocomplete': 'off' })
+    var quantity_input = createElement('input', { 'type': 'text', 'name': 'number', 'placeholder': 'Amount', 'autocomplete': 'off' })
     if (!onchange) {
         quantity_input.onchange = _ => {
             addProductField(container, null, 1)

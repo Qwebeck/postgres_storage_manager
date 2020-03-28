@@ -1,4 +1,6 @@
-
+/**
+ * Definition of all HTML elements as dict's, to manage them easier
+ */
 
 function getForms() {
     return {

@@ -1,6 +1,9 @@
+
+/**
+ * @module StorageManager contain functions that user could to manage his warehouse.
+ */
 class StorageManager extends Section {
     /**
-     * 
      * @param {{element:Element,default_class:string,subareas:[{element:Element,hide:function()}]}} productAddingArea 
      * @param {{element:Element,default_class:string,subareas:[{element:Element,hide:function()}]}} productsArea 
      * @param {Element} toolbar 
@@ -23,7 +26,7 @@ class StorageManager extends Section {
 
         this.existing_businesses = existing_businesses
         this.storage_statistics = storage_statistics
-        this.existing_types = Array.isArray(storage_statistics.data) ? storage_statistics.data.map(x => x["Тип"]) : []
+        this.existing_types = Array.isArray(storage_statistics.data) ? storage_statistics.data.map(x => x["Type"]) : []
         this.active_business = active_business
         this.producents_and_models = producents_and_models
         this.product_type_manager = productTypeManager
@@ -36,10 +39,10 @@ class StorageManager extends Section {
      * Fill type datalists with types availavle on storage and creates 
      * table, which gives brief information about all types that are currently on storages   
      * @param {Object[]} data Actual data about products on storage. grouped by type
-     * @param data.Тип Type of product
+     * @param data.Type Type of product
      */
     storageStatisticsUpdate(data) {
-        this.existing_types = data && data.map(x => x["Тип"])
+        this.existing_types = data && data.map(x => x["Type"])
         updateDatalist(this.storage_statistics.related_list, this.existing_types)
 
         createTable(data, (row_info, _, rowNode) => this.processStatisticsRow(row_info, _, rowNode),
@@ -80,14 +83,14 @@ class StorageManager extends Section {
     processStatisticsRow(row_info, _, rowNode) {
         let action_btn = createActionButton(row_info,
             rowNode,
-            "Тип",
-            "Подробнее",
+            "Type",
+            "Expand",
             this.expandForTypes
         )
-        if (row_info['К-во исправных'] < row_info['Критический уровень'] && row_info['Заказано'] == 0) {
+        if (row_info['Amount of functional'] < row_info['Critical level'] && row_info['Ordered'] == 0) {
             action_btn.className = 'action-button alert-critical'
         }
-        if (row_info['К-во исправных'] - row_info['Заказано'] < row_info['Критический уровень']) {
+        if (row_info['Amount of functional'] - row_info['Ordered'] < row_info['Critical level']) {
             action_btn.className = 'action-button alert-warning'
         }
 
@@ -112,7 +115,7 @@ class StorageManager extends Section {
         let form = e.target.parentElement
         let new_business = form.active_storage.value
         if (!new_business) {
-            alert("Бизнес не выбран")
+            alert("Business wasn't choose")
             return
         }
         if (this.existing_businesses.data.includes(new_business)) {
@@ -146,7 +149,7 @@ class StorageManager extends Section {
         let form = event.target.parentElement
         let new_business = form.active_storage.value
         if (!new_business) {
-            alert("Бизнес не выбран")
+            alert("Business wasn't choose")
             return
         }
 
@@ -159,7 +162,7 @@ class StorageManager extends Section {
                 document.dispatchEvent(data_item_modified)
             })
         } else {
-            alert(`Бизнес ${new_business} не существует`)
+            alert(`Business ${new_business} doesn't exists`)
         }
     }
     /**
@@ -186,7 +189,6 @@ class StorageManager extends Section {
         let addBusiness = sendRequest(url, data, 'POST')
         addBusiness.then(
             _ => {
-                // waitingAnimation(true)
                 if (callback) callback()
                 data_dicts.existing_businesses.is_actual = false
                 document.dispatchEvent(data_item_modified)

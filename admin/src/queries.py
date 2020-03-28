@@ -19,8 +19,8 @@ def client_supplier_query(order_id: int) -> Products:
     Suppliers = aliased(Businesses)
     ClientSupplier = join(Orders, Clients, Orders.client_id == Clients.name)\
         .join(Suppliers, Suppliers.name == Orders.supplier_id)
-    query = aliased(select([Clients.name.label("Клиент"),
-                            Suppliers.name.label("Поставщик")])
+    query = aliased(select([Clients.name.label("Client"),
+                            Suppliers.name.label("Supplier")])
                     .where(Orders.order_id == order_id)
                     .select_from(ClientSupplier))
     return query
@@ -28,14 +28,14 @@ def client_supplier_query(order_id: int) -> Products:
 
 def types_query(owner_id):
     """Return query for proucts on storage."""
-    query = Products.query.with_entities(Products.type_name.label('Тип'))\
+    query = Products.query.with_entities(Products.type_name.label('Type'))\
         .filter_by(owner_id=owner_id)\
         .distinct()
     return query
 
 
 def statistics_query(owner_id):
-    """Return a query, that get count of each type on storage."""
+    """Query to describe current storage."""
 
     """
     WITH p_count AS (
@@ -95,11 +95,11 @@ def statistics_query(owner_id):
     """
     stats_query = db.session.query(
         p_count.c.owner_id,
-        p_count.c.type_name.label('Тип'),
-        p_count.c.product_count.label('К-во'),
-        p_count.c.valid.label('К-во исправных'),
-        (func.coalesce(specific_orders.c.ordered, 0)).label('Заказано'),
-        CriticalLevels.critical_amount.label('Критический уровень')
+        p_count.c.type_name.label('Type'),
+        p_count.c.product_count.label('Amount'),
+        p_count.c.valid.label('Amount of functional products'),
+        (func.coalesce(specific_orders.c.ordered, 0)).label('Ordered amount'),
+        CriticalLevels.critical_amount.label('Critical level')
     )\
         .select_entity_from(p_count)\
         .outerjoin(CriticalLevels, and_(CriticalLevels.business == p_count.c.owner_id,
@@ -135,7 +135,7 @@ def get_critical_level(owner_id, type_name):
     return db.session.query(aliased(critical_level))
 
 
-def expand_type_query_2(owner_id: str, type_name: []) -> 'session query':
+def expand_type_query(owner_id: str, type_name: []) -> 'session query':
     """Return query, where provide detaled info about available products for this type."""
     critical_level = get_critical_level(owner_id, type_name)
 
@@ -151,13 +151,13 @@ def expand_type_query_2(owner_id: str, type_name: []) -> 'session query':
 
     )
 
-    query = select([Products.type_name.label('Тип'),
-                    Products.serial_number.label('Серийный номер'),
-                    Products.producent.label('Изготовитель'),
-                    Products.model.label('Модель'),
-                    Products.product_condition.label('Состояние'),
-                    Products.additonal_info.label('Инфо'),
-                    Products.appear_in_order.label('Привязан к заказу')])\
+    query = select([Products.type_name.label('Type'),
+                    Products.serial_number.label('Serial number'),
+                    Products.producent.label('Producent'),
+                    Products.model.label('Model'),
+                    Products.product_condition.label('Condition'),
+                    Products.additonal_info.label('Additional info'),
+                    Products.appear_in_order.label('Bind to order')])\
         .where(
         and_(
             Products.owner_id == owner_id,
@@ -167,15 +167,15 @@ def expand_type_query_2(owner_id: str, type_name: []) -> 'session query':
     return db.session.query(aliased(query)), ordered, critical_level
 
 
-def expand_type_query(owner_id: str, type_name: [], order_id) -> 'session query':
+def expand_types_order(owner_id: str, type_name: [], order_id) -> 'session query':
     """Return query, where provide detaled info about available products for this type."""
-    query = select([Products.type_name.label('Тип'),
-                    Products.serial_number.label('Серийный номер'),
-                    Products.producent.label('Изготовитель'),
-                    Products.model.label('Модель'),
-                    Products.product_condition.label('Состояние'),
-                    Products.additonal_info.label('Инфо'),
-                    Products.appear_in_order.label('Привязан к заказу')])\
+    query = select([Products.type_name.label('Type'),
+                    Products.serial_number.label('Serial number'),
+                    Products.producent.label('Producent'),
+                    Products.model.label('Model'),
+                    Products.product_condition.label('Condition'),
+                    Products.additonal_info.label('Additional info'),
+                    Products.appear_in_order.label('Bind to order')])\
         .where(
         and_(
             Products.owner_id == owner_id,
@@ -225,10 +225,10 @@ def get_orders_query(history, business_id):
     Clients = aliased(Businesses)
     Suppliers = aliased(Businesses)
     query = db.session.query(
-        Orders.order_id.label("Ид заказа"),
-        Orders.order_date.label("Дата заказа"),
-        Clients.name.label("Клиент"),
-        Suppliers.name.label("Поставщик"),
+        Orders.order_id.label("Order id"),
+        Orders.order_date.label("Order date"),
+        Clients.name.label("Client"),
+        Suppliers.name.label("Supplier"),
         Orders.order_id)\
         .join(Clients, Clients.name == Orders.client_id)\
         .join(Suppliers, Suppliers.name == Orders.supplier_id)\
@@ -238,9 +238,9 @@ def get_orders_query(history, business_id):
             Orders.order_date.desc())
     else:
         query = db.session.query(
-            Orders.completion_date.label("Дата выполнения"),
-            Clients.name.label("Клиент"),
-            Suppliers.name.label("Поставщик"),
+            Orders.completion_date.label("Completion date"),
+            Clients.name.label("Client"),
+            Suppliers.name.label("Supplier"),
             Orders.order_id)\
             .join(Clients, Clients.name == Orders.client_id)\
             .join(Suppliers, Suppliers.name == Orders.supplier_id)
@@ -280,14 +280,14 @@ def expand_order_query(order_id):
     GROUP BY (b2b.products.type_name, specific_orders.quantity);
     """
     order_sides = db.session.query(
-        Orders.supplier_id.label('Поставщик'),
-        Orders.client_id.label('Клиент')
+        Orders.supplier_id.label('Supplier'),
+        Orders.client_id.label('Client')
     ).filter(Orders.order_id == order_id)
 
     # Select for order stats
-    order_stats_query = db.session.query(SpecificOrders.type_name.label('Тип'),
+    order_stats_query = db.session.query(SpecificOrders.type_name.label('Type'),
                                          SpecificOrders.quantity.label(
-                                             'Заказано'),
+                                             'Ordered'),
                                          func.count(
         case(
             [
@@ -297,8 +297,8 @@ def expand_order_query(order_id):
             ],
             else_=None
         )
-    ).label('К-во исправных свободных'),
-        func.count(Products.type_name).label('К-во на складе'),
+    ).label('Amount of functional'),
+        func.count(Products.type_name).label('Amount on warehouse'),
         func.count(
             case(
                 [
@@ -306,7 +306,7 @@ def expand_order_query(order_id):
                 ],
                 else_=None
             )
-    ).label('К-во привязаных')
+    ).label('Amount of binded')
     )\
         .select_from(Orders)\
         .join(SpecificOrders, SpecificOrders.order_id == Orders.order_id)\
@@ -329,13 +329,13 @@ def expand_order_query(order_id):
         [item.is_service for item in is_service])
 
     available_products_query = db.session.query(
-        Products.type_name.label('Тип'),
-        Products.producent.label('Производитель'),
-        Products.model.label('Модель'),
-        Products.serial_number.label('Серийный номер'),
-        Products.appear_in_order.label('Привязан к заказу'),
-        Products.product_condition.label('Cостояние'),
-        Products.additonal_info.label('Дополнительная информация'),
+        Products.type_name.label('Type'),
+        Products.producent.label('Producent'),
+        Products.model.label('Model'),
+        Products.serial_number.label('Serial number'),
+        Products.appear_in_order.label('Binded to order'),
+        Products.product_condition.label('Condition'),
+        Products.additonal_info.label('Additional info'),
     )\
         .join(Orders, and_(Orders.order_id == order_id,
                            Orders.supplier_id == Products.owner_id))\
@@ -477,10 +477,10 @@ def expand_history_order_query(order_id):
         Orders, ProductsMovement, Orders.order_id == ProductsMovement.order_id)
 
     query = select([
-        ProductsMovement.type_name.label('Тип'),
-        ProductsMovement.producent.label('Производитель'),
-        ProductsMovement.model.label('Модель'),
-        ProductsMovement.serial_number.label('Серийный номер'),
+        ProductsMovement.type_name.label('Type'),
+        ProductsMovement.producent.label('Producent'),
+        ProductsMovement.model.label('Model'),
+        ProductsMovement.serial_number.label('Serial number'),
         Orders.supplier_id,
         Orders.client_id,
         ProductsMovement.type_name,

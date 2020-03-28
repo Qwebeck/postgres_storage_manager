@@ -1,34 +1,18 @@
-/**
- * Two problems:
- * 1. No. 1 - different library version. 
- * Solution:
- *      1. Create wrappers everywhere
- *      2. Create setup.py
- *      3. Docker image
- * 2. Problem with encodings in database 
- */
-
-var active_section = null
-var active_toolbar = null
-// Change on query
-// var main_storage_id = "Головний офіс, Вінниця";
-
 /*
 Code convetions:
 1. snake case for values ( main_storage_id, json_output, url ...)
-2. camel case for functions and objects
+2. camel case for functions and objects intances
+3. pacal case for object instances
 */
-
-/*TODO
-1. Allow user to create order on types, that aren't available on storage
 
 /**
  * Keys in session storage
  * is_history - indicates if last history mode where turned on in orders
  * active_storage - stores informatoin about current storage
  */
-
-
+// global variables, used to show active elements on page
+active_section = null
+active_toolbar = null
 
 function init() {
     $('is_history').checked = false
@@ -72,7 +56,6 @@ function init() {
         sections.history_info_section,
         forms.orders_order_creation_form,
         data_dicts.orders_with_current_storage,
-        data_dicts.current_order_sides,
         data_dicts.current_actual_order_description,
         concreteOrderManager
     )
@@ -97,15 +80,7 @@ function init() {
 
     storageManager.hide()
     if (sessionStorage.getItem('active_storage')) {
-        updateData().then(
-            () => {
-                // waitingAnimation(false)
-
-            }
-        )
+        updateData()
         updateHeaders()
-
-    } else {
-        // waitingAnimation(false)
-    }
+    } 
 }

@@ -1,3 +1,7 @@
+/**
+ * @module OrderManager Contains functions that user can do, for managing all his orders:
+ * Add order, deleteOrder, lookfor order in period
+ */
 class OrderManager extends Section {
     constructor(productAddingArea,
         ordersDiplayArea,
@@ -5,7 +9,6 @@ class OrderManager extends Section {
         history_section,
         order_modification_section,
         pending_orders,
-        order_sides,
         order_description,
         concrete_order_manager) {
         super(
@@ -18,8 +21,6 @@ class OrderManager extends Section {
         this.pending_orders = pending_orders
         this.order_description = order_description
         this.concrete_order_manager = concrete_order_manager
-
-        // this.order_expand_handler = (e) => this.expandForOrder(e.target.value)
         this.current_layout = this.order_creation_area
 
         document.addEventListener('pending_orders_update', (e) => this.pendingOrdersUpdate(e.detail))
@@ -32,7 +33,7 @@ class OrderManager extends Section {
                 createActionButton(row_info,
                     rowNode,
                     'order_id',
-                    'Подробнее',
+                    'Expand',
                     (e) => this.expandForOrder(e.target.value)),
             this.rightColumn.element,
             false,

@@ -8,12 +8,11 @@ from sqlalchemy import func, update, delete, join, select, and_
 from sqlalchemy.sql import text
 from datetime import datetime
 from admin.config import app, USER, DATABASE, SCHEMA_NAME
-from admin.src.cloud_backup import upload_dump
 from admin.src.models import (db, Products, Businesses, Orders, SpecificOrders)
 from admin.src.queries import (client_supplier_query,
                                types_query,
                                statistics_query,
-                               expand_type_query,
+                               expand_types_order,
                                create_product,
                                businesses_query,
                                get_orders_query,
@@ -26,7 +25,7 @@ from admin.src.queries import (client_supplier_query,
                                bind_to_order,
                                modify_specific_orders,
                                unbind_all_from_order,
-                               expand_type_query_2,
+                               expand_type_query,
                                set_critical_level,
                                get_models_query,
                                get_producents_query,
@@ -54,9 +53,9 @@ class InvalidUsage(Exception):
 def handle_invalid_usage(error):
     print(error)
     if re.search("violates foreign key constraint", str(getattr(error, 'orig'))):
-        message = "Невозможно удалить бизнес поскольку он уже принимал участие в заказах"
+        message = "You an delete business because it already was a part of order"
     else:
-        message = "Подобный ключ уже существует в базе данных"
+        message = "Provided key already exists in database"
     response = InvalidUsage(
         message=message)
     response.status_code = 500
@@ -67,7 +66,7 @@ def handle_invalid_usage(error):
 @app.errorhandler(OperationalError)
 def handle_invalid_usage(error):
     response = InvalidUsage(
-        message='Потеряно соединение с сервером базы данных')
+        message='Connection with database server lost')
     response.status_code = 500
     response = response.to_dict()
     return jsonify(response), 400
@@ -142,28 +141,28 @@ def count_types(owner_id):
 
 
 @app.route('/expand_types/id/<string:owner_id>/types/<string:type_name>')
-def get_details_about_type_2(owner_id, type_name):
+def get_details_about_type(owner_id, type_name):
     types = type_name.split(',')
     products_query, ordered_amount_query, critical_level_query = \
-        expand_type_query_2(owner_id, types)
+        expand_type_query(owner_id, types)
     products = products_query.all()
     ordered_amount = ordered_amount_query.first()
     critical_level = critical_level_query.first()
     products = [item._asdict() for item in products]
     result = {
         'available_products': products,
-        'type_stats': {'Всего заказов на тип': ordered_amount.number or 0,
-                       'Количество на складе': len(products),
-                       'К-во исправных': len(tuple(filter(lambda el: el['Состояние'] is True, products)))},
+        'type_stats': {'Total ordered amount': ordered_amount.number or 0,
+                       'All amount on warehouse': len(products),
+                       'Amount of functional': len(tuple(filter(lambda el: el['Condition'] is True, products)))},
         'critical_level': critical_level.critical_amount if critical_level else None
     }
     return jsonify(result)
 
 
 @app.route('/expand_types/id/<string:owner_id>/types/<string:type_name>/for_order/<int:order_id>')
-def get_details_about_type(owner_id, type_name, order_id):
+def expand_types_for_order(owner_id, type_name, order_id):
     types = type_name.split(',')
-    result = expand_type_query(owner_id, types, order_id).all()
+    result = expand_types_order(owner_id, types, order_id).all()
     result = [item._asdict() for item in result]
     return jsonify(result)
 
@@ -302,7 +301,7 @@ def get_order_sides(order_id):
 @app.route('/expand_history_order/id/<int:order_id>')
 def expand_history_order(order_id):
     query = expand_history_order_query(order_id).all()
-    order_sides = {'Клиент': query[0].client_id, 'Поставщик': query[0].supplier_id} if len(
+    order_sides = {'Client': query[0].client_id, 'Supplier': query[0].supplier_id} if len(
         query) > 0 else {}
     order_info = {'available_products': [],
                   'order_stats': [],
@@ -316,7 +315,7 @@ def expand_history_order(order_id):
         order_info['available_products'].append(item._asdict())
         products_with_stats[item.type_name] += 1
 
-    order_info['order_stats'] = [{'Тип': i_type, 'Реализовано': amount}
+    order_info['order_stats'] = [{'Type': i_type, 'Sold': amount}
                                  for i_type, amount in products_with_stats.items()]
     print(order_info)
     return jsonify(order_info)
@@ -327,15 +326,15 @@ def expand_order(order_id):
     order_sides, order_stats_query, available_products_query = expand_order_query(
         order_id)
     stats = order_stats_query.all()
-    stats = {item.Тип: item._asdict() for item in stats}
+    stats = {item.Type: item._asdict() for item in stats}
     counter = {type_: 0 for type_ in stats.keys()}
     available_products = available_products_query.all()
     assigned_products = []
     order_sides = order_sides.first()
     for item in available_products:
-        if counter[item.Тип] < stats[item.Тип]['Заказано']:
+        if counter[item.Type] < stats[item.Type]['Ordered']:
             assigned_products.append(item._asdict())
-            counter[item.Тип] += 1
+            counter[item.Type] += 1
     expanded_order = {
         'order_sides': order_sides._asdict(),
         'order_stats': stats,
@@ -376,6 +375,5 @@ def complete_order(order_id):
 
 
 def run():
-    app.run(debug=True)
-    atexit.register(partial(
-        upload_dump, backup_file_name=f"{DATABASE}_dump", database=DATABASE, user=USER))
+    app.run(debug=False)
+

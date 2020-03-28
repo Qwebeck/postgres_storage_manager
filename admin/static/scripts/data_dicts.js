@@ -1,6 +1,9 @@
 
 /**
- * Return data used by application in dict format
+ * Contains all information in form of dict, that allows easily update it. 
+ * Each dict contains data, event it should emit while updating and url_creation_hanler 
+ * that points to url from whic this dict should take info.
+ * @returns data used by application in dict format
  */
 function getDataDicts() {
     return {
@@ -43,14 +46,14 @@ function getDataDicts() {
             url_creation_handler: () => createExpandOrderUrl(),
             data_processor: (data) => {
                 if (!data) return null
-                let available_products = convertToObject('Серийный номер', data.available_products)
+                let available_products = convertToObject('Serial number', data.available_products)
                 let order_stats = data.order_stats
                 let order_sides = data.order_sides
                 return {
                     available_products: available_products,
                     order_sides: [order_sides],
                     order_types: Object.values(order_stats).reduce((accumulator, el) => {
-                        accumulator[el['Тип']] = el['Заказано']
+                        accumulator[el['Type']] = el['Ordered']
                         return accumulator
                     }, {}),
                     order_stats: Object.values(order_stats),

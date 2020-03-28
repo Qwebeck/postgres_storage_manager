@@ -18,15 +18,15 @@ class ProductTypeManager extends Section {
     checkForWarnings(data, type) {
         this.alert_area.hide()
         let critical_level = data.critical_level
-        let amount_on_st = data.type_stats['К-во исправных']
-        let ordered_amount = data.type_stats['Всего заказов на тип']
+        let amount_on_st = data.type_stats['Amount of functional']
+        let ordered_amount = data.type_stats['Ordered amount']
         if (amount_on_st < critical_level && ordered_amount == 0) {
-            let am_alert = createElement('div', { 'class': 'alert alert-critical', 'innerHTML': `Количество исправных ${type}ов меньше критического уровня. Не хватает ${critical_level - amount_on_st} ${type}ов` })
+            let am_alert = createElement('div', { 'class': 'alert alert-critical', 'innerHTML': `Amount of functional ${type}s is lower then critical level. You need ${critical_level - amount_on_st} more of ${type}s` })
             // Fix me
             this.alert_area.element.appendChild(am_alert)
         }
         else if (amount_on_st - ordered_amount < critical_level) {
-            let am_alert = createElement('div', { 'class': 'alert alert-warning', 'innerHTML': `Количество исправных ${type}ов будет меньше критического уровня после реализации всех заказов. Не хватает ${critical_level - (amount_on_st - ordered_amount)} ${type}ов` })
+            let am_alert = createElement('div', { 'class': 'alert alert-warning', 'innerHTML': `Amount of functional ${type}s will be lower then criticall level after all orders completion. You need ${critical_level - (amount_on_st - ordered_amount)} more of ${type}s` })
             // Fix me
             this.alert_area.element.appendChild(am_alert)
         }
@@ -52,20 +52,20 @@ class ProductTypeManager extends Section {
                 (row_info, _, rowNode) => {
                     let actions = {
                         'unbind': {
-                            'accessKey': "Серийный номер",
-                            'callback': (e) => this.changeCondition(e.target, 'unbind', 'assigned_to_other', 'Отменить отвязку от заказа'),
-                            'actionName': "Отвязать от заказа",
-                            'predicate': (rowInfo) => rowInfo["Привязан к заказу"]
+                            'accessKey': "Serial number",
+                            'callback': (e) => this.changeCondition(e.target, 'unbind', 'assigned_to_other', 'Cancell order unbinding'),
+                            'actionName': "Unbind from order",
+                            'predicate': (rowInfo) => rowInfo["Bind to order"]
                         },
                         'change_state': {
-                            'accessKey': "Серийный номер",
-                            'callback': (e) => this.changeCondition(e.target, 'change_condition', 'assigned', "Отменить изменение состояния"),
-                            'actionName': "Пометить на изменение состояния"
+                            'accessKey': "Serial number",
+                            'callback': (e) => this.changeCondition(e.target, 'change_condition', 'assigned', "Cancell condition change"),
+                            'actionName': "Mark for condition change"
                         },
                         'delete': {
-                            'accessKey': "Серийный номер",
+                            'accessKey': "Serial number",
                             'callback': (e) => this.deleteProduct(e.target),
-                            'actionName': "Удалить"
+                            'actionName': "Delete"
                         }
                     }
                     createDropdownList(row_info, rowNode, actions)
@@ -137,7 +137,6 @@ class ProductTypeManager extends Section {
         }
         let post = sendRequest(url, data, "DELETE")
         getContainingRow(button).remove()
-        // e.target.parentElement.parentElement.parentElement.remove()
         post.then(_ => {
             productTypeManager.current_storage_stats.is_actual = false
         })

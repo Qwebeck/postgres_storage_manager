@@ -6,7 +6,7 @@
  */
 function validateOrderForm(form) {
     var error = false
-    message = 'Заполните все необходимые поля'
+    message = 'Fill all required fields'
     if(!form.clients_ids.value){
         error = true
         form.clients_ids.className = "error"
@@ -29,7 +29,7 @@ function validateOrderForm(form) {
         }
     }
     if(!order_exists) {
-        message = 'Заказ должен быть сделан на что-то'
+        message = 'Order should be done on something'
         error = true
     }
     if (error) {
@@ -68,7 +68,7 @@ function validateStorageForm(form) {
         form.type_name.className = 'error'
     }
     if (error) {
-        alert('Заполните необходимые поля')
+        alert('Fill all selected rules')
         return false
     }
     return true
@@ -129,7 +129,7 @@ function validateNewBusiness(form){
     error = false
     field = form.querySelector("[name=new_business_name")
     if(!field.value){
-        message="Подайте название бизнеса"
+        message="Provide the business name"
         error = true
     }
     if(error) {
