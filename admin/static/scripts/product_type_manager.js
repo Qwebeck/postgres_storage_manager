@@ -19,15 +19,15 @@ class ProductTypeManager extends Section {
         this.alert_area.hide()
         let critical_level = data.critical_level
         let amount_on_st = data.type_stats['Amount of functional']
-        let ordered_amount = data.type_stats['Ordered amount']
+        let ordered_amount = data.type_stats['Total ordered amount']
         if (amount_on_st < critical_level && ordered_amount == 0) {
-            let am_alert = createElement('div', { 'class': 'alert alert-critical', 'innerHTML': `Amount of functional ${type}s is lower then critical level. You need ${critical_level - amount_on_st} more of ${type}s` })
-            // Fix me
+            let am_alert = createElement('div', { 'class': 'alert alert-critical', 'innerHTML': `Amount of functional ${type}s is lower then critical level. You need ${critical_level - amount_on_st} more ${type}s` })
+
             this.alert_area.element.appendChild(am_alert)
         }
         else if (amount_on_st - ordered_amount < critical_level) {
-            let am_alert = createElement('div', { 'class': 'alert alert-warning', 'innerHTML': `Amount of functional ${type}s will be lower then criticall level after all orders completion. You need ${critical_level - (amount_on_st - ordered_amount)} more of ${type}s` })
-            // Fix me
+            let am_alert = createElement('div', { 'class': 'alert alert-warning', 'innerHTML': `Amount of functional ${type}s will be lower then criticall level after all orders completion. You need ${critical_level - (amount_on_st - ordered_amount)} more ${type}s` })
+
             this.alert_area.element.appendChild(am_alert)
         }
     }
@@ -103,7 +103,7 @@ class ProductTypeManager extends Section {
         let alternativeName = button.innerHTML
         button.onclick = (e) => this.changeCondition(e.target, changeName, className, alternativeName)
         button.innerHTML = standardName
-        // Fix me
+
         getContainingRow(button).className = getContainingRow(button).className.replace(className, "")
     }
 
@@ -111,7 +111,7 @@ class ProductTypeManager extends Section {
         e.preventDefault()
         let form = e.target
         let url = '/modify_critical_level'
-        // Fix me
+
         let amount = form.new_cl.value
         let data = {
             owner: sessionStorage.getItem('active_storage'),
