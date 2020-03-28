@@ -28,9 +28,9 @@ Each order from the right column can be expanded. This action will cause the pro
 It is important to note that such an action does not cause products to be bound to the order, but only generates a possible set for its completion.  
 Also database will inform you in case if there will be not enough products to complete as order.
 ![Order creation](/images/order_creation.png)
-Order creation
+Order creation and overview
 ![Order creation](/images/notification.png)
-Informing you about missing products
+Informing you about required products 
 
 
 
