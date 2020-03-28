@@ -44,7 +44,6 @@ class StorageManager extends Section {
     storageStatisticsUpdate(data) {
         this.existing_types = data && data.map(x => x["Type"])
         updateDatalist(this.storage_statistics.related_list, this.existing_types)
-
         createTable(data, (row_info, _, rowNode) => this.processStatisticsRow(row_info, _, rowNode),
             this.rightColumn.element,
             false,
@@ -87,10 +86,10 @@ class StorageManager extends Section {
             "Expand",
             this.expandForTypes
         )
-        if (row_info['Amount of functional'] < row_info['Critical level'] && row_info['Ordered'] == 0) {
+        if (row_info['Amount of functional products'] < row_info['Critical level'] && row_info['Ordered amount'] == 0) {
             action_btn.className = 'action-button alert-critical'
         }
-        if (row_info['Amount of functional'] - row_info['Ordered'] < row_info['Critical level']) {
+        if (row_info['Amount of functional products'] - row_info['Ordered amount'] < row_info['Critical level']) {
             action_btn.className = 'action-button alert-warning'
         }
 
