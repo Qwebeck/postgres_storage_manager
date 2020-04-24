@@ -1,5 +1,5 @@
 # Short description
-The application is designed to simplify the administration of a large network of warehouses with technical goods. It is designed to provide the user with information about the movement of his products, how many goods need to be delivered to other warehouses in the network and what goods are in these warehouses. The functionality is described in more detail below.
+The application is designed to simplify the administration of a large network of warehouses with technical goods. It is designed to provide the user with information about the movement of his products, how many goods need to be delivered to other warehouses in the network and what goods are in these warehouses. The functionality is described in more details below.
 # Technical overview
 The application was written as a browser client, that provides access to a database in the cloud. 
 The database was designed to provide information about such things as the number of products in the warehouse, product condition,
